@@ -25,10 +25,10 @@ Context is provided via project knowledge files — see "Upload to Project" belo
 ### Daily Macro Targets
 | Day Type | Protein | Carbs | Fat | Calories |
 |---|---|---|---|---|
-| Regular | 150g | 165g | 65g | ~1,895 |
-| Training (Strength) | 150g | 175g | 65g | ~1,895 |
-| Run Days | 150g | 175g | 65g | ~1,895 |
-| Race Days | 150g | 195g | 50g | ~1,900 |
+| Regular / Rest | 150g | 165g | 65g | ~1,845 |
+| Training (Strength) | 150g | 175g | 65g | ~1,885 |
+| Run Days | 150g | 175g | 65g | ~1,885 |
+| Race Days | 150g | 195g | 50g | ~1,830 |
 
 ### Red Lines — Never Go Below
 - 1,750 kcal/day
@@ -94,9 +94,9 @@ In the project, go to **Add content → Upload files** and add:
 | `profile/liz-athlete-profile.md` | Who Liz is — stats, goals, history |
 | `references/LIZPROFILE.pdf` | Full background profile |
 | `references/17WEEKPROGRAM.pdf` | Full training program |
-| `references/NUTRITIONGUIDE.pdf` | Deep nutrition reference |
-| `references/CYCLETRACKER.pdf` | Cycle phase context |
-| `references/RACEPREP.pdf` | Race-specific fueling and prep |
+| `references/NUTRITIONGUIDE.md` | Deep nutrition reference |
+| `references/CYCLETRACKER.md` | Cycle phase context |
+| `references/RACEPREP.md` | Race-specific fueling and prep |
 | `references/WEEKLYCHECKIN.pdf` | Weekly check-in structure |
 
 ---
