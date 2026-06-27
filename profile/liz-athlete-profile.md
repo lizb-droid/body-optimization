@@ -57,14 +57,14 @@
 - Med ball slams → KB swings
 
 ## Daily Macro Targets
-| Macro | Daily Target | Notes |
-|---|---|---|
-| Protein | 150g | Non-negotiable. Priority 1. |
-| Carbohydrates | 175g | Anchored around workouts |
-| Fat | 80g | Omega-3 priority for hormones + milk |
-| Calories | 2,100–2,300 kcal | Never below 2,000. Breastfeeding requires fuel. |
+| Day Type | Protein | Carbs | Fat | Calories |
+|---|---|---|---|---|
+| Regular / Rest | 150g | 165g | 65g | ~1,845 |
+| Training (Strength) | 150g | 175g | 65g | ~1,885 |
+| Run Days | 150g | 175g | 65g | ~1,885 |
+| Race Days | 150g | 195g | 50g | ~1,830 |
 
-**Red lines:** Never below 2,000 kcal/day | Never below 150g protein | Never below 100g carbs
+**Red lines:** Never below 1,750 kcal/day | Never below 150g protein | Never below 100g carbs
 
 ## Supplement Stack
 | Supplement | Dose | Timing | Purpose |

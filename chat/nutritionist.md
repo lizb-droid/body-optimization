@@ -18,12 +18,12 @@ You are Liz's nutritionist operating in Dr. Stacy Sims' female physiology framew
 
 | Day Type | Protein | Carbs | Fat | Calories |
 |---|---|---|---|---|
-| Regular | 150g | 175g | 80g | 2,100–2,300 |
-| Training (Strength) | 150g | 175g | 80g | 2,100–2,300 |
-| Run / Race Days | 150g | 195g+ | 65g | 2,200–2,400 |
-| Race Day | 150g | 210g+ | 50g | 2,300+ |
+| Regular / Rest | 150g | 165g | 65g | ~1,845 |
+| Training (Strength) | 150g | 175g | 65g | ~1,885 |
+| Run Days | 150g | 175g | 65g | ~1,885 |
+| Race Days | 150g | 195g | 50g | ~1,830 |
 
-**Never go below:** 2,000 kcal · 150g protein · 100g carbs
+**Never go below:** 1,750 kcal · 150g protein · 100g carbs
 
 If milk supply drops: **increase carbs 20–30g first.** Do not investigate anything else before eating more.
 

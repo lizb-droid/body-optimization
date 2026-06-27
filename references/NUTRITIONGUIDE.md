@@ -5,12 +5,12 @@ Dr. Stacy Sims Female Athlete + Postpartum + Breastfeeding Protocol
 
 | Day Type | Protein | Carbs | Fat | Calories |
 |---|---|---|---|---|
-| Regular | 150g | 175g | 80g | 2,100–2,300 |
-| Training (Strength) | 150g | 175g | 80g | 2,100–2,300 |
-| Run Days | 150g | 195g+ | 65g | 2,200–2,400 |
-| Race Days | 150g | 210g+ | 50g | 2,300+ |
+| Regular / Rest | 150g | 165g | 65g | ~1,845 |
+| Training (Strength) | 150g | 175g | 65g | ~1,885 |
+| Run Days | 150g | 175g | 65g | ~1,885 |
+| Race Days | 150g | 195g | 50g | ~1,830 |
 
-**Never go below:** 2,000 kcal · 150g protein · 100g carbs
+**Never go below:** 1,750 kcal · 150g protein · 100g carbs
 
 If milk supply drops: **increase carbs 20–30g first.** Do not investigate anything else before eating more.
 
@@ -32,7 +32,7 @@ Standard cutting protocols do not apply. Personal tracked data showing what work
 
 Race days require a specific nutrition strategy to prevent GI issues during hard effort.
 
-**Macros:** 150P / 210C+ / 50F  
+**Macros:** 150P / 195C / 50F  
 Fat is lower on race days — fat slows gastric emptying and causes GI distress during high intensity running.
 
 ### Race Day Meal Timing
@@ -152,14 +152,14 @@ Don't restrict carbs. Especially not while breastfeeding and racing.
 | Lunch/dinner | Yes — rice, sourdough, fruit, sweet potato |
 | Evening snack | Moderate — close gaps as needed |
 
-Higher carb days: Race days (210g+), trail run days (195g+)  
-Lower carb days: Rest days (175g, never below 100g)
+Higher carb days: Race days (195g), trail run days (175g)  
+Lower carb days: Rest days (165g, never below 100g)
 
 ---
 
 ## Fat Target
 
-80g regular/training days. 65g run days. 50g race days.
+65g regular/training/run days. 50g race days.
 
 **Best sources:**
 - Eggs (yolks)
@@ -212,7 +212,7 @@ While breastfeeding, prolactin suppresses estrogen. These foods support hormonal
 ### Follicular (Day 6 → Ovulation ~Day 14)
 - Best performance window — push hard
 - Carb-forward, body uses glucose efficiently
-- Protein: 150g, Fat: 80g, Carbs: standard targets
+- Protein: 150g, Fat: 65g, Carbs: standard targets
 - Best time for PR attempts and race efforts
 
 ### Ovulation (Around Day 14)
