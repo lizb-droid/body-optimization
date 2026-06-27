@@ -1540,6 +1540,70 @@ function launchConfetti(x,y){
 }
 
 // ─────────────────────────────────────────────
+// PULL TO REFRESH
+// ─────────────────────────────────────────────
+(function(){
+  const THRESHOLD=65, MAX=100;
+  let startY=0, pulling=false, dist=0;
+
+  const ind=document.createElement('div');
+  ind.id='ptr-ind';
+  ind.innerHTML=`<svg id="ptr-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="7 10 12 5 17 10"/><line x1="12" y1="5" x2="12" y2="19"/></svg><svg id="ptr-spin" style="display:none" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`;
+  Object.assign(ind.style,{
+    position:'fixed',top:'0',left:'0',right:'0',height:'0',
+    display:'flex',alignItems:'flex-end',justifyContent:'center',
+    paddingBottom:'6px',overflow:'hidden',
+    color:'var(--ind-on)',background:'transparent',
+    transition:'height .2s ease',zIndex:'999',pointerEvents:'none',
+    boxSizing:'border-box'
+  });
+  document.body.appendChild(ind);
+
+  function getPanel(){return document.querySelector('.tab-panel[style*="display: block",.tab-panel.active')||document.querySelector('.tab-panel:not([style*="display: none"])');}
+
+  function onStart(e){
+    const panel=document.querySelector('.tab-panel[style*="flex"],.tab-panel[style*="block"]');
+    const scrollEl=panel||document.scrollingElement;
+    if(scrollEl&&scrollEl.scrollTop>0) return;
+    pulling=true; dist=0;
+    startY=e.touches?e.touches[0].clientY:e.clientY;
+  }
+  function onMove(e){
+    if(!pulling) return;
+    const y=e.touches?e.touches[0].clientY:e.clientY;
+    dist=Math.max(0,y-startY);
+    if(dist>0){
+      const clamped=Math.min(dist,MAX);
+      const ratio=Math.min(clamped/THRESHOLD,1);
+      ind.style.height=clamped*.6+'px';
+      ind.style.opacity=ratio;
+      document.getElementById('ptr-arrow').style.transform=`rotate(${ratio*180}deg)`;
+      if(dist>2) e.preventDefault();
+    }
+  }
+  function onEnd(){
+    if(!pulling) return;
+    pulling=false;
+    if(dist>=THRESHOLD){
+      document.getElementById('ptr-arrow').style.display='none';
+      document.getElementById('ptr-spin').style.display='';
+      ind.style.height='44px';
+      const style=document.createElement('style');
+      style.textContent='#ptr-spin{animation:ptr-rotate .7s linear infinite}@keyframes ptr-rotate{to{transform:rotate(360deg)}}';
+      document.head.appendChild(style);
+      setTimeout(()=>location.reload(),500);
+    } else {
+      ind.style.height='0'; ind.style.opacity='0';
+    }
+    dist=0;
+  }
+
+  document.addEventListener('touchstart',onStart,{passive:true});
+  document.addEventListener('touchmove',onMove,{passive:false});
+  document.addEventListener('touchend',onEnd,{passive:true});
+})();
+
+// ─────────────────────────────────────────────
 // KEYBOARD — hide tab bar when open
 // ─────────────────────────────────────────────
 
