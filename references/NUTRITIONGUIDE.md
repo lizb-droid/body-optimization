@@ -1,7 +1,18 @@
 # Nutrition Guide — Liz
 Dr. Stacy Sims Female Athlete + Postpartum + Breastfeeding Protocol
 
-> **Note:** Calorie targets and supplement stack in this file reflect an older version. Current targets are in `chat/nutritionist.md` — use that file as the authoritative source for macro targets and supplements.
+## Daily Macro Targets
+
+| Day Type | Protein | Carbs | Fat | Calories |
+|---|---|---|---|---|
+| Regular | 150g | 175g | 80g | 2,100–2,300 |
+| Training (Strength) | 150g | 175g | 80g | 2,100–2,300 |
+| Run Days | 150g | 195g+ | 65g | 2,200–2,400 |
+| Race Days | 150g | 210g+ | 50g | 2,300+ |
+
+**Never go below:** 2,000 kcal · 150g protein · 100g carbs
+
+If milk supply drops: **increase carbs 20–30g first.** Do not investigate anything else before eating more.
 
 ---
 
@@ -21,7 +32,7 @@ Standard cutting protocols do not apply. Personal tracked data showing what work
 
 Race days require a specific nutrition strategy to prevent GI issues during hard effort.
 
-**Macros:** 150P / 195C / 50F  
+**Macros:** 150P / 210C+ / 50F  
 Fat is lower on race days — fat slows gastric emptying and causes GI distress during high intensity running.
 
 ### Race Day Meal Timing
@@ -141,14 +152,14 @@ Don't restrict carbs. Especially not while breastfeeding and racing.
 | Lunch/dinner | Yes — rice, sourdough, fruit, sweet potato |
 | Evening snack | Moderate — close gaps as needed |
 
-Higher carb days: Race days (195g), trail run days (175g)  
-Lower carb days: Rest days (165g, never below 100g)
+Higher carb days: Race days (210g+), trail run days (195g+)  
+Lower carb days: Rest days (175g, never below 100g)
 
 ---
 
 ## Fat Target
 
-65g regular days. 50g race days.
+80g regular/training days. 65g run days. 50g race days.
 
 **Best sources:**
 - Eggs (yolks)
@@ -201,7 +212,7 @@ While breastfeeding, prolactin suppresses estrogen. These foods support hormonal
 ### Follicular (Day 6 → Ovulation ~Day 14)
 - Best performance window — push hard
 - Carb-forward, body uses glucose efficiently
-- Protein: 150g, Fat: 65g, Carbs: standard targets
+- Protein: 150g, Fat: 80g, Carbs: standard targets
 - Best time for PR attempts and race efforts
 
 ### Ovulation (Around Day 14)
@@ -216,6 +227,24 @@ While breastfeeding, prolactin suppresses estrogen. These foods support hormonal
 - Extra magnesium and electrolytes
 - Expect 2–5 lbs water retention — NOT fat
 - Do not restrict calories
+
+---
+
+## Supplement Stack
+
+| Supplement | Dose | Timing | Purpose |
+|---|---|---|---|
+| Creatine | 10g (2×5g) | Pre/post-workout or anytime | Muscle performance + cognitive |
+| Collagen | 2 scoops | Post-workout or breakfast | Joint/tendon health — NOT a protein source |
+| Vitamin D3 | Per label | With fat-containing meal | Bone density, immune, mood |
+| Omega-3 | Per label | With food | DHA/EPA — breast milk quality, inflammation |
+| Magnesium Glycinate | Per label | 30–60 min before bed | Sleep, recovery, cortisol |
+| L-Theanine | Per label | At night with Mag + Glycine | Sleep quality |
+| Glycine | Per label | At night with Mag + L-Theanine | Deep sleep support |
+| Postnatal Vitamin | Per label | With food | Micronutrient coverage |
+| Pre-workout | Per label | ~20 min before training | Under 200mg caffeine/day total |
+
+**Note:** Collagen does not count toward protein totals.
 
 ---
 
