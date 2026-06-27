@@ -1483,7 +1483,10 @@ function ioAction(){
       const wl=document.getElementById('workout-list');
       if(wl) wl.scrollTop=0;
       const bn=document.getElementById('import-banner');
-      document.getElementById('import-banner-text').textContent='✓ Data restored — all your workouts, weights and PRs are back.';
+      const doneCount=Object.keys(S.done||{}).length;
+      const exCount=Object.keys(S.weights||{}).length;
+      const prCount=Object.keys(S.prs||{}).length;
+      document.getElementById('import-banner-text').textContent=`✓ Restored: ${doneCount} sessions done · ${exCount} exercise logs · ${prCount} PRs`;
       bn.classList.add('show');
     }catch(e){
       setImportMsg('Couldn\'t read that — make sure you pasted the full backup text (starting with {).','var(--red)');
