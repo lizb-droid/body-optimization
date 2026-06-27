@@ -1465,12 +1465,31 @@ function ioAction(){
     try{
       const data=JSON.parse(cleaned);
       if(!data||typeof data!=='object') throw new Error('bad');
+
+      // Migrate old key format: "w0-w1mon" → "w0d0"
+      const DAY_MAP={mon:0,tue:1,wed:2,thu:3,fri:4,sat:5,sun:6};
+      function migrateKey(k){
+        // matches "w{n}-w{n+1}{day}" with optional "-ex{n}" suffix
+        const m=k.match(/^w(\d+)-w\d+([a-z]+)(-ex\d+)?$/);
+        if(!m) return k;
+        const wi=m[1], day=DAY_MAP[m[2]], suffix=m[3]||'';
+        return day===undefined?k:`w${wi}d${day}${suffix}`;
+      }
+      function migrateObj(obj){
+        if(!obj) return obj;
+        const out={};
+        Object.keys(obj).forEach(k=>{ out[migrateKey(k)]=obj[k]; });
+        return out;
+      }
+
       let count=0;
-      if(data.done){S.done=data.done;count++;}
-      if(data.weights){S.weights=data.weights;count++;}
-      if(data.notes){S.notes=data.notes;count++;}
+      if(data.done){S.done=migrateObj(data.done);count++;}
+      if(data.weights){S.weights=migrateObj(data.weights);count++;}
+      if(data.notes){S.notes=migrateObj(data.notes);count++;}
       if(data.prs){S.prs=data.prs;count++;}
-      if(data.weekIdx!==undefined){S.weekIdx=parseInt(data.weekIdx)||0;count++;}
+      // support both weekIdx (new) and currentWeek (old)
+      const wk=data.weekIdx!==undefined?data.weekIdx:data.currentWeek;
+      if(wk!==undefined){S.weekIdx=parseInt(wk)||0;count++;}
       if(data.macros){S.macros=data.macros;count++;}
       if(data.progress){S.progress=data.progress;count++;}
       if(count===0) throw new Error('empty');
