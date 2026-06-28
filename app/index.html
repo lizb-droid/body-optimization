@@ -1246,7 +1246,7 @@ function renderMacros(){
   const p=parseFloat(m.p)||0,c=parseFloat(m.c)||0,f=parseFloat(m.f)||0,kcal=parseFloat(m.kcal)||0;
   const dayType=(m.dayType||'').toLowerCase();
   const tgt=dayType==='race'?{p:150,c:195,f:50,kcal:1830}
-    :dayType==='run'||dayType==='training'?{p:150,c:175,f:65,kcal:1885}
+    :dayType==='run'||dayType==='training'||dayType==='strength'?{p:150,c:175,f:65,kcal:1885}
     :{p:150,c:165,f:65,kcal:1845};
 
   function barRow(name,val,target,color,numColor){
@@ -1613,7 +1613,7 @@ const GH_RAW=`https://raw.githubusercontent.com/${GH_REPO}/main/${GH_FILE}`;
 function buildBackup(){
   return JSON.stringify({
     done:S.done,weights:S.weights,notes:S.notes,prs:S.prs,
-    weekIdx:S.weekIdx,macros:S.macros,progress:S.progress,
+    weekIdx:S.weekIdx,progress:S.progress,
     exported:new Date().toISOString()
   });
 }
@@ -1672,7 +1672,6 @@ async function tryLoadFromGitHub(){
     if(data.notes) S.notes=data.notes;
     if(data.prs) S.prs=data.prs;
     if(data.weekIdx!==undefined) S.weekIdx=data.weekIdx;
-    if(data.macros) S.macros=data.macros;
     if(data.progress) S.progress=data.progress;
     saveWorkout();
     renderWeekTabs();
@@ -1691,17 +1690,27 @@ function openMacroLog(){
 function closeMacroLog(){
   document.getElementById('macro-modal').style.display='none';
 }
+function getTodayMacroType(){
+  const todayIdx=getTodayDayIdx();
+  const day=WEEKS[S.weekIdx]&&WEEKS[S.weekIdx].days[todayIdx];
+  if(!day) return 'rest';
+  if(day.type==='race') return 'race';
+  if(day.type==='run') return 'run';
+  if(day.type==='lift') return 'strength';
+  return 'rest';
+}
 function confirmMacroLog(){
   const raw=document.getElementById('macro-paste').value.trim();
   try{
     const d=JSON.parse(raw);
+    const tot=d.totals||{};
     S.macros={
       date: d.date||todayStr(),
-      dayType: d.dayType||'',
-      p: d.protein||d.p||0,
-      c: d.carbs||d.c||0,
-      f: d.fat||d.f||0,
-      kcal: d.calories||d.kcal||0,
+      dayType: d.day_type||d.dayType||getTodayMacroType(),
+      p: tot.p||d.protein||d.p||0,
+      c: tot.c||d.carbs||d.c||0,
+      f: tot.f||d.fat||d.f||0,
+      kcal: tot.kcal||d.calories||d.kcal||0,
       meals: d.meals||[]
     };
     try{localStorage.setItem('lizmacros',JSON.stringify(S.macros));}catch(e){}
