@@ -1241,7 +1241,7 @@ function renderMacros(){
   const el=document.getElementById('macros-content'), m=S.macros;
   if(!m){
     el.innerHTML=`<div class="macro-empty"><p>Log your macros in the Claude chat, then paste the snippet here.</p>
-      <button class="nav-btn" style="margin-top:16px;font-size:15px;padding:10px 24px" onclick="openMacroLog()">Log Macros</button></div>`;
+      <button class="nav-btn" style="margin-top:16px;font-size:15px;padding:10px 24px" onclick="openMacroLog()">Load Macros</button></div>`;
     return;
   }
   const p=parseFloat(m.p)||0,c=parseFloat(m.c)||0,f=parseFloat(m.f)||0,kcal=parseFloat(m.kcal)||0;
@@ -1294,10 +1294,7 @@ function renderMacros(){
 
   el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 20px;border-bottom:1px solid #222;background:var(--dk1)">
       <span style="font-size:13px;color:var(--tt)">${m.date||todayStr()}${m.dayType?` · ${escH(m.dayType)}`:''}</span>
-      <div style="display:flex;gap:8px">
-        <button class="nav-btn" style="font-size:13px;padding:6px 14px" onclick="saveToGitHub()">Save</button>
-        <button class="nav-btn-sec" style="font-size:13px;padding:6px 14px" onclick="openMacroLog()">Update</button>
-      </div>
+      <button class="nav-btn" style="font-size:13px;padding:6px 14px" onclick="openMacroLog()">Load Macros</button>
     </div>
     <div class="macro-bars">
       ${barRow('Protein',p,tgt.p,'var(--ind)','#a0aaff')}
