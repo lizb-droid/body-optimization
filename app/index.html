@@ -698,6 +698,7 @@ function readUrlParams(){
 
 function fmtTime(s){ s=Math.max(0,s); return Math.floor(s/60)+':'+String(s%60).padStart(2,'0'); }
 function parseNumSets(str){ const m=(str||'').match(/^(\d+)/); return m?parseInt(m[1]):3; }
+function parseTargetReps(str){ const m=(str||'').match(/^\d+×(\d+)/); return m?m[1]:''; }
 function escH(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function todayStr(){ return new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}); }
 
@@ -1005,12 +1006,15 @@ function renderExRow(ex,ei,day,prev){
     <span></span>
   </div>`;
 
+  const targetReps=parseTargetReps(setsStr);
+
   const setRowsHtml=Array.from({length:numSets},(_,si)=>{
     const stored=sets[si]||{};
     const wVal=typeof stored==='object'?(stored.w||''):(stored||'');
-    const rVal=typeof stored==='object'?(stored.r||''):'';
+    const rStoredVal=typeof stored==='object'?(stored.r||''):'';
+    const rVal=rStoredVal||targetReps;
     const wFilled=!!(wVal&&wVal.trim());
-    const rFilled=!!(rVal&&rVal.trim());
+    const rFilled=!!(rStoredVal&&rStoredVal.trim());
     const isActive=si===activeSet;
     const prevStored=prev[exName]&&prev[exName][si];
     let prevDisplay='—';
@@ -1030,7 +1034,7 @@ function renderExRow(ex,ei,day,prev){
       <input class="${rClass}" type="text" inputMode="decimal" value="${escH(rVal)}" placeholder="—"
         data-exid="${exId}" data-exname="${escH(exName)}" data-si="${si}" data-field="r"
         onchange="handleWeight2(this)" onfocus="this.select()" style="width:100%;height:36px">
-      <div class="set-done-chk${wFilled?' done':''}" onclick="this.classList.toggle('done')" style="margin-bottom:0;width:26px;height:26px">
+      <div class="set-done-chk${wFilled?' done':''}" id="chk-${exId}-${si}" onclick="this.classList.toggle('done')" style="margin-bottom:0;width:26px;height:26px">
         <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
       </div>
     </div>`;
@@ -1090,6 +1094,11 @@ function handleWeight2(input){
   const stored=S.weights[exId][si];
   const cur=typeof stored==='object'&&stored!==null?{...stored}:{w:typeof stored==='string'?stored:'',r:''};
   cur[field]=val;
+  // Auto-save pre-filled reps when weight is entered
+  if(field==='w'&&val&&!cur.r){
+    const rInput=document.querySelector(`input[data-exid="${exId}"][data-si="${si}"][data-field="r"]`);
+    if(rInput&&rInput.value.trim()){cur.r=rInput.value.trim();rInput.classList.add('filled');}
+  }
   S.weights[exId][si]=cur;
   if(field==='w'){
     const num=parseFloat(val);
@@ -1097,6 +1106,18 @@ function handleWeight2(input){
       S.prs[exName]=num;
       const r=input.getBoundingClientRect();
       launchConfetti(r.left+r.width/2,r.top);
+    }
+    // Auto-checkmark this set
+    const chk=document.getElementById(`chk-${exId}-${si}`);
+    if(chk) chk.classList.toggle('done',!!val);
+    // Scroll to next exercise when all sets of this exercise are filled
+    const exEl=document.getElementById(`ex-${exId}`);
+    if(exEl&&val){
+      const allFilled=[...exEl.querySelectorAll('input[data-field="w"]')].every(i=>i.value.trim());
+      if(allFilled){
+        const next=exEl.nextElementSibling;
+        if(next) setTimeout(()=>next.scrollIntoView({behavior:'smooth',block:'start'}),250);
+      }
     }
   }
   input.classList.toggle('filled',!!val);
