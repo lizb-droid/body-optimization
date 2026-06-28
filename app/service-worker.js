@@ -1,6 +1,6 @@
 // service-worker.js — Cache-first strategy for Liz Program PWA
 // Cache name: bump version string to force a fresh install on deploy
-const CACHE_NAME = "liz-app-v6"; // bumped: bigger fonts, no PTR, tab persistence
+const CACHE_NAME = "liz-app-v7"; // bumped: bypass CDN cache on navigation
 
 // Files to cache on install (shell + CDN deps)
 // CDN URLs must match the <script src> imports in index.html exactly.
@@ -46,7 +46,7 @@ self.addEventListener("fetch", (event) => {
     // Navigation (HTML pages): try network first so updates land immediately;
     // fall back to cache if offline.
     event.respondWith(
-      fetch(event.request)
+      fetch(event.request, {cache: 'no-cache'})
         .then((response) => {
           // Cache successful navigation responses
           const clone = response.clone();

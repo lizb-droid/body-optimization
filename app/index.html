@@ -35,7 +35,7 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 
 /* ── Header ── */
 .hdr-top{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 0}
-.hdr-date{font-size:11px;color:#FF9BD7}
+.hdr-date{font-size:11px;color:#555}
 .hdr-title{font-size:20px;font-weight:500;color:#fff;margin-top:2px;padding:0 20px 8px}
 .hdr-io{display:flex;gap:8px}
 .io-btn{display:flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:var(--r-full);border:1px solid #333;background:rgba(255,255,255,.05);color:#777;font-size:12px;font-weight:500;cursor:pointer;font-family:inherit}
@@ -833,9 +833,9 @@ function renderDayCard(day,dayIdx,weekStart,todayIdx){
   // Day abbr + date column
   const abbrColor=isDone?'var(--ind-on)':(isToday?'var(--pink-on)':'var(--tt)');
   const numColor=isDone?'#a0aaff':(isToday?'var(--pink)':'var(--td)');
-  const dateCol=`<div style="width:28px;flex-shrink:0;text-align:center">
-    <div style="font-size:9px;font-weight:600;color:${abbrColor}">${dayAbbr}</div>
-    <div style="font-size:11px;${isToday?'font-weight:600;':''}color:${numColor};margin-top:1px">${dateNum}</div>
+  const dateCol=`<div style="width:32px;flex-shrink:0;text-align:center">
+    <div style="font-size:12px;font-weight:600;color:${abbrColor}">${dayAbbr}</div>
+    <div style="font-size:14px;${isToday?'font-weight:600;':''}color:${numColor};margin-top:1px">${dateNum}</div>
   </div>`;
 
   // Session label
@@ -855,19 +855,19 @@ function renderDayCard(day,dayIdx,weekStart,todayIdx){
     if(hasWo){
       const rows=WORKOUTS[day.workout].map((ex,i)=>
         `<div onclick="event.stopPropagation();openDay('${day.id}',${i})" style="-webkit-tap-highlight-color:transparent;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--brd);cursor:pointer">
-          <span style="font-size:13px;color:var(--ts)">${escH(ex[0])}</span>
-          <span style="font-size:11px;color:var(--tt)">${escH(ex[1])}</span>
+          <span style="font-size:16px;color:var(--ts)">${escH(ex[0])}</span>
+          <span style="font-size:14px;color:var(--tt)">${escH(ex[1])}</span>
         </div>`
       ).join('');
       expandedHtml=`<div style="border-top:1px solid var(--brd)">${rows}
         <div style="padding:10px 14px 12px">
-          <div onclick="event.stopPropagation();openDay('${day.id}')" style="-webkit-tap-highlight-color:transparent;height:40px;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer">Start workout</div>
+          <div onclick="event.stopPropagation();openDay('${day.id}')" style="-webkit-tap-highlight-color:transparent;height:40px;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:16px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer">Start workout</div>
         </div>
       </div>`;
     } else {
       // run / race / rest — info + notes
       let body='';
-      if(day.info) body+=`<div style="padding:10px 14px 4px;font-size:13px;color:var(--ts);line-height:1.5">${escH(day.info)}</div>`;
+      if(day.info) body+=`<div style="padding:10px 14px 4px;font-size:16px;color:var(--ts);line-height:1.5">${escH(day.info)}</div>`;
       body+=`<div style="padding:${day.info?'4px':'10px'} 14px 12px">
         <div style="font-size:10px;font-weight:500;color:var(--tt);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Notes</div>
         <textarea style="width:100%;padding:8px 10px;border:1px solid var(--brd);border-radius:var(--r-md);background:var(--bg);font-size:16px;color:var(--tp);font-family:inherit;resize:none;outline:none;line-height:1.5" rows="2" placeholder="How it felt, conditions..."
@@ -881,7 +881,7 @@ function renderDayCard(day,dayIdx,weekStart,todayIdx){
     <div onclick="toggleDayExpand('${day.id}')" style="-webkit-tap-highlight-color:transparent;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer">
       ${chk}${dateCol}
       <div style="flex:1;display:flex;align-items:center;min-width:0;overflow:hidden">
-        <span style="font-size:14px;font-weight:${sessionWeight};color:${sessionColor};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(day.session)}</span>
+        <span style="font-size:20px;font-weight:${sessionWeight};color:${sessionColor};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escH(day.session)}</span>
         ${todayBadge}${logBadge}
       </div>
       ${chevron}
