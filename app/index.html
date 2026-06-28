@@ -1668,8 +1668,7 @@ async function pushToGitHub(token){
 
 async function tryLoadFromGitHub(){
   const hasDone=Object.keys(S.done).length;
-  const hasWeights=Object.keys(S.weights).length;
-  if(hasDone||hasWeights){showGHStatus('Local data found ('+hasDone+' days, '+hasWeights+' exercises)');return;}
+  if(hasDone){showGHStatus('Local data found ('+hasDone+' days)');return;}
   try{
     showGHStatus('Fetching backup…');
     const r=await fetch(GH_RAW+'?t='+Date.now());
