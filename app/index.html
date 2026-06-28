@@ -227,6 +227,10 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 /* ── Confetti ── */
 #confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:200}
 
+/* ── GitHub sync modal ── */
+#gh-modal{position:fixed;inset:0;z-index:200;display:none;align-items:flex-end;padding-bottom:env(safe-area-inset-bottom)}
+#gh-modal.open{display:flex}
+
 /* ── IO bottom sheet ── */
 #io-modal{position:fixed;inset:0;z-index:150;display:none;align-items:flex-end;padding-bottom:env(safe-area-inset-bottom)}
 #io-modal.open{display:flex}
@@ -277,6 +281,9 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
       <div class="hdr-top">
         <div><div class="hdr-date" id="hdr-date"></div></div>
         <div style="display:flex;gap:6px;padding-top:4px">
+          <button id="gh-save-btn" class="nav-btn" style="font-size:11px;padding:6px 10px;gap:3px" onclick="saveToGitHub()">
+            <svg viewBox="0 0 24 24" fill="none" width="11" height="11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20a6 6 0 0 0-12 0"/><path d="M12 14V4"/><path d="M8 8l4-4 4 4"/><path d="M4 20h16"/></svg>Save
+          </button>
           <button class="nav-btn" style="font-size:11px;padding:6px 10px;gap:3px" onclick="openExport()">
             <svg viewBox="0 0 24 24" fill="none" width="11" height="11" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>Export
           </button>
@@ -386,6 +393,18 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
       <button class="timer-start" id="timer-start-btn" onclick="toggleTimer()">Start</button>
       <button class="timer-reset" onclick="resetTimer()">Reset</button>
     </div>
+  </div>
+</div>
+
+<!-- ── GitHub sync modal ── -->
+<div id="gh-modal" onclick="if(event.target===this)closeGHSetup()">
+  <div style="position:absolute;inset:0;background:rgba(0,0,0,.5)"></div>
+  <div style="position:relative;z-index:1;width:100%;background:var(--surf);border-radius:20px 20px 0 0;padding:20px">
+    <div style="font-size:17px;font-weight:600;color:var(--tp);margin-bottom:4px">Connect GitHub</div>
+    <div style="font-size:13px;color:var(--tt);margin-bottom:16px;line-height:1.5">One-time setup. Create a fine-grained token at <strong>github.com/settings/tokens</strong> with Contents: Read &amp; Write on the body-optimization repo.</div>
+    <input id="gh-token-input" type="password" placeholder="Paste token here…" style="width:100%;height:44px;padding:0 12px;border:1px solid var(--brd);border-radius:var(--r-md);font-size:15px;color:var(--tp);background:var(--bg);outline:none;font-family:inherit;box-sizing:border-box;margin-bottom:10px">
+    <button onclick="confirmGHToken()" style="width:100%;height:48px;border:none;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:8px">Save &amp; Sync</button>
+    <button onclick="closeGHSetup()" style="width:100%;height:44px;border:1px solid var(--brd);border-radius:var(--r-full);background:transparent;font-size:14px;font-weight:500;color:var(--ts);cursor:pointer;font-family:inherit">Cancel</button>
   </div>
 </div>
 
@@ -1597,6 +1616,85 @@ if(window.visualViewport){
 }
 
 // ─────────────────────────────────────────────
+// GITHUB SYNC
+// ─────────────────────────────────────────────
+
+const GH_REPO='lizb-droid/body-optimization';
+const GH_FILE='app/data/backup.json';
+const GH_API=`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`;
+const GH_RAW=`https://raw.githubusercontent.com/${GH_REPO}/main/${GH_FILE}`;
+
+function buildBackup(){
+  return JSON.stringify({
+    done:S.done,weights:S.weights,notes:S.notes,prs:S.prs,
+    weekIdx:S.weekIdx,macros:S.macros,progress:S.progress,
+    exported:new Date().toISOString()
+  });
+}
+
+function openGHSetup(){ document.getElementById('gh-modal').classList.add('open'); setTimeout(()=>document.getElementById('gh-token-input').focus(),100); }
+function closeGHSetup(){ document.getElementById('gh-modal').classList.remove('open'); }
+
+async function confirmGHToken(){
+  const token=document.getElementById('gh-token-input').value.trim();
+  if(!token) return;
+  try{localStorage.setItem('lizghtoken',token);}catch(e){}
+  closeGHSetup();
+  await pushToGitHub(token);
+}
+
+async function saveToGitHub(){
+  const token=localStorage.getItem('lizghtoken');
+  if(!token){ openGHSetup(); return; }
+  await pushToGitHub(token);
+}
+
+async function pushToGitHub(token){
+  const btn=document.getElementById('gh-save-btn');
+  const orig=btn?btn.textContent:'';
+  if(btn){btn.textContent='Saving…';btn.disabled=true;}
+  try{
+    let sha=null;
+    const getR=await fetch(GH_API,{headers:{'Authorization':`Bearer ${token}`,'Accept':'application/vnd.github+json'}});
+    if(getR.ok){const d=await getR.json();sha=d.sha;}
+    const content=btoa(unescape(encodeURIComponent(buildBackup())));
+    const putR=await fetch(GH_API,{
+      method:'PUT',
+      headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json','Accept':'application/vnd.github+json'},
+      body:JSON.stringify({message:`data: backup ${new Date().toISOString().slice(0,10)}`,content,...(sha&&{sha})})
+    });
+    if(putR.ok){
+      if(btn){btn.textContent='Saved ✓';btn.disabled=false;setTimeout(()=>{btn.textContent=orig;},2500);}
+    } else {
+      if(putR.status===401) localStorage.removeItem('lizghtoken');
+      if(btn){btn.textContent='Error';btn.disabled=false;setTimeout(()=>{btn.textContent=orig;},3000);}
+    }
+  } catch(e){
+    if(btn){btn.textContent='Error';btn.disabled=false;setTimeout(()=>{btn.textContent=orig;},3000);}
+  }
+}
+
+async function tryLoadFromGitHub(){
+  if(Object.keys(S.done).length||Object.keys(S.weights).length) return;
+  try{
+    const r=await fetch(GH_RAW+'?t='+Date.now());
+    if(!r.ok) return;
+    const data=await r.json();
+    if(!data.exported) return;
+    if(data.done) S.done=data.done;
+    if(data.weights) S.weights=data.weights;
+    if(data.notes) S.notes=data.notes;
+    if(data.prs) S.prs=data.prs;
+    if(data.weekIdx!==undefined) S.weekIdx=data.weekIdx;
+    if(data.macros) S.macros=data.macros;
+    if(data.progress) S.progress=data.progress;
+    saveWorkout();
+    renderWeekTabs();
+    renderDayCards();
+  } catch(e){}
+}
+
+// ─────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────
 
@@ -1612,6 +1710,7 @@ document.getElementById('hdr-date').textContent=todayStr();
 })();
 renderWeekTabs();
 renderDayCards();
+tryLoadFromGitHub();
 </script>
 </body>
 </html>
