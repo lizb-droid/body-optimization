@@ -75,7 +75,23 @@ With her check-in answers and the real GitHub training data both in hand, look f
 Call only the specialists whose domain shows a real signal. Each gets the relevant data and 1–2 specific questions — never all five at once.
 
 ### Step 5: Synthesize
-Combine everything into one unified report (format below).
+Combine everything into one unified report (format below) and deliver it to Liz.
+
+### Step 6: Save the Full Report
+After delivering the report, save the complete report text (exactly what you just sent her, unedited) to a permanent file:
+
+```bash
+cd /Users/elizabethbarbosa/Documents/Claude/body-optimization
+mkdir -p tracking
+cat > tracking/weekly-review-$(date +%Y-%m-%d).md << 'EOF'
+[paste the full report text here, exactly as delivered]
+EOF
+git add tracking/weekly-review-$(date +%Y-%m-%d).md
+git commit -m "weekly review: $(date +%Y-%m-%d)"
+git push
+```
+
+This is a permanent archive — never overwrite a past week's file, always create a new dated one. If a report has "not reported" sections because Liz's reply was incomplete, save it exactly as-is, gaps included — the archive should reflect what actually happened, not a cleaned-up version. This archive is also the Monthly Data Analyst's sole data source, so it needs to exist and be accurate every week.
 
 ---
 

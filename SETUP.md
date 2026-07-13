@@ -48,7 +48,9 @@ An 8-agent performance system that runs automated weekly and monthly reviews. It
      Data Manager, incorporate any Nutritionist/Training Coach summaries she
      pastes, call only the specialists whose domain shows a real signal, and
      deliver one full-spectrum report. Never invent a number that wasn't in
-     her reply or in the real GitHub data.
+     her reply or in the real GitHub data. After delivering it, save the full
+     report to tracking/weekly-review-[date].md and push it, exactly as
+     defined in your instructions.
      ```
 
 ### Monthly Analysis — First of Every Month
@@ -58,18 +60,18 @@ An 8-agent performance system that runs automated weekly and monthly reviews. It
    - **Starting agent:** Monthly Data Analyst
    - **Prompt:**
      ```
-     It's the 1st. Run the monthly analysis.
-     1. Request last month's full summary from Data Manager
-     2. Identify trends, correlations, and red flags
-     3. Call relevant specialists for deeper insight
-     4. Deliver the monthly report with next month's priorities
+     It's the 1st. Run the monthly analysis exactly as defined in your
+     instructions.
+
+     Read this month's weekly reports from tracking/weekly-review-[date].md
+     — that archive is your only data source, do not call Data Manager and
+     do not fetch GitHub directly. Note plainly any weeks that are missing
+     or incomplete rather than smoothing over the gap. Identify trends,
+     correlations, and red flags across the month, call relevant specialists
+     for deeper insight, deliver the monthly report with next month's
+     priorities, then save the full report to
+     tracking/monthly-review-[year-month].md and push it.
      ```
-
----
-
-## Step 4: Paste Your Weekly Data
-
-Before each Monday automation runs, paste the previous week's logs into the CoWork project so Data Manager has data to work with. Use the daily export from the app.
 
 ---
 
@@ -86,15 +88,17 @@ Monday automation fires
 
 Monthly automation fires
     → Monthly Data Analyst wakes up
-    → Requests 4-week summary from Data Manager
-    → Spots trends and correlations
+    → Reads this month's weekly reports from tracking/ (its only data source)
+    → Flags any missing or incomplete weeks explicitly
+    → Spots trends and correlations across real, already-vetted numbers
     → Calls relevant specialists for deeper analysis
     → Delivers monthly report + next month priorities
+    → Saves the full report to tracking/monthly-review-[year-month].md and pushes it
 ```
 
 ## Token Efficiency
 
-Only the agents that are needed run. A clean week = Data Manager + Weekly Review only. Issues flagged = max 2–3 specialists. Never all 9 at once.
+Only the agents that are needed run. A clean week = Data Manager + Weekly Review only. Issues flagged = max 2–3 specialists. Never all 8 at once.
 
 ---
 
