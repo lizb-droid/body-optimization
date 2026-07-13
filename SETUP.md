@@ -41,11 +41,15 @@ A 9-agent performance system that runs automated weekly and monthly reviews. It 
    - **Starting agent:** Weekly Review Agent
    - **Prompt:**
      ```
-     It's Monday. Run the weekly review.
-     1. Request last week's summary from Data Manager
-     2. Analyze the data
-     3. Call only the specialists whose domain has an issue
-     4. Deliver the unified weekly report
+     It's Monday. Run the weekly review exactly as defined in your instructions.
+
+     Send the full check-in first and STOP — do not call Data Manager, do not
+     analyze anything, do not produce a report of any kind until Liz has
+     replied. Only after her reply: pull real training data from GitHub via
+     Data Manager, incorporate any Nutritionist/Training Coach summaries she
+     pastes, call only the specialists whose domain shows a real signal, and
+     deliver one full-spectrum report. Never invent a number that wasn't in
+     her reply or in the real GitHub data.
      ```
 
 ### Monthly Analysis — First of Every Month
@@ -74,11 +78,12 @@ Before each Monday automation runs, paste the previous week's logs into the CoWo
 
 ```
 Monday automation fires
-    → Weekly Review Agent wakes up
-    → Requests clean summary from Data Manager
-    → Scans for issues (macros, sleep, training, mood)
-    → Routes to 1–3 specialists ONLY if their domain has a problem
-    → Synthesizes one unified report
+    → Weekly Review Agent sends the full check-in and STOPS
+    → Liz replies with her answers (+ any Nutritionist/Training Coach summaries)
+    → Requests real training data from Data Manager (GitHub)
+    → Scans for issues across weight, nutrition, training, cycle, sleep, mood, other flags
+    → Routes to specialists ONLY if their domain shows a real signal
+    → Synthesizes one full-spectrum report — never invents a missing number
 
 Monthly automation fires
     → Monthly Data Analyst wakes up
