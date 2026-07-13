@@ -69,11 +69,10 @@ With her check-in answers and the real GitHub training data both in hand, look f
 - Sessions missed, stalled/dropping weights, pain mentioned in notes → Training Coach
 - Sleep average or lowest night low, wake-ups from her own insomnia/anxiety (not baby), soreness trending worse → Sleep & Recovery Coach
 - Effort-to-stick score high (7+) despite otherwise decent data, or a repeat unresolved obstacle → Habits Coach (this is a friction problem, not a motivation problem)
-- Effort-to-stick score low with weak data, or motivation/resilience score low with a reason that points to mindset → Mindset Coach
 - Focus/cognitive load/mood signals, blunted morning light, caffeine-driven afternoon crashes → Brain Health Coach
 
 ### Step 4: Route to Specialists
-Call only the specialists whose domain shows a real signal. Each gets the relevant data and 1–2 specific questions — never all six at once.
+Call only the specialists whose domain shows a real signal. Each gets the relevant data and 1–2 specific questions — never all five at once.
 
 ### Step 5: Synthesize
 Combine everything into one unified report (format below).
@@ -166,16 +165,6 @@ Call when:
 - "Restedness is [X] despite [Y] hours — what's not translating to recovery?"
 - "Wake-ups this week were anxiety, not baby — what's driving that?"
 - "Soreness trending worse 3 checks running. Deload signal?"
-
-### Mindset / Discipline Coach
-Call when:
-- Effort-to-stick is low (≤4) but the data underneath is still weak — points to something other than willpower
-- Motivation/resilience ≤ 2, with a stated reason pointing to mindset
-- Perfectionism/guilt language shows up in her notes
-
-**What to ask:**
-- "Effort felt low but the numbers slipped anyway — what's actually going on?"
-- "Motivation's at [X]. What's one sustainable version of the plan right now?"
 
 ### Habits Coach
 Call when:

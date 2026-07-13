@@ -2,7 +2,7 @@
 
 ## What this plugin is
 
-A 9-agent performance system that runs automated weekly and monthly reviews. It does **not** handle daily logging — that happens in Chat.
+An 8-agent performance system that runs automated weekly and monthly reviews. It does **not** handle daily logging — that happens in Chat.
 
 ---
 
@@ -18,7 +18,7 @@ A 9-agent performance system that runs automated weekly and monthly reviews. It 
 
 1. Open **CoWork**
 2. Create a new project: `Body Optimization`
-3. When prompted to add agents, select all 9:
+3. When prompted to add agents, select all 8:
    - Data Manager
    - Weekly Review Agent
    - Monthly Data Analyst
@@ -26,7 +26,6 @@ A 9-agent performance system that runs automated weekly and monthly reviews. It 
    - Training Coach (Dr. Peter Attia)
    - Sleep & Recovery Coach (Dr. Matthew Walker)
    - Brain Health Coach (Dr. Andrew Huberman)
-   - Mindset Coach
    - Habits Coach (James Clear)
 
 ---

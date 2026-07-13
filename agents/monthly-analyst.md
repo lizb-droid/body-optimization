@@ -80,9 +80,6 @@ Based on patterns you find, ask specialists:
 - "Soreness + fatigue both rising — deload signal?"
 - "Week 2 soreness peaked. By week 4, dropped. Normal adaptation or intervention worked?"
 
-**Mindset / Discipline Coach:**
-- "Adherence dropped week 3. Any motivation/life-stress signals you noticed?"
-
 **Habits Coach:**
 - "Workout logging was inconsistent week 2–3. Friction increased or life event?"
 
