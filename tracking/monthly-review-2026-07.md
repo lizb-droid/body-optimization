@@ -1,52 +1,46 @@
 # Monthly Review — July 2026
 
-**Phase 3→4 · Cirque Alta (Jul 11) → Rebuild for Cirque Snowbird (Aug 15)**
+**Cirque Snowbird DNF (Jul 11) → Phase 4 Rebuild for Cirque Alta (Aug 15)**
 
 ---
 
-## Data Coverage — Read This First
+## Data Coverage
 
-The tracking archive is missing most of the month. Only two weekly-review files exist for the July window:
+Six weekly reports now cover the month: Jun 26 (pre-taper, no data), Jun 29 (Wk10, peak week), Jul 6 (Wk11, taper), Jul 13 (Wk12, race + Phase 4 pivot), Jul 27 (Wk14, mid-rebuild). **Week 13 (week of Jul 20) has no report at all** — noted factually, not as a red flag; it's a real gap in the middle of the block covered here.
 
-- **June 26** — no data logged; program-context only.
-- **July 27** — the only report with real numbers, and it covers a two-week block (roughly Jul 13–27), not one week.
-
-**Weeks of Jul 6, Jul 13, and Jul 20 were never saved as standalone weekly files.** Cirque Alta (Jul 11, the race that was the entire point of Phase 3) has no post-race weekly review at all — the archive jumps straight from pre-race (Jun 26) to mid-Phase-4 (Jul 27) with no record of how the race went, how taper landed, or the first week of rebuild. Within the one week that is documented, 3 of 15 days (Jul 18, 24, 25) are still unlogged. This report is built entirely from what's in the Jul 27 file — treat any monthly trend below as a partial picture, not a full one.
+Three of these (Wk10, Wk11, Wk12-full) existed only on your computer and had never been pushed to GitHub — now synced.
 
 ---
 
-## Trends & Red Flags
+## The Month's Arc
 
-**1. Nutrition red-line breaches cluster on Wednesdays, not random days.**
-Across the logged window: Jul 14 (143g protein), Jul 15 (98g protein / 1,323 kcal), Jul 17 (145g / 1,706 kcal), Jul 21 (1,628 kcal), Jul 22 (98g / 1,323 kcal — identical to Jul 15), Jul 23 (1,642 kcal), Jul 27 (136g / 1,659 kcal, in progress). Week average for the block: **1,680 kcal, 143g protein — both below floor for the week as a whole**, not just bad days. Jul 15 and Jul 22 are exact repeats (98g protein, ~1,323 kcal) and both fall on a Wednesday — as does Brighton race day, Jul 29. That's a weekday pattern, not coincidence.
+**Jun 26–Jul 11: Taper into Cirque Snowbird, a DNF.** Peak week (Jun 29) went well — 7/7 sessions, no GI issues on a 1,163ft trail run. Taper week had one rough patch: a Jul 1 family emergency produced the worst-fueled day in the program's history (88g protein / 1,379 kcal), but recovery was fast and race week (Jul 7–12) turned into **the best nutrition week of the entire 12-week program** — 153g protein avg, carb-loading executed correctly. The race itself: **DNF, missed the 2-hour cutoff by ~10 minutes** at 8,000–11,000 ft in 90–95°F heat. Splits were progressive (23:06 → 27:49 → 37:15), tracking the steepening grade — a clean pacing/fueling execution against a genuine altitude-heat ceiling, not an error.
 
-**2. The Saturday altitude-run block is unverified for its full window.**
-Jul 18 and Jul 25 — the two Saturday Alta runs in the Jul 13–27 block — are both unconfirmed. These are the primary altitude-adaptation stimulus for Snowbird (Aug 15), not accessory work. With only Aug 2 and Aug 9 remaining before the race, two unconfirmed sessions out of what should be a six-run block is a real gap, not a logging technicality.
+**Jul 13: same-day pivot.** A 7-point program overhaul was designed and approved the day of the DNF debrief, aimed directly at the deficit the race exposed — sustained climbing at altitude. Step-ups replaced walking lunges immediately; Alta trail runs became the standing Saturday session; Wednesdays were repurposed from "race rehearsal" to climbing intervals; Bird Dog and Pallof Hold were added for terrain stability; daily pelvic-floor rehab was added; Leki poles were queued for practice. Execution that day was strong — Hip Thrust, Squat, and RDL all moved up load-wise with good energy.
 
-**3. Same root cause across nutrition, training, and sleep.**
-The common thread specialists identified: each failure point (Wednesday nutrition crash, unlogged Saturday run, phone past 9:30pm) is a fresh willpower decision made under postpartum/breastfeeding fatigue, with no pre-set default to fall back on. None of these are three separate problems — they're one bandwidth problem showing up in three places.
+**Jul 27: the fixes built to close the DNF gap are the ones slipping.** Two weeks later: both Saturday Alta runs (Jul 18, Jul 25) — the single mechanism Phase 4 exists to deliver — are unconfirmed. The Jul 22 Wednesday climbing interval is unconfirmed. Nutrition is crashing specifically on Wednesdays (Jul 15 and Jul 22 are identical: 98g protein / 1,323 kcal), the same day that got repurposed into the hardest new training stimulus. And a sleep problem diagnosed in specific, concrete terms on Jul 13 — bedtime running 60–90 min past the 9:00–9:30 PM target — is flagged again on Jul 27 as unresolved, despite a clear fix (move the phone charger out of the bedroom) having been given two weeks earlier.
 
-**4. Logging itself is degrading.** 2 of the last 4 weeks have no file at all, and even the one documented week has 3 unlogged days. Under-logging and under-eating tend to move together, so the visible red-line numbers are likely a floor, not the full picture of how the month went.
+**The pattern underneath all three:** the DNF diagnosis was correct and the prescription was right, but the compliance mechanism for the two highest-leverage pieces (Saturday Alta, Wednesday intervals) has not held past the first week, and a sleep fix given real specificity two weeks ago still hasn't been acted on.
 
 ---
 
-## Specialists Weigh In
+## Other Threads Still Open
 
-### Dr. Stacy Sims — Nutrition
-Mapping the crash dates to the calendar shows Jul 15, 22, and 29 all fall on Wednesdays — the two identical 98g/1,323kcal crashes are exactly 7 days apart on the same weekday, which points to a recurring weekly trigger rather than random disruption. A generic "keep a fallback food in the house" fix is reactive; it doesn't address that the failure is predictable by day. **Highest-leverage change for August: treat Wednesday as a named risk day — pre-build and stage Wednesday's meals/shakes on Tuesday night, not same-day.** This matters more than usual because Snowbird taper (week of Aug 10) also lands on a Wednesday, and a taper-week crash the week of the goal race is a materially worse failure than a mid-training one, on top of the breastfeeding floor that doesn't move for taper.
-
-### James Clear — Habits
-The common friction across all three patterns (Alta run, phone cutoff, nutrition crash) is that each still lives in "intention" rather than "environment" — a decision remade every time under depleted bandwidth, rather than a pre-set default. **Priority for August: fix the Saturday Alta run first**, because it's the only one of the three with a hard, non-recoverable deadline — only Aug 2 and Aug 9 remain before Snowbird, and missed altitude exposure can't be made up the way a bad nutrition day can. Convert it from intention to a standing calendar block with logistics pre-committed (drive time, a fixed departure time, or a running partner), plus a same-day one-line log so next week's review can distinguish "missed" from "unlogged" — right now that ambiguity is itself a system gap. Phone relocation and pre-staged Wednesday meals are the same category of fix and worth queuing right after the race.
+- **Ferritin test** — recommended Jul 13 ("get this tested this week," altitude adaptation depends on it) — no mention in the Jul 27 report of whether it happened.
+- **OB clearance for NAC** — recommended Jul 13 as a condition of continuing past week 1 — no confirmation by Jul 27.
+- **Program document is behind reality.** `program/program-revisions.md` still lists Bird Dog, Pallof Hold, daily rehab, Alta Saturdays, and Wednesday climbing intervals as "Pending approval," even though the Jul 13 report says all seven were approved and several are already running in practice. The written record and what's actually happening have diverged.
+- **Body comp:** weight sat in a narrow 150–152 lb band all month (glycogen/water and cycle-related per Sims each time it moved) — stable, not a concern, but flagged repeatedly by Liz as discouraging despite strong performance markers each week.
 
 ---
 
 ## August Priorities
 
-1. **Stage Wednesday nutrition the night before.** Tuesday-night prep for Wednesday meals/shakes — this is the specific, predictable failure day, and it lands on both race days and the Snowbird taper week.
-2. **Lock the Saturday Alta run to a fixed calendar block with logistics pre-committed**, plus a mandatory same-day log entry (even "missed" counts) so it stops being ambiguous. Only Aug 2 and Aug 9 remain before Snowbird.
-3. **Close the logging gap.** Two of the last four weeks have no weekly-review file at all. Confirm the weekly review is actually running each Monday and being saved to the archive — without it, next month's report will have the same blind spot.
-4. **Get a post-Cirque-Alta and post-Brighton race debrief into the archive** — there's currently no record of how either race actually went, which is a gap for pacing/fueling calibration ahead of Snowbird.
+1. **Follow through on the Jul 13 sleep fix.** Bedtime was diagnosed as a schedule problem two weeks ago with a specific fix (phone charger out of the bedroom). It's still not done. This is the one item in this report that's a repeat, and it's a repeat because the intervention never got executed, not because it needs re-diagnosing.
+2. **Close the Wednesday nutrition failure** with Tuesday-night meal prep — it's now landed on the same day twice, and Wednesday is also the day carrying the heaviest new training stimulus (climbing intervals), which likely compounds it.
+3. **Bank elevation without adding volume:** run at Alta on any non-race training run day, stacking with the existing Saturday Alta sessions rather than depending on a single weekly slot. Log every Alta session, including a same-day note if one is skipped, so "missed" and "unlogged" stop being indistinguishable.
+4. **Close the two open medical action items:** ferritin test and OB clearance for NAC. Both were flagged as time-sensitive on Jul 13 and neither has a documented resolution.
+5. **Reconcile `program/program-revisions.md`** with what's actually being run — several "pending approval" items have been live for two weeks.
 
 ---
 
-*Monthly Data Analyst — generated July 27, 2026. Source: tracking/weekly-review-2026-06-26.md and tracking/weekly-review-2026-07-27.md (only files present in archive for this window). Specialists consulted: Nutritionist (Dr. Stacy Sims), Habits Coach (James Clear).*
+*Monthly Data Analyst — generated July 2026. Sources: tracking/weekly-review-2026-06-26.md, tracking/week-2026-06-29.md, tracking/week-2026-07-06.md, tracking/weekly-review-2026-07-13.md, tracking/weekly-review-2026-07-27.md. Week of Jul 20 has no report in either the local or GitHub archive.*
