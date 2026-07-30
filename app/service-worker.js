@@ -1,6 +1,6 @@
 // service-worker.js — Cache-first strategy for Liz Program PWA
 // Cache name: bump version string to force a fresh install on deploy
-const CACHE_NAME = "liz-app-v7"; // bumped: bypass CDN cache on navigation
+const CACHE_NAME = "liz-app-v8"; // bumped: step-ups, bird dog, pallof hold, race name fixes
 
 // Files to cache on install (shell + CDN deps)
 // CDN URLs must match the <script src> imports in index.html exactly.
