@@ -12,12 +12,12 @@ const REST_TIMES = {
   "Barbell Back Squat":240,"Front Squat":240,"Barbell RDL":240,"Clean Pull":240,
   "Barbell Bench Press":180,"Barbell Bent Over Row":180,"Barbell Strict Press":180,
   "Bulgarian Split Squat":180,"Hip Thrust":180,"Single-arm DB Row":120,
-  "DB Incline Press":120,"DB Shoulder Press":120,"Walking Lunges":120,
+  "DB Incline Press":120,"DB Shoulder Press":120,
   "Box Jump":120,"Push Press":120,"KB Swing":90,"GHD Hip Extension":90,
   "Single-leg RDL":90,"Step-up with Knee Drive":90,"DB Pullover":60,
   "DB Lateral Raise":60,"DB Rear Delt Fly":60,"Bicep Curl":60,
   "Hammer Curl":60,"Tricep Pushdown (DB)":60,"Single-leg Calf Raise":60,
-  "Dead Bug":45,"Copenhagen Plank":45
+  "Dead Bug":45,"Copenhagen Plank":45,"Bird Dog":45,"Pallof Hold":45
 };
 
 const FIXED_PRESETS = [60, 120, 180];
@@ -25,12 +25,12 @@ const FIXED_PRESETS = [60, 120, 180];
 const WORKOUTS = {
   upperA:[["Barbell Bench Press","4×8"],["Single-arm DB Row","4×10 ea"],["DB Shoulder Press","3×10"],["DB Pullover","3×12"],["DB Lateral Raise","3×12"],["Bicep Curl","3×12"],["Dead Bug","3×8 ea"]],
   upperB:[["Barbell Bent Over Row","4×8"],["DB Incline Press","4×10"],["Barbell Strict Press","3×8"],["DB Rear Delt Fly","3×15"],["Hammer Curl","3×12"],["Tricep Pushdown (DB)","3×12"],["Dead Bug","3×8 ea"]],
-  lowerA:[["Barbell Back Squat","4×8"],["Barbell RDL","4×8"],["Hip Thrust","4×12"],["Walking Lunges","3×12 ea"],["GHD Hip Extension","3×12"],["Copenhagen Plank","3×20s ea"]],
+  lowerA:[["Barbell Back Squat","4×8"],["Barbell RDL","4×8"],["Hip Thrust","4×12"],["Step-up with Knee Drive","3×10 ea"],["GHD Hip Extension","3×12"],["Copenhagen Plank","3×20s ea"],["Bird Dog","3×8 ea"],["Pallof Hold","3×20s ea"]],
   lowerB:[["Bulgarian Split Squat","4×8 ea"],["Clean Pull","3×4"],["Front Squat","3×6"],["Single-leg RDL","3×10 ea"],["Step-up with Knee Drive","3×10 ea"],["Single-leg Calf Raise","3×15 ea"]],
   upperAPower:[["KB Swing","3×10"],["Push Press","3×5"],["Barbell Bench Press","4×6"],["Single-arm DB Row","4×8 ea"],["DB Shoulder Press","3×8"],["DB Pullover","3×12"],["DB Lateral Raise","3×12"],["Bicep Curl","3×12"],["Dead Bug","3×8 ea"]],
-  lowerAPower:[["Clean Pull","3×4 heavy"],["Box Jump","3×5"],["Barbell Back Squat","4×5"],["Barbell RDL","3×8 heavy"],["Hip Thrust","4×10"],["Walking Lunges","3×10 ea"],["GHD Hip Extension","3×12"],["Copenhagen Plank","3×20s ea"]],
+  lowerAPower:[["Clean Pull","3×4 heavy"],["Box Jump","3×5"],["Barbell Back Squat","4×5"],["Barbell RDL","3×8 heavy"],["Hip Thrust","4×10"],["Step-up with Knee Drive","3×10 ea"],["GHD Hip Extension","3×12"],["Copenhagen Plank","3×20s ea"],["Bird Dog","3×8 ea"],["Pallof Hold","3×20s ea"]],
   upperALight:[["Barbell Bench Press","3×8 light"],["Single-arm DB Row","3×10 ea"],["DB Shoulder Press","2×10"],["DB Lateral Raise","2×12"],["Bicep Curl","2×12"],["Dead Bug","3×8 ea"]],
-  lowerALight:[["Barbell Back Squat","3×8 light"],["Barbell RDL","3×8 light"],["Hip Thrust","3×12"],["Walking Lunges","2×10 ea"],["GHD Hip Extension","2×12"],["Copenhagen Plank","2×20s ea"]],
+  lowerALight:[["Barbell Back Squat","3×8 light"],["Barbell RDL","3×8 light"],["Hip Thrust","3×12"],["Step-up with Knee Drive","2×10 ea"],["GHD Hip Extension","2×12"],["Copenhagen Plank","2×20s ea"],["Bird Dog","2×8 ea"],["Pallof Hold","2×20s ea"]],
   lowerBLight:[["Bulgarian Split Squat","3×8 ea light"],["Front Squat","2×6 light"],["Single-leg RDL","2×10 ea"],["Step-up with Knee Drive","2×10 ea"],["Single-leg Calf Raise","2×15 ea"]],
   upperBLight:[["Barbell Bent Over Row","3×8 light"],["DB Incline Press","3×10"],["Barbell Strict Press","2×8"],["DB Rear Delt Fly","2×15"],["Hammer Curl","2×12"],["Dead Bug","3×8 ea"]],
 };
@@ -38,8 +38,8 @@ const WORKOUTS = {
 const PHASES = [
   {id:"p1",label:"Phase 1 · Foundation",weeks:[0,1,2,3]},
   {id:"p2",label:"Phase 2 · Build",weeks:[4,5,6,7,8]},
-  {id:"p3",label:"Phase 3 · Cirque Alta",weeks:[9,10,11]},
-  {id:"p4",label:"Phase 4 · Snowbird",weeks:[12,13,14,15,16]},
+  {id:"p3",label:"Phase 3 · Cirque Snowbird",weeks:[9,10,11]},
+  {id:"p4",label:"Phase 4 · Rebuild for Cirque Alta",weeks:[12,13,14,15,16]},
 ];
 
 const WEEKS = [
@@ -124,16 +124,16 @@ const WEEKS = [
     {id:"w9sat",day:"Saturday",type:"run",session:"Trail 65–70 min + full fuel",info:"Practice exact race-day fueling. Lock it in."},
     {id:"w9sun",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 10",dates:"Jun 22–28",phase:"Phase 3 · Cirque Alta",title:"Week 10 — Peak",focus:"Highest intensity · Full race effort",days:[
+  {label:"Wk 10",dates:"Jun 22–28",phase:"Phase 3 · Cirque Snowbird",title:"Week 10 — Peak",focus:"Highest intensity · Full race effort",days:[
     {id:"w10mon",day:"Monday",type:"lift",session:"Lower A — 80–90%",workout:"lowerAPower",note:"Heavy clean pulls and squats. Best effort."},
     {id:"w10tue",day:"Tuesday",type:"lift",session:"Upper A — 80–90%",workout:"upperAPower",note:"Highest intensity of the program."},
     {id:"w10wed",day:"Wednesday",type:"race",session:"🏃 Solitude Race",info:"Full race effort. Peak fitness. Note your splits."},
     {id:"w10thu",day:"Thursday",type:"rest",session:"Rest"},
     {id:"w10fri",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w10sat",day:"Saturday",type:"run",session:"Trail 70 min + full fuel protocol",info:"Practice exact Cirque Alta fueling."},
+    {id:"w10sat",day:"Saturday",type:"run",session:"Trail 70 min + full fuel protocol",info:"Practice exact Cirque Snowbird fueling."},
     {id:"w10sun",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 11 ↓",dates:"Jun 29–Jul 5",phase:"Phase 3 · Cirque Alta",title:"Week 11 — Taper",focus:"Keep intensity · Cut volume 30% · Sleep is training",days:[
+  {label:"Wk 11 ↓",dates:"Jun 29–Jul 5",phase:"Phase 3 · Cirque Snowbird",title:"Week 11 — Taper",focus:"Keep intensity · Cut volume 30% · Sleep is training",days:[
     {id:"w11mon",day:"Monday",type:"lift",session:"Lower A — 30% less volume",workout:"lowerA",note:"Cut sets by 30%. Keep same load."},
     {id:"w11tue",day:"Tuesday",type:"lift",session:"Upper A — 30% less volume",workout:"upperA",note:"Cut sets by 30%. Keep same load."},
     {id:"w11wed",day:"Wednesday",type:"run",session:"Easy run — 25 min + strides",info:"No race. Easy jog. 4–5 uphill strides to stay sharp."},
@@ -142,16 +142,16 @@ const WEEKS = [
     {id:"w11sat",day:"Saturday",type:"run",session:"Easy trail — 40 min",info:"Flat to moderate. Easy effort. Legs fresh."},
     {id:"w11sun",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 12 ⛰",dates:"Jul 6–12",phase:"Phase 3 · Cirque Alta",title:"Week 12 — Cirque Alta",focus:"Race week · Sleep · Nutrition locked · Legs fresh",isCirque:true,days:[
+  {label:"Wk 12 ⛰",dates:"Jul 6–12",phase:"Phase 3 · Cirque Snowbird",title:"Week 12 — Cirque Snowbird",focus:"Race week · Sleep · Nutrition locked · Legs fresh",isCirque:true,days:[
     {id:"w12mon",day:"Monday",type:"lift",session:"Lower A — light",workout:"lowerALight",note:"Light loads only. Movement, not stimulus."},
     {id:"w12tue",day:"Tuesday",type:"lift",session:"Upper A — light",workout:"upperALight",note:"Light loads only."},
-    {id:"w12wed",day:"Wednesday",type:"race",session:"🏃 Alta Series — EASY only",info:"Shakeout only. Do NOT race hard. Cirque Alta is Sunday July 11."},
+    {id:"w12wed",day:"Wednesday",type:"race",session:"🏃 Alta Series — EASY only",info:"Shakeout only. Do NOT race hard. Cirque Snowbird is Saturday July 11."},
     {id:"w12thu",day:"Thursday",type:"rest",session:"Rest"},
     {id:"w12fri",day:"Friday",type:"run",session:"20 min easy + uphill strides",info:"Easy jog. 4–5 uphill strides. Legs fresh and snappy."},
     {id:"w12sat",day:"Saturday",type:"rest",session:"Rest — prep + sleep"},
-    {id:"w12sun",day:"Sunday",type:"race",session:"⛰ CIRQUE ALTA — RACE DAY",info:"Feed or pump before start. Electrolytes from mile 1. Fuel at 35–40 min.",isCirque:true},
+    {id:"w12sun",day:"Sunday",type:"race",session:"⛰ CIRQUE SNOWBIRD — RACE DAY",info:"Feed or pump before start. Electrolytes from mile 1. Fuel at 35–40 min.",isCirque:true},
   ]},
-  {label:"Wk 13",dates:"Jul 13–19",phase:"Phase 4 · Rebuild for Snowbird",title:"Week 13 — Recover",focus:"Easy everything · You just raced Cirque Alta",days:[
+  {label:"Wk 13",dates:"Jul 13–19",phase:"Phase 4 · Rebuild for Cirque Alta",title:"Week 13 — Recover",focus:"Easy everything · You just raced Cirque Snowbird",days:[
     {id:"w13mon",day:"Monday",type:"lift",session:"Lower A — light",workout:"lowerALight",note:"Light loads. Movement quality only."},
     {id:"w13tue",day:"Tuesday",type:"lift",session:"Upper A — light",workout:"upperALight",note:"Light loads. Focus on how the body feels."},
     {id:"w13wed",day:"Wednesday",type:"race",session:"🏃 Snowbird Series — easy",info:"Easy effort. Active recovery. Don't race it."},
@@ -160,7 +160,7 @@ const WEEKS = [
     {id:"w13sat",day:"Saturday",type:"run",session:"Easy trail — 45 min",info:"Flat-ish. No pushing. Full recovery."},
     {id:"w13sun",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 14",dates:"Jul 20–26",phase:"Phase 4 · Rebuild for Snowbird",title:"Week 14 — Rebuild",focus:"Back to full load · Second peak begins",days:[
+  {label:"Wk 14",dates:"Jul 20–26",phase:"Phase 4 · Rebuild for Cirque Alta",title:"Week 14 — Rebuild",focus:"Back to full load · Second peak begins",days:[
     {id:"w14mon",day:"Monday",type:"lift",session:"Lower A — back to load",workout:"lowerAPower"},
     {id:"w14tue",day:"Tuesday",type:"lift",session:"Upper A — back to load",workout:"upperAPower"},
     {id:"w14wed",day:"Wednesday",type:"run",session:"Run — 35 min Zone 2",info:"No race. Easy Zone 2. Build back aerobic base."},
@@ -169,31 +169,31 @@ const WEEKS = [
     {id:"w14sat",day:"Saturday",type:"run",session:"Trail 55–65 min + elevation",info:"Seek real elevation. Moderate effort."},
     {id:"w14sun",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 15",dates:"Jul 27–Aug 2",phase:"Phase 4 · Rebuild for Snowbird",title:"Week 15 — Build",focus:"Full load · Race hard · Trail volume up",days:[
+  {label:"Wk 15",dates:"Jul 27–Aug 2",phase:"Phase 4 · Rebuild for Cirque Alta",title:"Week 15 — Build",focus:"Full load · Race hard · Trail volume up",days:[
     {id:"w15mon",day:"Monday",type:"lift",session:"Lower A + Power",workout:"lowerAPower"},
     {id:"w15tue",day:"Tuesday",type:"lift",session:"Upper A + Power",workout:"upperAPower"},
     {id:"w15wed",day:"Wednesday",type:"race",session:"🏃 Brighton Race",info:"Push it hard. You're rebuilding fitness fast."},
     {id:"w15thu",day:"Thursday",type:"rest",session:"Rest"},
     {id:"w15fri",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w15sat",day:"Saturday",type:"run",session:"Trail 65–70 min + full fuel",info:"Practice exact Cirque Snowbird fueling."},
+    {id:"w15sat",day:"Saturday",type:"run",session:"Alta Trail — 65 min, race-pace uphill sections",info:"Fuel exactly as Cirque Alta race day. Race-pace effort on steep sections for 15–20 min."},
     {id:"w15sun",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 16",dates:"Aug 3–9",phase:"Phase 4 · Rebuild for Snowbird",title:"Week 16 — Peak",focus:"Final peak week · Go hard · Sleep well",days:[
+  {label:"Wk 16",dates:"Aug 3–9",phase:"Phase 4 · Rebuild for Cirque Alta",title:"Week 16 — Peak",focus:"Final peak week · Go hard · Sleep well",days:[
     {id:"w16mon",day:"Monday",type:"lift",session:"Lower A — 80–90%",workout:"lowerAPower",note:"Peak intensity. Heavy clean pulls and squats."},
     {id:"w16tue",day:"Tuesday",type:"lift",session:"Upper A — 80–90%",workout:"upperAPower",note:"Highest intensity. Push hard."},
     {id:"w16wed",day:"Wednesday",type:"race",session:"🏃 Alta Series Race",info:"Full race effort. Peak fitness."},
     {id:"w16thu",day:"Thursday",type:"rest",session:"Rest"},
     {id:"w16fri",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w16sat",day:"Saturday",type:"run",session:"Trail 60–65 min moderate",info:"Moderate effort. Don't empty the tank."},
+    {id:"w16sat",day:"Saturday",type:"run",session:"Alta Trail — FINAL altitude session, 60–65 min moderate",info:"Last altitude-adaptation stimulus before Cirque Alta. Don't empty the tank this close to race day."},
     {id:"w16sun",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 17 ⛰",dates:"Aug 10–16",phase:"Phase 4 · Cirque Snowbird",title:"Week 17 — Cirque Snowbird",focus:"Race week · Sleep · Nutrition locked · Legs fresh",isCirque:true,days:[
+  {label:"Wk 17 ⛰",dates:"Aug 10–16",phase:"Phase 4 · Cirque Alta",title:"Week 17 — Cirque Alta",focus:"Race week · Sleep · Nutrition locked · Legs fresh",isCirque:true,days:[
     {id:"w17mon",day:"Monday",type:"lift",session:"Lower A — light",workout:"lowerALight",note:"Light loads only."},
     {id:"w17tue",day:"Tuesday",type:"lift",session:"Upper A — light",workout:"upperALight",note:"Light loads only."},
-    {id:"w17wed",day:"Wednesday",type:"race",session:"🏃 Snowbird Series — EASY only",info:"Shakeout only. Cirque Snowbird is Saturday August 15."},
+    {id:"w17wed",day:"Wednesday",type:"race",session:"🏃 Snowbird Series — EASY only",info:"Shakeout only. Cirque Alta is Saturday August 15."},
     {id:"w17thu",day:"Thursday",type:"rest",session:"Rest"},
     {id:"w17fri",day:"Friday",type:"run",session:"15 min easy + uphill strides",info:"Very easy. 3–4 uphill strides. Done."},
-    {id:"w17sat",day:"Saturday",type:"race",session:"⛰ CIRQUE SNOWBIRD — RACE DAY",info:"Feed or pump before start. Electrolytes from mile 1. Fuel at 35–40 min.",isCirque:true},
+    {id:"w17sat",day:"Saturday",type:"race",session:"⛰ CIRQUE ALTA — RACE DAY",info:"Feed or pump before start. Electrolytes from mile 1. Fuel at 35–40 min.",isCirque:true},
     {id:"w17sun",day:"Sunday",type:"rest",session:"Rest — you did it 🎉"},
   ]},
 ];
