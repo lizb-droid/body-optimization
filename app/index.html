@@ -264,6 +264,37 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 
 /* ── Float timer ── */
 #float-timer{position:fixed;bottom:calc(60px + env(safe-area-inset-bottom) + 16px);right:16px;width:60px;height:60px;border-radius:50%;background:var(--dk0);border:1px solid #333;display:none;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;z-index:10;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+
+/* ── Superset / Finisher bands ── */
+.ss-band{background:#141414;display:flex;align-items:center;gap:8px;padding:9px 14px}
+.ss-band-dot{width:7px;height:7px;border-radius:50%;background:var(--pink);flex-shrink:0}
+.ss-band-lbl{font-size:11px;font-weight:500;color:var(--pink);letter-spacing:.5px;text-transform:uppercase}
+.ss-band-sub{margin-left:auto;font-size:11px;color:#555}
+.fin-band{background:#141414;display:flex;align-items:center;gap:8px;padding:9px 14px}
+.fin-band-lbl{font-size:11px;font-weight:500;color:#fff;letter-spacing:.5px;text-transform:uppercase}
+.fin-band-badge{margin-left:auto;font-size:9px;font-weight:600;padding:2px 8px;border-radius:var(--r-full);letter-spacing:.06em;text-transform:uppercase}
+.fin-timer-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--brd)}
+.fin-fmt-lbl{font-size:13px;color:var(--tt)}
+.fin-open-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;background:var(--dk0);color:#fff;border-radius:var(--r-full);font-size:13px;font-weight:500;cursor:pointer;border:none;font-family:inherit}
+.fin-open-btn svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.5}
+.fin-mov-hdr{display:grid;grid-template-columns:1fr 72px 26px;gap:8px;padding:6px 14px 4px;border-bottom:1px solid var(--brd)}
+.fin-mov-hdr span{font-size:9px;font-weight:600;color:var(--tt);letter-spacing:.06em;text-transform:uppercase}
+.fin-mov-hdr span:nth-child(2){text-align:center}
+.fin-mov-row{display:grid;grid-template-columns:1fr 72px 26px;gap:8px;align-items:center;padding:8px 14px;border-bottom:1px solid #f0f0f0}
+.fin-mov-row:last-child{border-bottom:none}
+.fin-mov-name{font-size:16px;font-weight:500;color:var(--tp)}
+.fin-mov-reps{font-size:12px;color:var(--tt);margin-top:1px}
+.fin-mov-inp{height:36px;border:1.5px solid var(--brd-d);border-radius:var(--r-md);background:var(--bg);font-size:15px;font-weight:500;color:var(--tp);text-align:center;font-family:inherit;width:100%;outline:none}
+.fin-mov-inp.bw{background:#f5f5f5;color:var(--td);border-color:var(--brd);font-size:11px;pointer-events:none}
+.fin-mov-inp.filled{border-color:var(--ind-b);background:var(--ind-m);color:var(--ind-on)}
+.fin-mov-inp:focus{border-color:var(--pink)}
+.fin-mov-chk{width:26px;height:26px;border:1.5px solid var(--brd-d);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s}
+.fin-mov-chk.done{background:var(--ind);border-color:var(--ind)}
+.fin-mov-chk svg{width:11px;height:11px;stroke:#fff;stroke-width:3;opacity:0}
+.fin-mov-chk.done svg{opacity:1}
+.tmr-rd-dot{width:8px;height:8px;border-radius:50%;background:var(--brd-d);display:inline-block;transition:background .2s}
+.tmr-rd-dot.done{background:var(--ind)}
+.tmr-rd-dot.active{background:var(--pink)}
 </style>
 </head>
 <body>
@@ -372,13 +403,17 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
       <div>
         <div class="timer-title" id="timer-ex-name">Rest timer</div>
         <div class="timer-sub" id="timer-sub">Recommended rest</div>
+        <div id="timer-rounds" style="display:none;flex-direction:column;align-items:flex-start;gap:4px;margin-top:5px">
+          <div style="font-size:12px;font-weight:500;color:var(--ts)">Round <span id="timer-rd-cur">1</span> of <span id="timer-rd-total">7</span></div>
+          <div id="timer-rd-dots" style="display:flex;gap:4px;margin-top:1px"></div>
+        </div>
       </div>
       <button class="timer-close" onclick="closeTimer()">
         <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="timer-display" id="timer-display">0:00</div>
-    <div class="timer-nudge">
+    <div class="timer-nudge" id="timer-nudge-row">
       <button class="nudge-btn" onclick="nudgeTimer(-10)">− 10s</button>
       <button class="nudge-btn" onclick="nudgeTimer(10)">+ 10s</button>
     </div>
@@ -437,7 +472,14 @@ const REST_TIMES = {
   "Single-leg RDL":90,"Step-up with Knee Drive":90,"DB Pullover":60,
   "DB Lateral Raise":60,"DB Rear Delt Fly":60,"Bicep Curl":60,
   "Hammer Curl":60,"Tricep Pushdown (DB)":60,"Single-leg Calf Raise":60,
-  "Dead Bug":45,"Copenhagen Plank":45,"Bird Dog":45,"Pallof Hold":45
+  "Dead Bug":45,"Copenhagen Plank":45,"Bird Dog":45,"Pallof Hold":45,
+  "Barbell Hip Thrust":120,"Staggered Stance Hip Thrust":120,
+  "Landmine RDL":90,"Deficit Reverse Lunge":90,"Lateral Lunge":90,
+  "Weighted Dead Bug":45,"Landmine Press":90,"Dips":60,
+  "DB Snatch":60,"Sumo Deadlift":180,"DB Row tripod":90,
+  "Seated Rear Delt Fly":60,"Spider Curl":60,"Suitcase Carry":60,
+  "Thrusters":150,"Barbell Cyclist Squat":150,"Sumo Squat":60,
+  "Turkish Get-Up":60,"Walking Lunge":60,"Overhead Tricep Extension":60
 };
 
 const WORKOUTS = {
@@ -451,6 +493,208 @@ const WORKOUTS = {
   lowerALight:[["Barbell Back Squat","3×8 light"],["Barbell RDL","3×8 light"],["Hip Thrust","3×12"],["Step-up with Knee Drive","2×10 ea"],["GHD Hip Extension","2×12"],["Copenhagen Plank","2×20s ea"],["Bird Dog","2×8 ea"],["Pallof Hold","2×20s ea"]],
   lowerBLight:[["Bulgarian Split Squat","3×8 ea light"],["Front Squat","2×6 light"],["Single-leg RDL","2×10 ea"],["Step-up with Knee Drive","2×10 ea"],["Single-leg Calf Raise","2×15 ea"]],
   upperBLight:[["Barbell Bent Over Row","3×8 light"],["DB Incline Press","3×10"],["Barbell Strict Press","2×8"],["DB Rear Delt Fly","2×15"],["Hammer Curl","2×12"],["Dead Bug","3×8 ea"]],
+  // ── 12-WEEK HYPERTROPHY PROGRAM ──
+  hypertrophyMonday:[
+    ["Barbell Back Squat","4×6"],
+    ["Barbell Hip Thrust","4×10"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["Landmine RDL","3×8–12 ea"],
+    ["Deficit Reverse Lunge","3×8–12 ea"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["Lateral Lunge","3×8–12 ea"],
+    ["Weighted Dead Bug","3×8 ea"],
+    {_fin:"interval",duration:120,rounds:5,badge:"Every 2 min × 5",
+      movements:[
+        {name:"KB Swing",reps:"10 reps",bw:false},
+        {name:"Walking Lunge",reps:"8 ea",bw:false}
+      ]},
+  ],
+  hypertrophyMondayDeload:[
+    ["Barbell Back Squat","3×6"],
+    ["Barbell Hip Thrust","3×10"],
+    {_ss:"Superset A",rounds:2,rest:"60s rest"},
+    ["Landmine RDL","2×8 ea"],
+    ["Deficit Reverse Lunge","2×8 ea"],
+    {_ss:"Superset B",rounds:2,rest:"60s rest"},
+    ["Lateral Lunge","2×8 ea"],
+    ["Weighted Dead Bug","2×8 ea"],
+  ],
+  hypertrophyTuesday:[
+    ["Barbell Bench Press","4×8"],
+    ["Barbell Bent Over Row","4×8"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["DB Incline Press","3×8–12"],
+    ["Single-arm DB Row","3×8–12 ea"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["Bicep Curl","3×8–12"],
+    ["Overhead Tricep Extension","3×8–12"],
+    {_fin:"amrap",duration:480,rounds:1,badge:"8 min AMRAP",
+      movements:[
+        {name:"Row",reps:"20 cal buy-in",bw:true,val:"ERG"},
+        {name:"Push-up",reps:"8 reps",bw:true},
+        {name:"Turkish Get-Up",reps:"4 ea",bw:false}
+      ]},
+  ],
+  hypertrophyTuesdayDeload:[
+    ["Barbell Bench Press","3×8"],
+    ["Barbell Bent Over Row","3×8"],
+    {_ss:"Superset A",rounds:2,rest:"60s rest"},
+    ["DB Incline Press","2×8"],
+    ["Single-arm DB Row","2×8 ea"],
+    {_ss:"Superset B",rounds:2,rest:"60s rest"},
+    ["Bicep Curl","2×8"],
+    ["Overhead Tricep Extension","2×8"],
+  ],
+  hypertrophyThursday:[
+    ["Push Press","5×(2+4)"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["DB Shoulder Press","3×8–12"],
+    ["Landmine Press","3×8–12 ea"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["DB Lateral Raise","3×10–14"],
+    ["Dips","3×8–10"],
+    {_ss:"Superset C",rounds:3,rest:"60s rest"},
+    ["Overhead Tricep Extension","3×8–12"],
+    ["Pallof Hold","3×20s ea"],
+    {_fin:"cap",duration:480,rounds:1,badge:"8 min cap",
+      movements:[
+        {name:"DB Snatch",reps:"10-8-6-4-2 ea",bw:false},
+        {name:"Push-up",reps:"10-8-6-4-2",bw:true}
+      ]},
+  ],
+  hypertrophyThursdayDeload:[
+    ["Push Press","3×(2+4)"],
+    {_ss:"Superset A",rounds:2,rest:"60s rest"},
+    ["DB Shoulder Press","2×8"],
+    ["Landmine Press","2×8 ea"],
+    {_ss:"Superset B",rounds:2,rest:"60s rest"},
+    ["DB Lateral Raise","2×10"],
+    ["Dips","2×8"],
+    {_ss:"Superset C",rounds:2,rest:"60s rest"},
+    ["Overhead Tricep Extension","2×8"],
+    ["Pallof Hold","2×20s ea"],
+  ],
+  hypertrophyFriday:[
+    ["Barbell Bent Over Row","4×8"],
+    ["Sumo Deadlift","4×6"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["DB Row tripod","3×8–12 ea"],
+    ["Seated Rear Delt Fly","3×10–14"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["Spider Curl","3×10–14"],
+    ["Hammer Curl","3×8–12"],
+    {_fin:"interval",duration:120,rounds:4,badge:"Every 2 min × 4",
+      movements:[
+        {name:"Suitcase Carry",reps:"20m ea side",bw:false},
+        {name:"KB Swing",reps:"8 reps",bw:false}
+      ]},
+  ],
+  hypertrophyFridayDeload:[
+    ["Barbell Bent Over Row","3×8"],
+    ["Sumo Deadlift","3×6"],
+    {_ss:"Superset A",rounds:2,rest:"60s rest"},
+    ["DB Row tripod","2×8 ea"],
+    ["Seated Rear Delt Fly","2×10"],
+    {_ss:"Superset B",rounds:2,rest:"60s rest"},
+    ["Spider Curl","2×10"],
+    ["Hammer Curl","2×8"],
+  ],
+  hypertrophySatA:[
+    ["Thrusters","5×5"],
+    ["Barbell Cyclist Squat","4×10"],
+    ["Staggered Stance Hip Thrust","4×8 ea"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["Bulgarian Split Squat","3×8–12 ea"],
+    ["GHD Hip Extension","3×10–14"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["Sumo Squat","3×10–14"],
+    ["Walking Lunge","3×10–14 ea"],
+    {_fin:"amrap",duration:900,rounds:1,badge:"15 min · Buy-In + AMRAP",
+      movements:[
+        {name:"Row",reps:"30 cal buy-in",bw:true,val:"ERG"},
+        {name:"KB Swing",reps:"10 reps",bw:false},
+        {name:"Walking Lunge",reps:"8 ea",bw:false},
+        {name:"Push-up",reps:"6 reps",bw:true}
+      ]},
+  ],
+  hypertrophySatB:[
+    ["Thrusters","5×5"],
+    ["Barbell Cyclist Squat","4×10"],
+    ["Staggered Stance Hip Thrust","4×8 ea"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["Bulgarian Split Squat","3×8–12 ea"],
+    ["GHD Hip Extension","3×10–14"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["Sumo Squat","3×10–14"],
+    ["Walking Lunge","3×10–14 ea"],
+    {_fin:"cap",duration:900,rounds:1,badge:"15 min cap",
+      movements:[
+        {name:"KB Swing",reps:"10-9-8…1 reps",bw:false},
+        {name:"Push-up",reps:"10-9-8…1 reps",bw:true}
+      ]},
+  ],
+  hypertrophySatC:[
+    ["Thrusters","5×5"],
+    ["Barbell Cyclist Squat","4×10"],
+    ["Staggered Stance Hip Thrust","4×8 ea"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["Bulgarian Split Squat","3×8–12 ea"],
+    ["GHD Hip Extension","3×10–14"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["Sumo Squat","3×10–14"],
+    ["Walking Lunge","3×10–14 ea"],
+    {_fin:"interval",duration:120,rounds:7,badge:"Every 2 min × 7",
+      movements:[
+        {name:"DB Thrusters",reps:"8 reps",bw:false},
+        {name:"Row",reps:"10 cal",bw:true,val:"ERG"}
+      ]},
+  ],
+  hypertrophySatD:[
+    ["Thrusters","5×5"],
+    ["Barbell Cyclist Squat","4×10"],
+    ["Staggered Stance Hip Thrust","4×8 ea"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["Bulgarian Split Squat","3×8–12 ea"],
+    ["GHD Hip Extension","3×10–14"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["Sumo Squat","3×10–14"],
+    ["Walking Lunge","3×10–14 ea"],
+    {_fin:"cap",duration:900,rounds:1,badge:"15 min grinder",
+      movements:[
+        {name:"Suitcase Carry",reps:"20m ea side",bw:false},
+        {name:"KB Swing",reps:"8 reps",bw:false},
+        {name:"Push-up",reps:"6 reps",bw:true}
+      ]},
+  ],
+  hypertrophySatE:[
+    ["Thrusters","5×5"],
+    ["Barbell Cyclist Squat","4×10"],
+    ["Staggered Stance Hip Thrust","4×8 ea"],
+    {_ss:"Superset A",rounds:3,rest:"60s rest"},
+    ["Bulgarian Split Squat","3×8–12 ea"],
+    ["GHD Hip Extension","3×10–14"],
+    {_ss:"Superset B",rounds:3,rest:"60s rest"},
+    ["Sumo Squat","3×10–14"],
+    ["Walking Lunge","3×10–14 ea"],
+    {_fin:"amrap",duration:900,rounds:1,badge:"15 min · Buy-In + AMRAP",
+      movements:[
+        {name:"Row",reps:"25 cal buy-in",bw:true,val:"ERG"},
+        {name:"DB Snatch",reps:"6 ea",bw:false},
+        {name:"GHD Hip Extension",reps:"10 reps",bw:false},
+        {name:"Farmer Carry",reps:"10m ea",bw:false}
+      ]},
+  ],
+  hypertrophySatDeload:[
+    ["Thrusters","3×5"],
+    ["Barbell Cyclist Squat","3×10"],
+    ["Staggered Stance Hip Thrust","3×6 ea"],
+    {_ss:"Superset A",rounds:2,rest:"60s rest"},
+    ["Bulgarian Split Squat","2×8 ea"],
+    ["GHD Hip Extension","2×10"],
+    {_ss:"Superset B",rounds:2,rest:"60s rest"},
+    ["Sumo Squat","2×10"],
+    ["Walking Lunge","2×10 ea"],
+  ],
 };
 
 const PHASES = [
@@ -458,6 +702,10 @@ const PHASES = [
   {label:"Phase 2 · Build",weeks:[4,5,6,7,8]},
   {label:"Phase 3 · Cirque Snowbird",weeks:[9,10,11]},
   {label:"Phase 4 · Rebuild for Cirque Alta",weeks:[12,13,14,15,16]},
+  {label:"Phase 5 · Body Comp — Block 1",weeks:[17,18,19,20,21]},
+  {label:"Phase 5 · Deload",weeks:[22]},
+  {label:"Phase 6 · Body Comp — Block 2",weeks:[23,24,25,26,27]},
+  {label:"Phase 6 · Deload",weeks:[28]},
 ];
 
 const WEEKS = [
@@ -614,6 +862,116 @@ const WEEKS = [
     {id:"w16d5",day:"Saturday",type:"race",session:"⛰ CIRQUE ALTA — RACE DAY",info:"Feed or pump before start. Electrolytes from mile 1. Fuel at 35–40 min.",isCirque:true},
     {id:"w16d6",day:"Sunday",type:"rest",session:"Rest — you did it 🎉"},
   ]},
+
+  // ── 12-WEEK HYPERTROPHY PROGRAM ──
+  {label:"Wk 18",dates:"Aug 17–23",days:[
+    {id:"w17d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
+    {id:"w17d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w17d2",day:"Wednesday",type:"race",session:"🏃 Snowbird Series",info:"Race day! Last race before hypertrophy block starts. Race hard, recover smart."},
+    {id:"w17d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w17d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w17d5",day:"Saturday",type:"lift",session:"Legs + Conditioning A",workout:"hypertrophySatA"},
+    {id:"w17d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 19",dates:"Aug 24–30",days:[
+    {id:"w18d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
+    {id:"w18d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w18d2",day:"Wednesday",type:"race",session:"🏃 Brighton Series — Last Race",info:"Season finale! Last race. Enjoy it — hypertrophy block starts next week."},
+    {id:"w18d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w18d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w18d5",day:"Saturday",type:"lift",session:"Legs + Conditioning B",workout:"hypertrophySatB"},
+    {id:"w18d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 20",dates:"Aug 31–Sep 6",days:[
+    {id:"w19d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
+    {id:"w19d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w19d2",day:"Wednesday",type:"run",session:"Run A — Zone 2, 30–40 min",info:"Conversational pace only. Aerobic base. Let the legs recover from the race block."},
+    {id:"w19d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w19d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w19d5",day:"Saturday",type:"lift",session:"Legs + Conditioning C",workout:"hypertrophySatC"},
+    {id:"w19d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 21",dates:"Sep 7–13",days:[
+    {id:"w20d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
+    {id:"w20d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w20d2",day:"Wednesday",type:"run",session:"Run B — Tempo, 30–35 min",info:"10 min easy warm-up / 15–20 min at threshold / 5–10 min easy cooldown."},
+    {id:"w20d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w20d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w20d5",day:"Saturday",type:"lift",session:"Legs + Conditioning D",workout:"hypertrophySatD"},
+    {id:"w20d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 22",dates:"Sep 14–20",days:[
+    {id:"w21d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
+    {id:"w21d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w21d2",day:"Wednesday",type:"run",session:"Run C — Hill Repeats",info:"10 min easy / 6–8 × 60–90s hard uphill, walk/jog down / 5–10 min easy cooldown."},
+    {id:"w21d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w21d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w21d5",day:"Saturday",type:"lift",session:"Legs + Conditioning E",workout:"hypertrophySatE"},
+    {id:"w21d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 23 ↓",dates:"Sep 21–27",days:[
+    {id:"w22d0",day:"Monday",type:"lift",session:"Lower A — Deload",workout:"hypertrophyMondayDeload",note:"Deload: hold loads, stop 2–4 reps shy of failure. No new PRs."},
+    {id:"w22d1",day:"Tuesday",type:"lift",session:"Upper — Deload",workout:"hypertrophyTuesdayDeload",note:"Deload: hold loads, stop shy of failure, skip finisher."},
+    {id:"w22d2",day:"Wednesday",type:"run",session:"Run — Easy Zone 2, 20–30 min",info:"Deload run only. Conversational pace — no tempo, no intervals."},
+    {id:"w22d3",day:"Thursday",type:"lift",session:"Push — Deload",workout:"hypertrophyThursdayDeload",note:"Deload: hold loads, 3 drop set rounds only, skip finisher."},
+    {id:"w22d4",day:"Friday",type:"lift",session:"Pull — Deload",workout:"hypertrophyFridayDeload",note:"Deload: hold loads, stop shy of failure, skip finisher."},
+    {id:"w22d5",day:"Saturday",type:"lift",session:"Legs — Deload",workout:"hypertrophySatDeload",note:"Deload: hold loads, 2 rounds each superset, skip conditioning entirely."},
+    {id:"w22d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 24",dates:"Sep 28–Oct 4",days:[
+    {id:"w23d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
+    {id:"w23d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w23d2",day:"Wednesday",type:"run",session:"Run D — Intervals",info:"10 min easy / 6–8 × 2 min hard, 90s easy / 5–10 min easy cooldown. Block 2 begins."},
+    {id:"w23d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w23d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w23d5",day:"Saturday",type:"lift",session:"Legs + Conditioning A",workout:"hypertrophySatA"},
+    {id:"w23d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 25 🌺",dates:"Oct 5–11",days:[
+    {id:"w24d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday",note:"Hawaii — find a gym or improvise equipment as needed. Same program."},
+    {id:"w24d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday",note:"Hawaii — improvise as needed."},
+    {id:"w24d2",day:"Wednesday",type:"run",session:"Run E — Long Easy, 45–50 min",info:"Hawaii — find a trail or road. Conversational pace, slightly longer than usual."},
+    {id:"w24d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday",note:"Hawaii — improvise as needed."},
+    {id:"w24d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday",note:"Hawaii — improvise as needed."},
+    {id:"w24d5",day:"Saturday",type:"lift",session:"Legs + Conditioning B",workout:"hypertrophySatB",note:"Hawaii — improvise as needed."},
+    {id:"w24d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 26 🌺",dates:"Oct 12–18",days:[
+    {id:"w25d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday",note:"Hawaii through Oct 20 — same program."},
+    {id:"w25d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w25d2",day:"Wednesday",type:"run",session:"Run A — Zone 2, 30–40 min",info:"Hawaii. Conversational pace — enjoy the terrain."},
+    {id:"w25d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w25d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w25d5",day:"Saturday",type:"lift",session:"Legs + Conditioning C",workout:"hypertrophySatC"},
+    {id:"w25d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 27",dates:"Oct 19–25",days:[
+    {id:"w26d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
+    {id:"w26d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w26d2",day:"Wednesday",type:"run",session:"Run B — Tempo, 30–35 min",info:"10 min easy warm-up / 15–20 min at threshold / 5–10 min easy cooldown."},
+    {id:"w26d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w26d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w26d5",day:"Saturday",type:"lift",session:"Legs + Conditioning D",workout:"hypertrophySatD"},
+    {id:"w26d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 28",dates:"Oct 26–Nov 1",days:[
+    {id:"w27d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
+    {id:"w27d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
+    {id:"w27d2",day:"Wednesday",type:"run",session:"Run C — Hill Repeats",info:"10 min easy / 6–8 × 60–90s hard uphill, walk/jog down / 5–10 min easy cooldown."},
+    {id:"w27d3",day:"Thursday",type:"lift",session:"Push — Shoulders + Chest",workout:"hypertrophyThursday"},
+    {id:"w27d4",day:"Friday",type:"lift",session:"Pull — Back + Arms",workout:"hypertrophyFriday"},
+    {id:"w27d5",day:"Saturday",type:"lift",session:"Legs + Conditioning E",workout:"hypertrophySatE"},
+    {id:"w27d6",day:"Sunday",type:"rest",session:"Rest"},
+  ]},
+  {label:"Wk 29 ↓",dates:"Nov 2–8",days:[
+    {id:"w28d0",day:"Monday",type:"lift",session:"Lower A — Deload",workout:"hypertrophyMondayDeload",note:"Final deload. Hold loads, stop 2–4 reps shy of failure, no finisher."},
+    {id:"w28d1",day:"Tuesday",type:"lift",session:"Upper — Deload",workout:"hypertrophyTuesdayDeload",note:"Final deload. Hold loads, skip finisher."},
+    {id:"w28d2",day:"Wednesday",type:"run",session:"Run — Easy Zone 2, 20–30 min",info:"Deload run only. Easy pace, no effort."},
+    {id:"w28d3",day:"Thursday",type:"lift",session:"Push — Deload",workout:"hypertrophyThursdayDeload",note:"Final deload. Hold loads, skip finisher."},
+    {id:"w28d4",day:"Friday",type:"lift",session:"Pull — Deload",workout:"hypertrophyFridayDeload",note:"Final deload. Hold loads, skip finisher."},
+    {id:"w28d5",day:"Saturday",type:"lift",session:"Legs — Deload",workout:"hypertrophySatDeload",note:"Final deload: hold loads, 2 rounds each superset, skip conditioning."},
+    {id:"w28d6",day:"Sunday",type:"rest",session:"Rest — Block complete 🎉"},
+  ]},
 ];
 
 // ─────────────────────────────────────────────
@@ -736,6 +1094,7 @@ function buildPrevWeights(){
     wk.days.forEach(day=>{
       if(!day.workout||!WORKOUTS[day.workout]) return;
       WORKOUTS[day.workout].forEach((ex,ei)=>{
+        if(!Array.isArray(ex)) return;
         const exId=`${day.id}-ex${ei}`;
         const sets=S.weights[exId];
         if(!sets) return;
@@ -779,8 +1138,8 @@ function switchTab(tab){
 
 function renderWeekTabs(){
   const pi=getCurrentPhaseIdx(), ph=PHASES[pi];
-  document.getElementById('phase-label').textContent=`${ph.label} · Week ${S.weekIdx+1} of 17`;
-  const pct=Math.round((S.weekIdx/16)*100);
+  document.getElementById('phase-label').textContent=`${ph.label} · Week ${S.weekIdx+1} of 29`;
+  const pct=Math.round((S.weekIdx/28)*100);
   document.getElementById('phase-pct').textContent=pct+'%';
   document.getElementById('phase-fill').style.width=pct+'%';
 
@@ -823,7 +1182,8 @@ function renderDayCards(){
 
 function dayHasLoggedWeights(day){
   if(!day.workout||!WORKOUTS[day.workout]) return false;
-  return WORKOUTS[day.workout].some((_,ei)=>{
+  return WORKOUTS[day.workout].some((ex,ei)=>{
+    if(!Array.isArray(ex)) return false;
     const sets=S.weights[`${day.id}-ex${ei}`];
     if(!sets) return false;
     return Object.values(sets).some(v=>typeof v==='object'?(v.w&&v.w.trim()):(v&&v.trim()));
@@ -877,12 +1237,13 @@ function renderDayCard(day,dayIdx,weekStart,todayIdx){
   let expandedHtml='';
   if(isOpen){
     if(hasWo){
-      const rows=WORKOUTS[day.workout].map((ex,i)=>
-        `<div onclick="event.stopPropagation();openDay('${day.id}',${i})" style="-webkit-tap-highlight-color:transparent;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--brd);cursor:pointer">
+      const rows=WORKOUTS[day.workout].map((ex,i)=>{
+        if(!Array.isArray(ex)) return '';
+        return `<div onclick="event.stopPropagation();openDay('${day.id}',${i})" style="-webkit-tap-highlight-color:transparent;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--brd);cursor:pointer">
           <span style="font-size:16px;color:var(--ts)">${escH(ex[0])}</span>
           <span style="font-size:14px;color:var(--tt)">${escH(ex[1])}</span>
-        </div>`
-      ).join('');
+        </div>`;
+      }).join('');
       expandedHtml=`<div style="border-top:1px solid var(--brd)">${rows}
         <div style="padding:10px 14px 12px">
           <div onclick="event.stopPropagation();openDay('${day.id}')" style="-webkit-tap-highlight-color:transparent;height:40px;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:16px;font-weight:500;display:flex;align-items:center;justify-content:center;cursor:pointer">Start workout</div>
@@ -979,7 +1340,11 @@ function renderDayDetail(dayId){
   if(day.note) html+=`<div class="day-note-banner" style="margin:12px 14px 4px">${escH(day.note)}</div>`;
   if(day.info) html+=`<div class="day-info-text">${escH(day.info)}</div>`;
   const hasWo=day.type==='lift'&&day.workout&&WORKOUTS[day.workout];
-  if(hasWo) html+=WORKOUTS[day.workout].map((ex,ei)=>renderExRow(ex,ei,day,prev)).join('');
+  if(hasWo) WORKOUTS[day.workout].forEach((item,ei)=>{
+    if(Array.isArray(item)) html+=renderExRow(item,ei,day,prev);
+    else if(item._ss) html+=renderSSBand(item);
+    else if(item._fin) html+=renderFinisherCard(item,day.id);
+  });
   html+=`<div class="notes-area"><div class="notes-lbl">Notes</div>
     <textarea class="notes-input" rows="2" placeholder="How it felt, energy, anything..."
       data-daykey="${dayId}" onchange="handleNote(this)">${escH(S.notes[dayId]||'')}</textarea></div>`;
@@ -1083,6 +1448,67 @@ function renderExRow(ex,ei,day,prev){
   </div>`;
 }
 
+function renderSSBand(item){
+  return `<div class="ss-band">
+    <div class="ss-band-dot"></div>
+    <span class="ss-band-lbl">${escH(item._ss)}</span>
+    ${item.rounds?`<span class="ss-band-sub">${item.rounds} rounds${item.rest?' · '+item.rest:''}</span>`:''}
+  </div>`;
+}
+
+function renderFinisherCard(fin,dayId){
+  const fmtLabels={
+    amrap:'Work until the clock runs out',
+    interval:`New round every ${fmtTime(fin.duration)}`,
+    cap:'For time — beat the clock'
+  };
+  const badgeBg={
+    amrap:'rgba(218,223,10,.18)',interval:'rgba(77,95,255,.18)',cap:'rgba(255,98,48,.15)'
+  };
+  const badgeCol={amrap:'#a8ac00',interval:'#c5caff',cap:'#FF6230'};
+  const bg=fin.badge_bg||(badgeBg[fin._fin]||'rgba(218,223,10,.18)');
+  const col=fin.badge_col||(badgeCol[fin._fin]||'#a8ac00');
+  const sub=fmtLabels[fin._fin]||'';
+  const rounds=fin.rounds||1;
+  const movRows=(fin.movements||[]).map((m,mi)=>{
+    const key=`fin-${dayId}-${mi}`;
+    const saved=S.weights[key]?(S.weights[key].w||''):'';
+    const isBW=!!m.bw;
+    return `<div class="fin-mov-row">
+      <div><div class="fin-mov-name">${escH(m.name)}</div><div class="fin-mov-reps">${escH(m.reps)}</div></div>
+      <input class="fin-mov-inp${isBW?' bw':saved?' filled':''}"
+        ${isBW?`value="${escH(m.val||'BW')}" readonly`:`value="${escH(saved)}" placeholder="lbs / kg"
+        data-finkey="${key}" onchange="handleFinWeight(this)"`}>
+      <div class="fin-mov-chk" onclick="this.classList.toggle('done')">
+        <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="fin-band">
+    <span class="fin-band-lbl">Finisher</span>
+    <span class="fin-band-badge" style="background:${bg};color:${col}">${escH(fin.badge||'')}</span>
+  </div>
+  <div style="background:var(--surf);border:1px solid var(--brd)">
+    <div class="fin-timer-row">
+      <span class="fin-fmt-lbl">${escH(sub)}</span>
+      <button class="fin-open-btn" onclick="openFinisherTimer('${fin._fin}',${fin.duration},${rounds},'${escH(fin.badge||'')}','${escH(sub)}')">
+        <svg viewBox="0 0 24 24" fill="none"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
+        ${fmtTime(fin.duration)}
+      </button>
+    </div>
+    <div class="fin-mov-hdr"><span>Movement</span><span>Weight</span><span></span></div>
+    ${movRows}
+  </div>`;
+}
+
+function handleFinWeight(inp){
+  const key=inp.dataset.finkey, val=inp.value.trim();
+  if(!S.weights[key]) S.weights[key]={};
+  S.weights[key].w=val;
+  inp.classList.toggle('filled',!!val);
+  saveWorkout();
+}
+
 function toggleDone(dayKey){
   S.done[dayKey]=!S.done[dayKey];
   if(S.done[dayKey]) launchConfetti(window.innerWidth/2, window.innerHeight/3);
@@ -1167,18 +1593,50 @@ function handleNote(ta){
 // REST TIMER
 // ─────────────────────────────────────────────
 
-let T={remaining:120,selected:120,recommended:120,running:false,interval:null};
+let T={remaining:120,selected:120,recommended:120,running:false,interval:null,
+  finType:null,finRounds:1,finCurRound:1};
+
+function buildRoundDots(total,cur){
+  document.getElementById('timer-rd-dots').innerHTML=
+    Array.from({length:total},(_,i)=>
+      `<span class="tmr-rd-dot${i<cur-1?' done':i===cur-1?' active':''}"></span>`
+    ).join('');
+}
 
 function openTimer(exName,seconds){
   clearInterval(T.interval);
-  T={remaining:seconds,selected:seconds,recommended:seconds,running:false,interval:null};
+  T={remaining:seconds,selected:seconds,recommended:seconds,running:false,interval:null,
+    finType:null,finRounds:1,finCurRound:1};
   document.getElementById('timer-ex-name').textContent=exName;
   document.getElementById('timer-sub').textContent='Recommended · '+fmtTime(seconds);
   document.getElementById('float-timer-time').textContent=fmtTime(seconds);
+  document.getElementById('timer-rounds').style.display='none';
+  document.getElementById('timer-nudge-row').style.display='flex';
   renderTimer();
   renderPresets(seconds);
   document.getElementById('timer-modal').classList.add('open');
-  // auto-start
+  toggleTimer();
+}
+
+function openFinisherTimer(type,duration,rounds,badge,sub){
+  clearInterval(T.interval);
+  T={remaining:duration,selected:duration,recommended:duration,running:false,interval:null,
+    finType:type,finRounds:rounds,finCurRound:1};
+  document.getElementById('timer-ex-name').textContent='Finisher';
+  document.getElementById('timer-sub').textContent=sub||badge;
+  document.getElementById('float-timer-time').textContent=fmtTime(duration);
+  document.getElementById('timer-presets').innerHTML='';
+  const showRounds=type==='interval'&&rounds>1;
+  const roundsEl=document.getElementById('timer-rounds');
+  if(showRounds){
+    document.getElementById('timer-rd-cur').textContent='1';
+    document.getElementById('timer-rd-total').textContent=rounds;
+    buildRoundDots(rounds,1);
+    roundsEl.style.display='flex';
+  } else { roundsEl.style.display='none'; }
+  document.getElementById('timer-nudge-row').style.display=type==='cap'?'flex':'none';
+  renderTimer();
+  document.getElementById('timer-modal').classList.add('open');
   toggleTimer();
 }
 
@@ -1221,9 +1679,21 @@ function toggleTimer(){
       if(T.remaining===0){
         clearInterval(T.interval); T.running=false;
         try{ navigator.vibrate&&navigator.vibrate([200,100,200,100,400]); }catch(e){}
-        setTimeout(closeTimer,2000);
-      }
-      renderTimer();
+        if(T.finType==='interval'&&T.finCurRound<T.finRounds){
+          T.finCurRound++;
+          document.getElementById('timer-rd-cur').textContent=T.finCurRound;
+          buildRoundDots(T.finRounds,T.finCurRound);
+          renderTimer();
+          setTimeout(()=>{
+            T.remaining=T.selected;
+            renderTimer();
+            toggleTimer();
+          },1500);
+        } else {
+          renderTimer();
+          setTimeout(closeTimer,2000);
+        }
+      } else { renderTimer(); }
     },1000);
   } else { clearInterval(T.interval); }
   renderTimer();
