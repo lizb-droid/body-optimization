@@ -116,10 +116,13 @@ Lateral Lunge ea *(standard wave, 8→12)* / Weighted Dead Bug ×8 ea, light DB 
 *Straight weight progression. Chest up, hinge at the hip — this is your primary back-thickness builder for the week.*
 
 **Superset A** — 3 rounds, 60s rest
-DB Incline Press *(standard wave, 8→12)* / DB Row single arm ea *(standard wave, 8→12)*
+DB Squeeze Press, two DBs pressed together throughout *(standard wave, 8→12 — constant inward tension, different feel than any press you've done)* / Chest-Supported DB Row, chest braced on incline bench *(standard wave, 8→12 — zero lower back involvement, pure lat isolation, different from every other row in the program)*
 
 **Superset B** — 3 rounds, 60s rest
-Bicep Curl *(standard wave, 8→12)* / Overhead Tricep Extension *(standard wave, 8→12)*
+Arnold Press *(standard wave, 8→12)* / Front Raise, straight arms, dumbbells lifted from hips to shoulder height *(standard wave, 8→12)*
+
+**Superset C** — 3 rounds, 60s rest
+DB Lateral Raise *(higher-rep wave, 10→14)* / Incline DB Curl *(standard wave, 8→12 — deeper stretch on the bicep than Friday's Spider Curl or Hammer Curl, different angle)*
 
 **Finisher** — 8 min buy-in
 Row 20 cal → AMRAP remaining: 8 Push-ups / 4 Turkish Get-Up ea
@@ -229,7 +232,7 @@ Spider Curl *(higher-rep wave, 10→14)* / Hammer Curl *(standard wave, 8→12)*
 Bulgarian Split Squat ea *(standard wave, 8→12)* / GHD Hip Extension *(higher-rep wave, 10→14)*
 
 **Superset B** — 3 rounds, 60s rest
-Sumo Squat *(higher-rep wave, 10→14)* / Walking Lunge *(higher-rep wave, 10→14)*
+Walking Lunge *(higher-rep wave, 10→14)*
 
 **Conditioning — 15 min** *(rotate weekly, A→B→C→D→E→A)*
 
