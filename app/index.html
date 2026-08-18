@@ -698,173 +698,14 @@ const WORKOUTS = {
 };
 
 const PHASES = [
-  {label:"Phase 1 · Foundation",weeks:[0,1,2,3]},
-  {label:"Phase 2 · Build",weeks:[4,5,6,7,8]},
-  {label:"Phase 3 · Cirque Snowbird",weeks:[9,10,11]},
-  {label:"Phase 4 · Rebuild for Cirque Alta",weeks:[12,13,14,15,16]},
-  {label:"Phase 5 · Body Comp — Block 1",weeks:[17,18,19,20,21]},
-  {label:"Phase 5 · Deload",weeks:[22]},
-  {label:"Phase 6 · Body Comp — Block 2",weeks:[23,24,25,26,27]},
-  {label:"Phase 6 · Deload",weeks:[28]},
+  {label:"Block 1 · Loading",weeks:[0,1,2,3,4]},
+  {label:"Block 1 · Deload",weeks:[5]},
+  {label:"Block 2 · Loading",weeks:[6,7,8,9,10]},
+  {label:"Block 2 · Deload",weeks:[11]},
 ];
 
 const WEEKS = [
-  {label:"Wk 1",dates:"Apr 20–26",days:[
-    {id:"w0d0",day:"Monday",type:"lift",session:"Lower A",workout:"lowerA"},
-    {id:"w0d1",day:"Tuesday",type:"lift",session:"Upper A",workout:"upperA"},
-    {id:"w0d2",day:"Wednesday",type:"race",session:"🏃 Eagle Mountain Race",info:"Run by effort, not pace. Practice fueling."},
-    {id:"w0d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w0d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w0d5",day:"Saturday",type:"run",session:"Trail Run — 45 min easy",info:"Walk steep grades. Time on feet, not pace."},
-    {id:"w0d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 2",dates:"Apr 27–May 3",days:[
-    {id:"w1d0",day:"Monday",type:"lift",session:"Lower A",workout:"lowerA"},
-    {id:"w1d1",day:"Tuesday",type:"lift",session:"Upper A",workout:"upperA"},
-    {id:"w1d2",day:"Wednesday",type:"race",session:"🏃 Dimple Dell Race",info:"Run by effort. Practice fueling."},
-    {id:"w1d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w1d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w1d5",day:"Saturday",type:"run",session:"Trail Run — 50 min easy",info:"Find elevation. Easy pace."},
-    {id:"w1d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 3",dates:"May 4–10",days:[
-    {id:"w2d0",day:"Monday",type:"lift",session:"Lower A",workout:"lowerA"},
-    {id:"w2d1",day:"Tuesday",type:"lift",session:"Upper A",workout:"upperA"},
-    {id:"w2d2",day:"Wednesday",type:"run",session:"Run — 30–40 min Zone 2",info:"Easy Zone 2."},
-    {id:"w2d3",day:"Thursday",type:"lift",session:"Lower B",workout:"lowerB"},
-    {id:"w2d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w2d5",day:"Saturday",type:"run",session:"Trail Run — 50 min, hills",info:"Seek elevation."},
-    {id:"w2d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 4 ↓",dates:"May 11–17",days:[
-    {id:"w3d0",day:"Monday",type:"lift",session:"Lower A — 40% less volume",workout:"lowerA",note:"Cut sets by 40%. Keep load."},
-    {id:"w3d1",day:"Tuesday",type:"lift",session:"Upper A — 40% less volume",workout:"upperA",note:"Cut sets by 40%. Keep load."},
-    {id:"w3d2",day:"Wednesday",type:"race",session:"🏃 Soldier Hollow Race",info:"Deload week — easy effort."},
-    {id:"w3d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w3d4",day:"Friday",type:"lift",session:"Upper B — 40% less volume",workout:"upperB",note:"Cut sets by 40%. Keep load."},
-    {id:"w3d5",day:"Saturday",type:"run",session:"Easy trail — 40 min",info:"Full recovery mode."},
-    {id:"w3d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 5",dates:"May 18–24",days:[
-    {id:"w4d0",day:"Monday",type:"lift",session:"Lower A + Power",workout:"lowerAPower"},
-    {id:"w4d1",day:"Tuesday",type:"lift",session:"Upper A + Power",workout:"upperAPower"},
-    {id:"w4d2",day:"Wednesday",type:"race",session:"🏃 Heber Race",info:"Push it. Race the uphills hard."},
-    {id:"w4d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w4d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB",note:"Add Push Press 3×5 before main session."},
-    {id:"w4d5",day:"Saturday",type:"run",session:"Trail 55–65 min + hill surges",info:"2–3 hard uphill surges mid-run."},
-    {id:"w4d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 6",dates:"May 25–31",days:[
-    {id:"w5d0",day:"Monday",type:"lift",session:"Lower A + Power",workout:"lowerAPower"},
-    {id:"w5d1",day:"Tuesday",type:"lift",session:"Upper A — lower reps",workout:"upperAPower",note:"Drop main lifts to 4–6 reps at 75–85%."},
-    {id:"w5d2",day:"Wednesday",type:"run",session:"Threshold Run — 3×8 min hard",info:"3×8 min threshold, 3 min easy between."},
-    {id:"w5d3",day:"Thursday",type:"lift",session:"Lower B",workout:"lowerB"},
-    {id:"w5d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w5d5",day:"Saturday",type:"run",session:"Trail 60–65 min, elevation",info:"Seek steep terrain."},
-    {id:"w5d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 7",dates:"Jun 1–7",days:[
-    {id:"w6d0",day:"Monday",type:"lift",session:"Lower A + Power",workout:"lowerAPower"},
-    {id:"w6d1",day:"Tuesday",type:"lift",session:"Upper A — lower reps",workout:"upperAPower",note:"Main lifts 4–6 reps at 75–85%."},
-    {id:"w6d2",day:"Wednesday",type:"race",session:"🏃 Dimple Dell Race",info:"Push it. Race uphills."},
-    {id:"w6d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w6d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w6d5",day:"Saturday",type:"run",session:"Trail 60–65 min, elevation",info:"Seek steep terrain."},
-    {id:"w6d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 8",dates:"Jun 8–14",days:[
-    {id:"w7d0",day:"Monday",type:"lift",session:"Lower A + Power",workout:"lowerAPower",note:"Push RDL and squat loads hard."},
-    {id:"w7d1",day:"Tuesday",type:"lift",session:"Upper A",workout:"upperAPower"},
-    {id:"w7d2",day:"Wednesday",type:"race",session:"🏃 Deer Valley Race",info:"Full race effort. Fitness test."},
-    {id:"w7d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w7d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w7d5",day:"Saturday",type:"run",session:"Trail 65–70 min + fuel at 45",info:"Practice race-day fueling."},
-    {id:"w7d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 9",dates:"Jun 15–21",days:[
-    {id:"w8d0",day:"Monday",type:"lift",session:"Lower A + Power",workout:"lowerAPower"},
-    {id:"w8d1",day:"Tuesday",type:"lift",session:"Upper A",workout:"upperAPower"},
-    {id:"w8d2",day:"Wednesday",type:"run",session:"Hill Repeats — 6×90 sec",info:"6–8×90 sec hard uphill, walk back down."},
-    {id:"w8d3",day:"Thursday",type:"lift",session:"Lower B",workout:"lowerB"},
-    {id:"w8d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w8d5",day:"Saturday",type:"run",session:"Trail 65–70 min + full fuel",info:"Practice exact race-day fueling."},
-    {id:"w8d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 10",dates:"Jun 22–28",days:[
-    {id:"w9d0",day:"Monday",type:"lift",session:"Lower A — 80–90%",workout:"lowerAPower",note:"Heavy clean pulls and squats. Best effort."},
-    {id:"w9d1",day:"Tuesday",type:"lift",session:"Upper A — 80–90%",workout:"upperAPower",note:"Highest intensity of the program."},
-    {id:"w9d2",day:"Wednesday",type:"race",session:"🏃 Solitude Race",info:"Full race effort. Peak fitness."},
-    {id:"w9d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w9d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w9d5",day:"Saturday",type:"run",session:"Trail 70 min + full fuel protocol",info:"Practice exact Cirque Snowbird fueling."},
-    {id:"w9d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 11 ↓",dates:"Jun 29–Jul 5",days:[
-    {id:"w10d0",day:"Monday",type:"lift",session:"Lower A — 30% less volume",workout:"lowerA",note:"Cut sets 30%. Keep load."},
-    {id:"w10d1",day:"Tuesday",type:"lift",session:"Upper A — 30% less volume",workout:"upperA",note:"Cut sets 30%."},
-    {id:"w10d2",day:"Wednesday",type:"run",session:"Easy run — 25 min + strides",info:"Easy jog. 4–5 uphill strides."},
-    {id:"w10d3",day:"Thursday",type:"lift",session:"Lower B — 30% less volume",workout:"lowerB",note:"Cut sets 30%."},
-    {id:"w10d4",day:"Friday",type:"lift",session:"Upper B — 30% less volume",workout:"upperB",note:"Cut sets 30%."},
-    {id:"w10d5",day:"Saturday",type:"run",session:"Easy trail — 40 min",info:"Easy effort. Legs fresh."},
-    {id:"w10d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 12 ⛰",dates:"Jul 6–12",isCirque:true,days:[
-    {id:"w11d0",day:"Monday",type:"lift",session:"Lower A — light",workout:"lowerALight",note:"Light loads only."},
-    {id:"w11d1",day:"Tuesday",type:"lift",session:"Upper A — light",workout:"upperALight",note:"Light loads only."},
-    {id:"w11d2",day:"Wednesday",type:"race",session:"🏃 Alta Series — EASY only",info:"Shakeout only. Do NOT race hard."},
-    {id:"w11d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w11d4",day:"Friday",type:"run",session:"20 min easy + uphill strides",info:"4–5 uphill strides."},
-    {id:"w11d5",day:"Saturday",type:"rest",session:"Rest — prep + sleep"},
-    {id:"w11d6",day:"Sunday",type:"race",session:"⛰ CIRQUE SNOWBIRD — RACE DAY",info:"Feed or pump before start. Electrolytes from mile 1. Fuel at 35–40 min.",isCirque:true},
-  ]},
-  {label:"Wk 13",dates:"Jul 13–19",days:[
-    {id:"w12d0",day:"Monday",type:"lift",session:"Lower A — light",workout:"lowerALight",note:"Light loads."},
-    {id:"w12d1",day:"Tuesday",type:"lift",session:"Upper A — light",workout:"upperALight",note:"Light loads."},
-    {id:"w12d2",day:"Wednesday",type:"race",session:"🏃 Snowbird Series — easy",info:"Easy effort. Active recovery."},
-    {id:"w12d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w12d4",day:"Friday",type:"lift",session:"Upper B — light",workout:"upperBLight",note:"Light loads."},
-    {id:"w12d5",day:"Saturday",type:"run",session:"Easy trail — 45 min",info:"Full recovery."},
-    {id:"w12d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 14",dates:"Jul 20–26",days:[
-    {id:"w13d0",day:"Monday",type:"lift",session:"Lower A — back to load",workout:"lowerAPower"},
-    {id:"w13d1",day:"Tuesday",type:"lift",session:"Upper A — back to load",workout:"upperAPower"},
-    {id:"w13d2",day:"Wednesday",type:"run",session:"Run — 35 min Zone 2",info:"Easy Zone 2."},
-    {id:"w13d3",day:"Thursday",type:"lift",session:"Lower B",workout:"lowerB"},
-    {id:"w13d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w13d5",day:"Saturday",type:"run",session:"Trail 55–65 min + elevation",info:"Seek real elevation."},
-    {id:"w13d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 15",dates:"Jul 27–Aug 2",days:[
-    {id:"w14d0",day:"Monday",type:"lift",session:"Lower A + Power",workout:"lowerAPower"},
-    {id:"w14d1",day:"Tuesday",type:"lift",session:"Upper A + Power",workout:"upperAPower"},
-    {id:"w14d2",day:"Wednesday",type:"race",session:"🏃 Brighton Race",info:"Push it hard."},
-    {id:"w14d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w14d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w14d5",day:"Saturday",type:"run",session:"Alta Trail — 65 min, race-pace uphill sections",info:"Fuel exactly as Cirque Alta race day. Race-pace effort on steep sections for 15–20 min."},
-    {id:"w14d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 16",dates:"Aug 3–9",days:[
-    {id:"w15d0",day:"Monday",type:"lift",session:"Lower A — 80–90%",workout:"lowerAPower",note:"Peak intensity."},
-    {id:"w15d1",day:"Tuesday",type:"lift",session:"Upper A — 80–90%",workout:"upperAPower",note:"Highest intensity."},
-    {id:"w15d2",day:"Wednesday",type:"race",session:"🏃 Alta Series Race",info:"Full race effort."},
-    {id:"w15d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w15d4",day:"Friday",type:"lift",session:"Upper B",workout:"upperB"},
-    {id:"w15d5",day:"Saturday",type:"run",session:"Alta Trail — FINAL altitude session, 60–65 min moderate",info:"Last altitude-adaptation stimulus before Cirque Alta. Don't empty the tank this close to race day."},
-    {id:"w15d6",day:"Sunday",type:"rest",session:"Rest"},
-  ]},
-  {label:"Wk 17 ⛰",dates:"Aug 10–16",isCirque:true,days:[
-    {id:"w16d0",day:"Monday",type:"lift",session:"Lower A — light",workout:"lowerALight",note:"Light loads only."},
-    {id:"w16d1",day:"Tuesday",type:"lift",session:"Upper A — light",workout:"upperALight",note:"Light loads only."},
-    {id:"w16d2",day:"Wednesday",type:"race",session:"🏃 Snowbird Series — EASY only",info:"Shakeout only."},
-    {id:"w16d3",day:"Thursday",type:"rest",session:"Rest"},
-    {id:"w16d4",day:"Friday",type:"run",session:"15 min easy + uphill strides",info:"Very easy. 3–4 strides."},
-    {id:"w16d5",day:"Saturday",type:"race",session:"⛰ CIRQUE ALTA — RACE DAY",info:"Feed or pump before start. Electrolytes from mile 1. Fuel at 35–40 min.",isCirque:true},
-    {id:"w16d6",day:"Sunday",type:"rest",session:"Rest — you did it 🎉"},
-  ]},
-
-  // ── 12-WEEK HYPERTROPHY PROGRAM ──
-  {label:"Wk 18",dates:"Aug 17–23",days:[
+  {label:"Wk 1",dates:"Aug 17–23",days:[
     {id:"w17d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
     {id:"w17d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w17d2",day:"Wednesday",type:"race",session:"🏃 Snowbird Series",info:"Race day! Last race before hypertrophy block starts. Race hard, recover smart."},
@@ -873,7 +714,7 @@ const WEEKS = [
     {id:"w17d5",day:"Saturday",type:"lift",session:"Legs + Conditioning A",workout:"hypertrophySatA"},
     {id:"w17d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 19",dates:"Aug 24–30",days:[
+  {label:"Wk 2",dates:"Aug 24–30",days:[
     {id:"w18d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
     {id:"w18d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w18d2",day:"Wednesday",type:"race",session:"🏃 Brighton Series — Last Race",info:"Season finale! Last race. Enjoy it — hypertrophy block starts next week."},
@@ -882,7 +723,7 @@ const WEEKS = [
     {id:"w18d5",day:"Saturday",type:"lift",session:"Legs + Conditioning B",workout:"hypertrophySatB"},
     {id:"w18d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 20",dates:"Aug 31–Sep 6",days:[
+  {label:"Wk 3",dates:"Aug 31–Sep 6",days:[
     {id:"w19d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
     {id:"w19d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w19d2",day:"Wednesday",type:"run",session:"Run A — Zone 2, 30–40 min",info:"Conversational pace only. Aerobic base. Let the legs recover from the race block."},
@@ -891,7 +732,7 @@ const WEEKS = [
     {id:"w19d5",day:"Saturday",type:"lift",session:"Legs + Conditioning C",workout:"hypertrophySatC"},
     {id:"w19d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 21",dates:"Sep 7–13",days:[
+  {label:"Wk 4",dates:"Sep 7–13",days:[
     {id:"w20d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
     {id:"w20d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w20d2",day:"Wednesday",type:"run",session:"Run B — Tempo, 30–35 min",info:"10 min easy warm-up / 15–20 min at threshold / 5–10 min easy cooldown."},
@@ -900,7 +741,7 @@ const WEEKS = [
     {id:"w20d5",day:"Saturday",type:"lift",session:"Legs + Conditioning D",workout:"hypertrophySatD"},
     {id:"w20d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 22",dates:"Sep 14–20",days:[
+  {label:"Wk 5",dates:"Sep 14–20",days:[
     {id:"w21d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
     {id:"w21d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w21d2",day:"Wednesday",type:"run",session:"Run C — Hill Repeats",info:"10 min easy / 6–8 × 60–90s hard uphill, walk/jog down / 5–10 min easy cooldown."},
@@ -909,7 +750,7 @@ const WEEKS = [
     {id:"w21d5",day:"Saturday",type:"lift",session:"Legs + Conditioning E",workout:"hypertrophySatE"},
     {id:"w21d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 23 ↓",dates:"Sep 21–27",days:[
+  {label:"Wk 6 ↓",dates:"Sep 21–27",days:[
     {id:"w22d0",day:"Monday",type:"lift",session:"Lower A — Deload",workout:"hypertrophyMondayDeload",note:"Deload: hold loads, stop 2–4 reps shy of failure. No new PRs."},
     {id:"w22d1",day:"Tuesday",type:"lift",session:"Upper — Deload",workout:"hypertrophyTuesdayDeload",note:"Deload: hold loads, stop shy of failure, skip finisher."},
     {id:"w22d2",day:"Wednesday",type:"run",session:"Run — Easy Zone 2, 20–30 min",info:"Deload run only. Conversational pace — no tempo, no intervals."},
@@ -918,7 +759,7 @@ const WEEKS = [
     {id:"w22d5",day:"Saturday",type:"lift",session:"Legs — Deload",workout:"hypertrophySatDeload",note:"Deload: hold loads, 2 rounds each superset, skip conditioning entirely."},
     {id:"w22d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 24",dates:"Sep 28–Oct 4",days:[
+  {label:"Wk 7",dates:"Sep 28–Oct 4",days:[
     {id:"w23d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
     {id:"w23d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w23d2",day:"Wednesday",type:"run",session:"Run D — Intervals",info:"10 min easy / 6–8 × 2 min hard, 90s easy / 5–10 min easy cooldown. Block 2 begins."},
@@ -927,7 +768,7 @@ const WEEKS = [
     {id:"w23d5",day:"Saturday",type:"lift",session:"Legs + Conditioning A",workout:"hypertrophySatA"},
     {id:"w23d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 25 🌺",dates:"Oct 5–11",days:[
+  {label:"Wk 8 🌺",dates:"Oct 5–11",days:[
     {id:"w24d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday",note:"Hawaii — find a gym or improvise equipment as needed. Same program."},
     {id:"w24d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday",note:"Hawaii — improvise as needed."},
     {id:"w24d2",day:"Wednesday",type:"run",session:"Run E — Long Easy, 45–50 min",info:"Hawaii — find a trail or road. Conversational pace, slightly longer than usual."},
@@ -936,7 +777,7 @@ const WEEKS = [
     {id:"w24d5",day:"Saturday",type:"lift",session:"Legs + Conditioning B",workout:"hypertrophySatB",note:"Hawaii — improvise as needed."},
     {id:"w24d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 26 🌺",dates:"Oct 12–18",days:[
+  {label:"Wk 9 🌺",dates:"Oct 12–18",days:[
     {id:"w25d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday",note:"Hawaii through Oct 20 — same program."},
     {id:"w25d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w25d2",day:"Wednesday",type:"run",session:"Run A — Zone 2, 30–40 min",info:"Hawaii. Conversational pace — enjoy the terrain."},
@@ -945,7 +786,7 @@ const WEEKS = [
     {id:"w25d5",day:"Saturday",type:"lift",session:"Legs + Conditioning C",workout:"hypertrophySatC"},
     {id:"w25d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 27",dates:"Oct 19–25",days:[
+  {label:"Wk 10",dates:"Oct 19–25",days:[
     {id:"w26d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
     {id:"w26d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w26d2",day:"Wednesday",type:"run",session:"Run B — Tempo, 30–35 min",info:"10 min easy warm-up / 15–20 min at threshold / 5–10 min easy cooldown."},
@@ -954,7 +795,7 @@ const WEEKS = [
     {id:"w26d5",day:"Saturday",type:"lift",session:"Legs + Conditioning D",workout:"hypertrophySatD"},
     {id:"w26d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 28",dates:"Oct 26–Nov 1",days:[
+  {label:"Wk 11",dates:"Oct 26–Nov 1",days:[
     {id:"w27d0",day:"Monday",type:"lift",session:"Lower A — Glute Focus",workout:"hypertrophyMonday"},
     {id:"w27d1",day:"Tuesday",type:"lift",session:"Upper — Chest + Back",workout:"hypertrophyTuesday"},
     {id:"w27d2",day:"Wednesday",type:"run",session:"Run C — Hill Repeats",info:"10 min easy / 6–8 × 60–90s hard uphill, walk/jog down / 5–10 min easy cooldown."},
@@ -963,7 +804,7 @@ const WEEKS = [
     {id:"w27d5",day:"Saturday",type:"lift",session:"Legs + Conditioning E",workout:"hypertrophySatE"},
     {id:"w27d6",day:"Sunday",type:"rest",session:"Rest"},
   ]},
-  {label:"Wk 29 ↓",dates:"Nov 2–8",days:[
+  {label:"Wk 12 ↓",dates:"Nov 2–8",days:[
     {id:"w28d0",day:"Monday",type:"lift",session:"Lower A — Deload",workout:"hypertrophyMondayDeload",note:"Final deload. Hold loads, stop 2–4 reps shy of failure, no finisher."},
     {id:"w28d1",day:"Tuesday",type:"lift",session:"Upper — Deload",workout:"hypertrophyTuesdayDeload",note:"Final deload. Hold loads, skip finisher."},
     {id:"w28d2",day:"Wednesday",type:"run",session:"Run — Easy Zone 2, 20–30 min",info:"Deload run only. Easy pace, no effort."},
@@ -979,18 +820,18 @@ const WEEKS = [
 // ─────────────────────────────────────────────
 
 const S = {
-  tab:'workout', weekIdx:9,
+  tab:'workout', weekIdx:0,
   weights:{}, done:{}, notes:{}, prs:{}, openDays:{}, activeDayId:null,
   macros:null, progress:null, checkins:null
 };
 
 function loadState(){
   try{
-    const d=ls('lizdone2')||ls('lizdone'),
-          w=ls('lizweights2')||ls('lizweights'),
-          n=ls('liznotes2')||ls('liznotes'),
-          p=ls('lizprs2')||ls('lizprs'),
-          wk=ls('lizweek2')||ls('lizweek'),
+    const d=ls('lizdone3'),
+          w=ls('lizweights3'),
+          n=ls('liznotes3'),
+          p=ls('lizprs3'),
+          wk=ls('lizweek3'),
           m=ls('lizmacros'), pr=ls('lizprogress');
     if(d) S.done=JSON.parse(d);
     if(w) S.weights=JSON.parse(w);
@@ -999,22 +840,17 @@ function loadState(){
     if(wk) S.weekIdx=parseInt(wk);
     if(m) S.macros=JSON.parse(m);
     if(pr) S.progress=JSON.parse(pr);
-    // migrate old keys to new
-    if(!ls('lizdone2')&&d) localStorage.setItem('lizdone2',d);
-    if(!ls('lizweights2')&&w) localStorage.setItem('lizweights2',w);
-    if(!ls('liznotes2')&&n) localStorage.setItem('liznotes2',n);
-    if(!ls('lizprs2')&&p) localStorage.setItem('lizprs2',p);
-    if(!ls('lizweek2')&&wk) localStorage.setItem('lizweek2',wk);
+    // v3 keys — old v2 data stays archived in localStorage, untouched
   }catch(e){console.warn(e)}
 }
 
 function saveWorkout(){
   try{
-    localStorage.setItem('lizdone2',JSON.stringify(S.done));
-    localStorage.setItem('lizweights2',JSON.stringify(S.weights));
-    localStorage.setItem('liznotes2',JSON.stringify(S.notes));
-    localStorage.setItem('lizprs2',JSON.stringify(S.prs));
-    localStorage.setItem('lizweek2',String(S.weekIdx));
+    localStorage.setItem('lizdone3',JSON.stringify(S.done));
+    localStorage.setItem('lizweights3',JSON.stringify(S.weights));
+    localStorage.setItem('liznotes3',JSON.stringify(S.notes));
+    localStorage.setItem('lizprs3',JSON.stringify(S.prs));
+    localStorage.setItem('lizweek3',String(S.weekIdx));
   }catch(e){}
 }
 
@@ -1138,8 +974,8 @@ function switchTab(tab){
 
 function renderWeekTabs(){
   const pi=getCurrentPhaseIdx(), ph=PHASES[pi];
-  document.getElementById('phase-label').textContent=`${ph.label} · Week ${S.weekIdx+1} of 29`;
-  const pct=Math.round((S.weekIdx/28)*100);
+  document.getElementById('phase-label').textContent=`${ph.label} · Week ${S.weekIdx+1} of 12`;
+  const pct=Math.round((S.weekIdx/11)*100);
   document.getElementById('phase-pct').textContent=pct+'%';
   document.getElementById('phase-fill').style.width=pct+'%';
 
