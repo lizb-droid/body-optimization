@@ -1,6 +1,6 @@
 // service-worker.js — Cache-first strategy for Liz Program PWA
 // Cache name: bump version string to force a fresh install on deploy
-const CACHE_NAME = "liz-app-v11"; // bumped: reset to 12-week standalone, fresh v3 save keys
+const CACHE_NAME = "liz-app-v12"; // bumped: updated program — Tue new exercises, Sat removed Sumo Squat
 
 // Files to cache on install (shell + CDN deps)
 // CDN URLs must match the <script src> imports in index.html exactly.

@@ -479,7 +479,9 @@ const REST_TIMES = {
   "DB Snatch":60,"Sumo Deadlift":180,"DB Row tripod":90,
   "Seated Rear Delt Fly":60,"Spider Curl":60,"Suitcase Carry":60,
   "Thrusters":150,"Barbell Cyclist Squat":150,"Sumo Squat":60,
-  "Turkish Get-Up":60,"Walking Lunge":60,"Overhead Tricep Extension":60
+  "Turkish Get-Up":60,"Walking Lunge":60,"Overhead Tricep Extension":60,
+  "DB Squeeze Press":90,"Chest-Supported DB Row":90,
+  "Arnold Press":60,"Front Raise":60,"Incline DB Curl":60
 };
 
 const WORKOUTS = {
@@ -523,11 +525,14 @@ const WORKOUTS = {
     ["Barbell Bench Press","4×8"],
     ["Barbell Bent Over Row","4×8"],
     {_ss:"Superset A",rounds:3,rest:"60s rest"},
-    ["DB Incline Press","3×8–12"],
-    ["Single-arm DB Row","3×8–12 ea"],
+    ["DB Squeeze Press","3×8–12"],
+    ["Chest-Supported DB Row","3×8–12"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
-    ["Bicep Curl","3×8–12"],
-    ["Overhead Tricep Extension","3×8–12"],
+    ["Arnold Press","3×8–12"],
+    ["Front Raise","3×8–12"],
+    {_ss:"Superset C",rounds:3,rest:"60s rest"},
+    ["DB Lateral Raise","3×10–14"],
+    ["Incline DB Curl","3×8–12"],
     {_fin:"amrap",duration:480,rounds:1,badge:"8 min AMRAP",
       movements:[
         {name:"Row",reps:"20 cal buy-in",bw:true,val:"ERG"},
@@ -539,11 +544,14 @@ const WORKOUTS = {
     ["Barbell Bench Press","3×8"],
     ["Barbell Bent Over Row","3×8"],
     {_ss:"Superset A",rounds:2,rest:"60s rest"},
-    ["DB Incline Press","2×8"],
-    ["Single-arm DB Row","2×8 ea"],
+    ["DB Squeeze Press","2×8"],
+    ["Chest-Supported DB Row","2×8"],
     {_ss:"Superset B",rounds:2,rest:"60s rest"},
-    ["Bicep Curl","2×8"],
-    ["Overhead Tricep Extension","2×8"],
+    ["Arnold Press","2×8"],
+    ["Front Raise","2×8"],
+    {_ss:"Superset C",rounds:2,rest:"60s rest"},
+    ["DB Lateral Raise","2×10"],
+    ["Incline DB Curl","2×8"],
   ],
   hypertrophyThursday:[
     ["Push Press","5×(2+4)"],
@@ -607,7 +615,6 @@ const WORKOUTS = {
     ["Bulgarian Split Squat","3×8–12 ea"],
     ["GHD Hip Extension","3×10–14"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
-    ["Sumo Squat","3×10–14"],
     ["Walking Lunge","3×10–14 ea"],
     {_fin:"amrap",duration:900,rounds:1,badge:"15 min · Buy-In + AMRAP",
       movements:[
@@ -625,7 +632,6 @@ const WORKOUTS = {
     ["Bulgarian Split Squat","3×8–12 ea"],
     ["GHD Hip Extension","3×10–14"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
-    ["Sumo Squat","3×10–14"],
     ["Walking Lunge","3×10–14 ea"],
     {_fin:"cap",duration:900,rounds:1,badge:"15 min cap",
       movements:[
@@ -641,7 +647,6 @@ const WORKOUTS = {
     ["Bulgarian Split Squat","3×8–12 ea"],
     ["GHD Hip Extension","3×10–14"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
-    ["Sumo Squat","3×10–14"],
     ["Walking Lunge","3×10–14 ea"],
     {_fin:"interval",duration:120,rounds:7,badge:"Every 2 min × 7",
       movements:[
@@ -657,7 +662,6 @@ const WORKOUTS = {
     ["Bulgarian Split Squat","3×8–12 ea"],
     ["GHD Hip Extension","3×10–14"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
-    ["Sumo Squat","3×10–14"],
     ["Walking Lunge","3×10–14 ea"],
     {_fin:"cap",duration:900,rounds:1,badge:"15 min grinder",
       movements:[
@@ -674,7 +678,6 @@ const WORKOUTS = {
     ["Bulgarian Split Squat","3×8–12 ea"],
     ["GHD Hip Extension","3×10–14"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
-    ["Sumo Squat","3×10–14"],
     ["Walking Lunge","3×10–14 ea"],
     {_fin:"amrap",duration:900,rounds:1,badge:"15 min · Buy-In + AMRAP",
       movements:[
@@ -692,7 +695,6 @@ const WORKOUTS = {
     ["Bulgarian Split Squat","2×8 ea"],
     ["GHD Hip Extension","2×10"],
     {_ss:"Superset B",rounds:2,rest:"60s rest"},
-    ["Sumo Squat","2×10"],
     ["Walking Lunge","2×10 ea"],
   ],
 };
