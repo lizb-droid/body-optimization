@@ -119,7 +119,7 @@ Lateral Lunge ea *(standard wave, 8→12)* / Weighted Dead Bug ×8 ea, light DB 
 DB Squeeze Press, two DBs pressed together throughout *(standard wave, 8→12 — constant inward tension, different feel than any press you've done)* / Chest-Supported DB Row, chest braced on incline bench *(standard wave, 8→12 — zero lower back involvement, pure lat isolation, different from every other row in the program)*
 
 **Superset B** — 3 rounds, 60s rest
-Arnold Press *(standard wave, 8→12)* / Front Raise, straight arms, dumbbells lifted from hips to shoulder height *(standard wave, 8→12)*
+Arnold Press *(standard wave, 8→12)* / DB Rear Delt Fly *(standard wave, 8→12 — posterior delt, antagonist to the front-dominant Arnold Press)*
 
 **Superset C** — 3 rounds, 60s rest
 DB Lateral Raise *(higher-rep wave, 10→14)* / Incline DB Curl *(standard wave, 8→12 — deeper stretch on the bicep than Friday's Spider Curl or Hammer Curl, different angle)*
@@ -168,10 +168,10 @@ Row 20 cal → AMRAP remaining: 8 Push-ups / 4 Turkish Get-Up ea
 *Straight weight progression on the Push Press portion — load it at a weight you can strict press for roughly 4-5 reps, and the Push Jerk reps should feel comparatively easier since you're already primed. This is your only main lift Thursday, so give it full rest and full focus.*
 
 **Superset A** — 3 rounds, 60s rest
-DB Shoulder Press *(standard wave, 8→12)* / Landmine Press ea *(standard wave, 8→12)*
+DB Shoulder Press *(standard wave, 8→12)* / DB Floor Press *(standard wave, 8→12 — chest-dominant, different primary muscle than the shoulder-dominant DB Shoulder Press, silent, no bench needed)*
 
 **Superset B** — 3 rounds, 60s rest
-DB Lateral Raise *(higher-rep wave, 10→14)* / Dips ×8-10 *(add a weighted vest/DB between legs once bodyweight hits the top of range, or hold at bodyweight if that's still building)*
+DB Z Press, seated on the floor legs straight out, no leg drive *(standard wave, 8→12 — strict core-braced overhead press, genuinely new movement)* / Dips ×8-10 *(add a weighted vest/DB between legs once bodyweight hits the top of range, or hold at bodyweight if that's still building)*
 
 **Superset C** — 3 rounds, 60s rest
 Overhead Tricep Extension *(standard wave, 8→12)* / Pallof Hold ×20s ea *(hold at bodyweight/band tension — this is a core control exercise, not a load one)*
@@ -201,7 +201,7 @@ Overhead Tricep Extension *(standard wave, 8→12)* / Pallof Hold ×20s ea *(hol
 DB Row tripod ea *(standard wave, 8→12)* / Seated Rear Delt Fly *(higher-rep wave, 10→14)*
 
 **Superset B** — 3 rounds, 60s rest
-Spider Curl *(higher-rep wave, 10→14)* / Hammer Curl *(standard wave, 8→12)*
+Spider Curl *(higher-rep wave, 10→14)* / Single-arm DB Row, standing, bent over ea *(standard wave, 8→12 — different variation than the chest-supported DB Row tripod in Superset A, genuine pull pattern)*
 
 **Finisher** — Every 2 min × 4 rounds
 20m Suitcase Carry ea + 8 KB Swings
