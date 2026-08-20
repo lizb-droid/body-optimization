@@ -919,39 +919,50 @@ function saveWorkout(){
 function ls(k){ return localStorage.getItem(k); }
 
 function showDebug(){
-  // After loadState runs, show what's actually in S.weights for new program keys
-  const newKeys=['w17d0','w17d1','w17d2','w17d3','w17d4','w17d5',
-                 'w18d0','w18d1','w18d3','w18d4'];
-  let out='<b>=== NEW PROGRAM WEIGHTS (after merge) ===</b><br>';
-  let found=0;
-  newKeys.forEach(dk=>{
-    // check all exercise slots
-    for(let i=0;i<20;i++){
-      const key=`${dk}-ex${i}`;
-      if(S.weights[key]){
-        out+=`${key}: ${JSON.stringify(S.weights[key])}<br>`;
-        found++;
-      }
+  let out='<b>=== KEYS ONLY IN v3 (logged while v3 active) ===</b><br>';
+  try{
+    const w2=JSON.parse(localStorage.getItem('lizweights2')||'{}');
+    const w3=JSON.parse(localStorage.getItem('lizweights3')||'{}');
+    const only3=Object.keys(w3).filter(k=>!w2[k]);
+    if(only3.length===0){ out+='<span style="color:red">None — v3 weights are identical to v2</span><br>'; }
+    else {
+      out+=`${only3.length} keys only in v3:<br>`;
+      only3.slice(0,20).forEach(k=>out+=`&nbsp;&nbsp;${k}: ${JSON.stringify(w3[k]).slice(0,50)}<br>`);
+      if(only3.length>20) out+=`&nbsp;&nbsp;...and ${only3.length-20} more<br>`;
     }
-  });
-  if(!found) out+='<span style="color:red">NO new program weights found in S.weights</span><br>';
+    const d2=JSON.parse(localStorage.getItem('lizdone2')||'{}');
+    const d3=JSON.parse(localStorage.getItem('lizdone3')||'{}');
+    const donly3=Object.keys(d3).filter(k=>!d2[k]);
+    out+=`<br>Done keys only in v3: ${donly3.length}<br>`;
+    donly3.slice(0,10).forEach(k=>out+=`&nbsp;&nbsp;${k}: ${d3[k]}<br>`);
+  }catch(e){ out+=`Error: ${e}<br>`; }
 
-  out+='<br><b>=== RAW STORAGE KEY COUNTS ===</b><br>';
-  ['lizdone2','lizweights2','lizweek2','lizdone3','lizweights3','lizweek3'].forEach(k=>{
-    const v=localStorage.getItem(k);
-    if(!v){ out+=`${k}: (empty)<br>`; return; }
-    try{
-      const obj=JSON.parse(v);
-      const all=Object.keys(obj);
-      const newProg=all.filter(ek=>ek.startsWith('w1')&&parseInt(ek.slice(1))>=17);
-      out+=`${k}: ${all.length} total, ${newProg.length} new-program entries<br>`;
-      newProg.slice(0,8).forEach(ek=>out+=`&nbsp;&nbsp;${ek}: ${JSON.stringify(obj[ek]).slice(0,50)}<br>`);
-    }catch(e){ out+=`${k}: ${String(v).slice(0,40)}<br>`; }
-  });
+  out+='<br><b>=== w0d0–w0d3 WEIGHTS (week 1 slot) ===</b><br>';
+  try{
+    const w2=JSON.parse(localStorage.getItem('lizweights2')||'{}');
+    ['w0d0','w0d1','w0d2','w0d3'].forEach(dk=>{
+      let found=false;
+      for(let i=0;i<15;i++){
+        const v=w2[`${dk}-ex${i}`];
+        if(v){ out+=`${dk}-ex${i}: ${JSON.stringify(v)}<br>`; found=true; }
+      }
+      if(!found) out+=`${dk}: no weights<br>`;
+    });
+  }catch(e){}
+
+  out+='<br><b>=== ALL DAY IDs WITH WEIGHTS (any key) ===</b><br>';
+  try{
+    const w2=JSON.parse(localStorage.getItem('lizweights2')||'{}');
+    const w3=JSON.parse(localStorage.getItem('lizweights3')||'{}');
+    const merged={...w2,...w3};
+    const days=new Set(Object.keys(merged).map(k=>k.replace(/-ex\d+$/,'')));
+    out+=`${days.size} unique days with weights:<br>`;
+    [...days].sort().slice(0,30).forEach(d=>out+=`${d} `);
+  }catch(e){}
 
   const div=document.createElement('div');
   div.style='position:fixed;top:0;left:0;right:0;bottom:0;background:#000;color:#0f0;font-size:11px;font-family:monospace;padding:16px;overflow:auto;z-index:9999';
-  div.innerHTML=out+'<br><button onclick="this.parentElement.remove()" style="padding:8px 16px;font-size:14px">Close</button>';
+  div.innerHTML=out+'<br><br><button onclick="this.parentElement.remove()" style="padding:8px 16px;font-size:14px">Close</button>';
   document.body.appendChild(div);
 }
 
@@ -2115,23 +2126,24 @@ async function pushToGitHub(token){
 }
 
 async function tryLoadFromGitHub(){
-  if(Object.keys(S.done).length) return;
   try{
     const r=await fetch(GH_RAW+'?t='+Date.now());
     if(!r.ok) return;
     const data=await r.json();
     if(!data.exported) return;
-    if(data.done) S.done=data.done;
-    if(data.weights) S.weights=data.weights;
-    if(data.notes) S.notes=data.notes;
-    if(data.prs) S.prs=data.prs;
-    if(data.weekIdx!==undefined) S.weekIdx=data.weekIdx;
-    if(data.progress) S.progress=data.progress;
-    if(data.checkins) S.checkins=data.checkins;
+    // Merge: backup fills any missing keys; localStorage data wins on conflict
+    if(data.done) S.done={...data.done,...S.done};
+    if(data.weights) S.weights={...data.weights,...S.weights};
+    if(data.notes) S.notes={...data.notes,...S.notes};
+    if(data.prs) S.prs={...data.prs,...S.prs};
+    if(data.weekIdx!==undefined && S.weekIdx===0 && !localStorage.getItem('lizweek2') && !localStorage.getItem('lizweek3'))
+      S.weekIdx=Math.min(data.weekIdx,WEEKS.length-1);
+    if(data.progress && !S.progress) S.progress=data.progress;
+    if(data.checkins && !S.checkins) S.checkins=data.checkins;
     saveWorkout();
     renderWeekTabs();
     renderDayCards();
-  } catch(e){}
+  } catch(e){ console.warn('backup load failed',e); }
 }
 
 // ─────────────────────────────────────────────
