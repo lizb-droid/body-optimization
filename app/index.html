@@ -265,6 +265,20 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 /* ── Float timer ── */
 #float-timer{position:fixed;bottom:calc(60px + env(safe-area-inset-bottom) + 16px);right:16px;width:60px;height:60px;border-radius:50%;background:var(--dk0);border:1px solid #333;display:none;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;z-index:10;box-shadow:0 4px 16px rgba(0,0,0,.4)}
 
+/* ── Warmup card ── */
+.warmup-details{margin:10px 14px 0}
+.warmup-details summary{list-style:none;display:flex;align-items:center;gap:8px;padding:9px 14px;background:#141414;border-radius:var(--r-md);cursor:pointer;user-select:none}
+.warmup-details summary::-webkit-details-marker{display:none}
+.warmup-details[open] summary{border-radius:var(--r-md) var(--r-md) 0 0}
+.warmup-dot{width:7px;height:7px;border-radius:50%;background:var(--ind);flex-shrink:0}
+.warmup-lbl{font-size:11px;font-weight:500;color:var(--ind);letter-spacing:.5px;text-transform:uppercase;flex:1}
+.warmup-chevron{transition:transform .2s;flex-shrink:0}
+.warmup-details[open] .warmup-chevron{transform:rotate(180deg)}
+.warmup-body{background:#1c1c1c;border-radius:0 0 var(--r-md) var(--r-md);padding:4px 14px 10px}
+.warmup-item{font-size:13px;color:#aaa;padding:5px 0;border-bottom:1px solid #2a2a2a}
+.warmup-item:last-child{border-bottom:none}
+.ex-note{font-size:12px;color:var(--tt);line-height:1.4;padding:1px 0 5px}
+
 /* ── Superset / Finisher bands ── */
 .ss-band{background:#141414;display:flex;align-items:center;gap:8px;padding:9px 14px}
 .ss-band-dot{width:7px;height:7px;border-radius:50%;background:var(--pink);flex-shrink:0}
@@ -481,7 +495,44 @@ const REST_TIMES = {
   "Thrusters":150,"Barbell Cyclist Squat":150,"Sumo Squat":60,
   "Turkish Get-Up":60,"Walking Lunge":60,"Overhead Tricep Extension":60,
   "DB Squeeze Press":90,"Chest-Supported DB Row":90,
-  "Arnold Press":60,"Front Raise":60,"Incline DB Curl":60
+  "Arnold Press":60,"DB Rear Delt Fly":60,"Front Raise":60,"Incline DB Curl":60,
+  "DB Floor Press":90,"DB Z Press":90
+};
+
+const WARMUPS = {
+  lower:[
+    "World's Greatest Stretch — 30s ea side",
+    "Glute Bridge March — 30s",
+    "Hip Circles — 30s ea side",
+    "Posterior Hip Capsule Stretch — 45s ea side",
+    "Squat to Stand — 30s"
+  ],
+  upper:[
+    "Cat Cow — 30s",
+    "Child's Pose Thread the Needle — 30s ea side",
+    "Scapular Push-up — 30s",
+    "Push-up to Down Dog — 30s"
+  ]
+};
+
+const EXERCISE_NOTES = {
+  "Barbell Back Squat":"Heaviest lower-body lift. Full rest matters — don't sacrifice load for a shorter session.",
+  "Barbell Hip Thrust":"2s hold at the top. Your #1 priority movement — keep tension on the glute at peak contraction.",
+  "Barbell Bench Press":"Straight weight progression.",
+  "Barbell Bent Over Row":"Chest up, hinge at the hip — primary back-thickness builder.",
+  "DB Squeeze Press":"Both DBs pressed together throughout — constant inward tension, different feel than any other press.",
+  "Chest-Supported DB Row":"Chest braced on incline bench — zero lower-back involvement, pure lat isolation.",
+  "Arnold Press":"Full rotation — start palms facing you, end palms forward at the top.",
+  "Push Press":"Load at a weight you can strict press 4–5 reps. The Push Jerk reps should feel comparatively easier.",
+  "Sumo Deadlift":"Wider stance, more upright torso — less lower-back shear than conventional. Straight weight progression.",
+  "Thrusters":"Build into it with lighter warm-up sets before your working 5×5.",
+  "Barbell Cyclist Squat":"Heels elevated — shifts emphasis to quads. Different angle than Monday's Back Squat.",
+  "Staggered Stance Hip Thrust":"Staggered foot shifts more load onto one glute at a time.",
+  "DB Floor Press":"Chest-dominant, different primary muscle than DB Shoulder Press. No bench needed — silent.",
+  "DB Z Press":"Seated on the floor, legs straight, no leg drive — strict core-braced overhead press.",
+  "Dips":"Bodyweight to start. Add a weighted vest or hold a DB once bodyweight reps feel easy.",
+  "Pallof Hold":"Anti-rotation — hold steady. Band tension, not load. This is a core control exercise.",
+  "Weighted Dead Bug":"Light DB in the extended arm — same DR-safe pattern as bodyweight Dead Bug, higher core demand."
 };
 
 const WORKOUTS = {
@@ -529,7 +580,7 @@ const WORKOUTS = {
     ["Chest-Supported DB Row","3×8–12"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
     ["Arnold Press","3×8–12"],
-    ["Front Raise","3×8–12"],
+    ["DB Rear Delt Fly","3×8–12"],
     {_ss:"Superset C",rounds:3,rest:"60s rest"},
     ["DB Lateral Raise","3×10–14"],
     ["Incline DB Curl","3×8–12"],
@@ -548,7 +599,7 @@ const WORKOUTS = {
     ["Chest-Supported DB Row","2×8"],
     {_ss:"Superset B",rounds:2,rest:"60s rest"},
     ["Arnold Press","2×8"],
-    ["Front Raise","2×8"],
+    ["DB Rear Delt Fly","2×8"],
     {_ss:"Superset C",rounds:2,rest:"60s rest"},
     ["DB Lateral Raise","2×10"],
     ["Incline DB Curl","2×8"],
@@ -557,9 +608,9 @@ const WORKOUTS = {
     ["Push Press","5×(2+4)"],
     {_ss:"Superset A",rounds:3,rest:"60s rest"},
     ["DB Shoulder Press","3×8–12"],
-    ["Landmine Press","3×8–12 ea"],
+    ["DB Floor Press","3×8–12"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
-    ["DB Lateral Raise","3×10–14"],
+    ["DB Z Press","3×8–12"],
     ["Dips","3×8–10"],
     {_ss:"Superset C",rounds:3,rest:"60s rest"},
     ["Overhead Tricep Extension","3×8–12"],
@@ -574,9 +625,9 @@ const WORKOUTS = {
     ["Push Press","3×(2+4)"],
     {_ss:"Superset A",rounds:2,rest:"60s rest"},
     ["DB Shoulder Press","2×8"],
-    ["Landmine Press","2×8 ea"],
+    ["DB Floor Press","2×8"],
     {_ss:"Superset B",rounds:2,rest:"60s rest"},
-    ["DB Lateral Raise","2×10"],
+    ["DB Z Press","2×8"],
     ["Dips","2×8"],
     {_ss:"Superset C",rounds:2,rest:"60s rest"},
     ["Overhead Tricep Extension","2×8"],
@@ -590,7 +641,7 @@ const WORKOUTS = {
     ["Seated Rear Delt Fly","3×10–14"],
     {_ss:"Superset B",rounds:3,rest:"60s rest"},
     ["Spider Curl","3×10–14"],
-    ["Hammer Curl","3×8–12"],
+    ["Single-arm DB Row","3×8–12 ea"],
     {_fin:"interval",duration:120,rounds:4,badge:"Every 2 min × 4",
       movements:[
         {name:"Suitcase Carry",reps:"20m ea side",bw:false},
@@ -605,7 +656,7 @@ const WORKOUTS = {
     ["Seated Rear Delt Fly","2×10"],
     {_ss:"Superset B",rounds:2,rest:"60s rest"},
     ["Spider Curl","2×10"],
-    ["Hammer Curl","2×8"],
+    ["Single-arm DB Row","2×8 ea"],
   ],
   hypertrophySatA:[
     ["Thrusters","5×5"],
@@ -1178,11 +1229,35 @@ function renderDayDetail(dayId){
   if(day.note) html+=`<div class="day-note-banner" style="margin:12px 14px 4px">${escH(day.note)}</div>`;
   if(day.info) html+=`<div class="day-info-text">${escH(day.info)}</div>`;
   const hasWo=day.type==='lift'&&day.workout&&WORKOUTS[day.workout];
-  if(hasWo) WORKOUTS[day.workout].forEach((item,ei)=>{
-    if(Array.isArray(item)) html+=renderExRow(item,ei,day,prev);
-    else if(item._ss) html+=renderSSBand(item);
-    else if(item._fin) html+=renderFinisherCard(item,day.id);
-  });
+  if(hasWo){
+    const wk=day.workout;
+    const warmupType=/Monday|Sat/.test(wk)?'lower':/Tuesday|Thursday|Friday/.test(wk)?'upper':null;
+    const wu=warmupType?WARMUPS[warmupType]:null;
+    const wuMin=warmupType==='lower'?'~4':'~3';
+    if(wu) html+=`<details class="warmup-details">
+      <summary><div class="warmup-dot"></div><span class="warmup-lbl">Warm-up · ${wuMin} min</span>
+        <svg class="warmup-chevron" viewBox="0 0 24 24" fill="none" width="12" height="12" stroke="#555" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </summary>
+      <div class="warmup-body">${wu.map(m=>`<div class="warmup-item">${escH(m)}</div>`).join('')}</div>
+    </details>`;
+    const items=WORKOUTS[wk];
+    let inSS=false,ssRest=60;
+    items.forEach((item,ei)=>{
+      if(Array.isArray(item)){
+        const next=items[ei+1];
+        const isSSEnd=inSS&&(!next||!!next._ss||!!next._fin);
+        html+=renderExRow(item,ei,day,prev,inSS,isSSEnd,ssRest);
+      } else if(item._ss){
+        inSS=true;
+        const m=item.rest?item.rest.match(/(\d+)/):null;
+        ssRest=m?parseInt(m[1]):60;
+        html+=renderSSBand(item);
+      } else if(item._fin){
+        inSS=false;
+        html+=renderFinisherCard(item,day.id);
+      }
+    });
+  }
   html+=`<div class="notes-area"><div class="notes-lbl">Notes</div>
     <textarea class="notes-input" rows="2" placeholder="How it felt, energy, anything..."
       data-daykey="${dayId}" onchange="handleNote(this)">${escH(S.notes[dayId]||'')}</textarea></div>`;
@@ -1198,11 +1273,12 @@ function toggleDoneDetail(dayId){
   if(btn){btn.className=S.done[dayId]?'complete-btn done':'complete-btn';btn.textContent=S.done[dayId]?'✓ Completed':'Mark complete';}
 }
 
-function renderExRow(ex,ei,day,prev){
+function renderExRow(ex,ei,day,prev,inSS=false,isSSEnd=false,ssRest=60){
   const exName=ex[0], setsStr=ex[1];
   const exId=`${day.id}-ex${ei}`;
   const sets=S.weights[exId]||{};
-  const rs=REST_TIMES[exName]||120;
+  const rs=inSS?ssRest:(REST_TIMES[exName]||120);
+  const showTimer=!inSS||isSSEnd;
 
   // Total sets = base or user-expanded
   const baseSets=parseNumSets(setsStr);
@@ -1266,16 +1342,18 @@ function renderExRow(ex,ei,day,prev){
     </div>`;
   }).join('');
 
+  const exNote=EXERCISE_NOTES[exName]||'';
   return `<div class="ex-row" id="ex-${exId}">
     <div class="ex-top">
       <div style="display:flex;align-items:center;gap:6px">
         <span class="ex-name">${escH(exName)}</span>${prTag}
       </div>
-      <div class="timer-btn" onclick="openTimer('${escH(exName)}',${rs})">
+      ${showTimer?`<div class="timer-btn" onclick="openTimer('${escH(exName)}',${rs})">
         <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 14 15"/><path d="M5 3l2 2M19 3l-2 2M12 3V1"/></svg>
         ${fmtTime(rs)} rest
-      </div>
+      </div>`:''}
     </div>
+    ${exNote?`<div class="ex-note">${escH(exNote)}</div>`:''}
     <div class="ex-meta">${escH(setsStr)}</div>
     ${tableHeader}
     <div>${setRowsHtml}</div>
