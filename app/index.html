@@ -878,18 +878,25 @@ const S = {
   macros:null, progress:null, checkins:null
 };
 
+function mergeKeys(k2,k3){
+  try{
+    const a=ls(k2)?JSON.parse(ls(k2)):{};
+    const b=ls(k3)?JSON.parse(ls(k3)):{};
+    return {...a,...b};
+  }catch(e){ try{return JSON.parse(ls(k3)||ls(k2)||'{}')}catch(e2){return {};} }
+}
 function loadState(){
   try{
-    const d=ls('lizdone2'),
-          w=ls('lizweights2'),
-          n=ls('liznotes2'),
-          p=ls('lizprs2'),
-          wk=ls('lizweek2'),
+    const d=mergeKeys('lizdone2','lizdone3'),
+          w=mergeKeys('lizweights2','lizweights3'),
+          n=mergeKeys('liznotes2','liznotes3'),
+          p=mergeKeys('lizprs2','lizprs3');
+    const wk=ls('lizweek3')||ls('lizweek2'),
           m=ls('lizmacros'), pr=ls('lizprogress');
-    if(d) S.done=JSON.parse(d);
-    if(w) S.weights=JSON.parse(w);
-    if(n) S.notes=JSON.parse(n);
-    if(p) S.prs=JSON.parse(p);
+    if(Object.keys(d).length) S.done=d;
+    if(Object.keys(w).length) S.weights=w;
+    if(Object.keys(n).length) S.notes=n;
+    if(Object.keys(p).length) S.prs=p;
     if(wk) S.weekIdx=Math.min(parseInt(wk)||0,WEEKS.length-1);
     if(m) S.macros=JSON.parse(m);
     if(pr) S.progress=JSON.parse(pr);
@@ -898,11 +905,14 @@ function loadState(){
 
 function saveWorkout(){
   try{
-    localStorage.setItem('lizdone2',JSON.stringify(S.done));
-    localStorage.setItem('lizweights2',JSON.stringify(S.weights));
-    localStorage.setItem('liznotes2',JSON.stringify(S.notes));
-    localStorage.setItem('lizprs2',JSON.stringify(S.prs));
-    localStorage.setItem('lizweek2',String(S.weekIdx));
+    const ds=JSON.stringify(S.done), ws=JSON.stringify(S.weights),
+          ns=JSON.stringify(S.notes), ps=JSON.stringify(S.prs),
+          wks=String(S.weekIdx);
+    localStorage.setItem('lizdone2',ds);   localStorage.setItem('lizdone3',ds);
+    localStorage.setItem('lizweights2',ws); localStorage.setItem('lizweights3',ws);
+    localStorage.setItem('liznotes2',ns);   localStorage.setItem('liznotes3',ns);
+    localStorage.setItem('lizprs2',ps);     localStorage.setItem('lizprs3',ps);
+    localStorage.setItem('lizweek2',wks);   localStorage.setItem('lizweek3',wks);
   }catch(e){}
 }
 
