@@ -919,23 +919,36 @@ function saveWorkout(){
 function ls(k){ return localStorage.getItem(k); }
 
 function showDebug(){
-  const keys=['lizdone2','lizweights2','liznotes2','lizprs2','lizweek2',
-               'lizdone3','lizweights3','liznotes3','lizprs3','lizweek3'];
-  let out='<b>localStorage debug</b><br><br>';
-  keys.forEach(k=>{
-    const v=localStorage.getItem(k);
-    if(v){
-      try{
-        const obj=JSON.parse(v);
-        const entries=Object.keys(obj);
-        out+=`<b>${k}</b>: ${entries.length} entries<br>`;
-        entries.slice(0,6).forEach(ek=>out+=`&nbsp;&nbsp;${ek}: ${JSON.stringify(obj[ek]).slice(0,60)}<br>`);
-      }catch(e){ out+=`<b>${k}</b>: ${String(v).slice(0,80)}<br>`; }
-    } else {
-      out+=`<b>${k}</b>: (empty)<br>`;
+  // After loadState runs, show what's actually in S.weights for new program keys
+  const newKeys=['w17d0','w17d1','w17d2','w17d3','w17d4','w17d5',
+                 'w18d0','w18d1','w18d3','w18d4'];
+  let out='<b>=== NEW PROGRAM WEIGHTS (after merge) ===</b><br>';
+  let found=0;
+  newKeys.forEach(dk=>{
+    // check all exercise slots
+    for(let i=0;i<20;i++){
+      const key=`${dk}-ex${i}`;
+      if(S.weights[key]){
+        out+=`${key}: ${JSON.stringify(S.weights[key])}<br>`;
+        found++;
+      }
     }
-    out+='<br>';
   });
+  if(!found) out+='<span style="color:red">NO new program weights found in S.weights</span><br>';
+
+  out+='<br><b>=== RAW STORAGE KEY COUNTS ===</b><br>';
+  ['lizdone2','lizweights2','lizweek2','lizdone3','lizweights3','lizweek3'].forEach(k=>{
+    const v=localStorage.getItem(k);
+    if(!v){ out+=`${k}: (empty)<br>`; return; }
+    try{
+      const obj=JSON.parse(v);
+      const all=Object.keys(obj);
+      const newProg=all.filter(ek=>ek.startsWith('w1')&&parseInt(ek.slice(1))>=17);
+      out+=`${k}: ${all.length} total, ${newProg.length} new-program entries<br>`;
+      newProg.slice(0,8).forEach(ek=>out+=`&nbsp;&nbsp;${ek}: ${JSON.stringify(obj[ek]).slice(0,50)}<br>`);
+    }catch(e){ out+=`${k}: ${String(v).slice(0,40)}<br>`; }
+  });
+
   const div=document.createElement('div');
   div.style='position:fixed;top:0;left:0;right:0;bottom:0;background:#000;color:#0f0;font-size:11px;font-family:monospace;padding:16px;overflow:auto;z-index:9999';
   div.innerHTML=out+'<br><button onclick="this.parentElement.remove()" style="padding:8px 16px;font-size:14px">Close</button>';
