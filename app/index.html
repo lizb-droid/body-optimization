@@ -878,22 +878,28 @@ const S = {
   macros:null, progress:null, checkins:null
 };
 
+function mergeStores(key2,key3){
+  try{
+    const a=ls(key2)?JSON.parse(ls(key2)):{};
+    const b=ls(key3)?JSON.parse(ls(key3)):{};
+    return JSON.stringify({...a,...b});
+  }catch(e){return ls(key3)||ls(key2);}
+}
 function loadState(){
   try{
-    const d=ls('lizdone3'),
-          w=ls('lizweights3'),
-          n=ls('liznotes3'),
-          p=ls('lizprs3'),
+    const d=mergeStores('lizdone2','lizdone3'),
+          w=mergeStores('lizweights2','lizweights3'),
+          n=mergeStores('liznotes2','liznotes3'),
+          p=mergeStores('lizprs2','lizprs3'),
           wk=ls('lizweek3'),
           m=ls('lizmacros'), pr=ls('lizprogress');
     if(d) S.done=JSON.parse(d);
     if(w) S.weights=JSON.parse(w);
     if(n) S.notes=JSON.parse(n);
     if(p) S.prs=JSON.parse(p);
-    if(wk) S.weekIdx=parseInt(wk);
+    if(wk) S.weekIdx=Math.min(parseInt(wk)||0,WEEKS.length-1);
     if(m) S.macros=JSON.parse(m);
     if(pr) S.progress=JSON.parse(pr);
-    // v3 keys — old v2 data stays archived in localStorage, untouched
   }catch(e){console.warn(e)}
 }
 
