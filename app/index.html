@@ -918,6 +918,30 @@ function saveWorkout(){
 
 function ls(k){ return localStorage.getItem(k); }
 
+function showDebug(){
+  const keys=['lizdone2','lizweights2','liznotes2','lizprs2','lizweek2',
+               'lizdone3','lizweights3','liznotes3','lizprs3','lizweek3'];
+  let out='<b>localStorage debug</b><br><br>';
+  keys.forEach(k=>{
+    const v=localStorage.getItem(k);
+    if(v){
+      try{
+        const obj=JSON.parse(v);
+        const entries=Object.keys(obj);
+        out+=`<b>${k}</b>: ${entries.length} entries<br>`;
+        entries.slice(0,6).forEach(ek=>out+=`&nbsp;&nbsp;${ek}: ${JSON.stringify(obj[ek]).slice(0,60)}<br>`);
+      }catch(e){ out+=`<b>${k}</b>: ${String(v).slice(0,80)}<br>`; }
+    } else {
+      out+=`<b>${k}</b>: (empty)<br>`;
+    }
+    out+='<br>';
+  });
+  const div=document.createElement('div');
+  div.style='position:fixed;top:0;left:0;right:0;bottom:0;background:#000;color:#0f0;font-size:11px;font-family:monospace;padding:16px;overflow:auto;z-index:9999';
+  div.innerHTML=out+'<br><button onclick="this.parentElement.remove()" style="padding:8px 16px;font-size:14px">Close</button>';
+  document.body.appendChild(div);
+}
+
 // ─────────────────────────────────────────────
 // URL BRIDGE
 // Macros: ?log=1&p=142&c=180&f=52&kcal=2180&tab=macros
@@ -926,6 +950,7 @@ function ls(k){ return localStorage.getItem(k); }
 
 function readUrlParams(){
   const params=new URLSearchParams(window.location.search);
+  if(params.get('debug')==='1'){ setTimeout(showDebug,400); return; }
   if(params.get('log')!=='1') return;
   const tab=params.get('tab');
 
