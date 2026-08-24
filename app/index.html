@@ -309,6 +309,16 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .tmr-rd-dot{width:8px;height:8px;border-radius:50%;background:var(--brd-d);display:inline-block;transition:background .2s}
 .tmr-rd-dot.done{background:var(--ind)}
 .tmr-rd-dot.active{background:var(--pink)}
+#timer-movements{display:none;margin:10px 0 6px;padding:8px 0;border-top:1px solid rgba(0,0,0,.1)}
+#timer-movements.has-movs{display:block}
+.timer-mov-item{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0;font-size:13px;gap:8px}
+.timer-mov-item .tmov-name{font-weight:500;color:#111}
+.timer-mov-item .tmov-reps{color:#666;font-size:12px;white-space:nowrap}
+.fin-result-row{display:flex;align-items:center;gap:10px;padding:10px 14px;border-top:1px solid var(--brd)}
+.fin-result-lbl{font-size:11px;font-weight:600;color:var(--tt);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.fin-result-inp{flex:1;height:36px;border:1.5px solid var(--brd-d);border-radius:var(--r-md);background:var(--bg);font-size:14px;color:var(--tp);padding:0 10px;font-family:inherit;outline:none}
+.fin-result-inp.filled{border-color:var(--ind-b);background:var(--ind-m);color:var(--ind-on)}
+.fin-result-inp:focus{border-color:var(--pink)}
 </style>
 </head>
 <body>
@@ -426,6 +436,7 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
         <svg viewBox="0 0 24 24" fill="none"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
+    <div id="timer-movements"></div>
     <div class="timer-display" id="timer-display">0:00</div>
     <div class="timer-nudge" id="timer-nudge-row">
       <button class="nudge-btn" onclick="nudgeTimer(-10)">− 10s</button>
@@ -1444,6 +1455,8 @@ function renderFinisherCard(fin,dayId){
   const col=fin.badge_col||(badgeCol[fin._fin]||'#a8ac00');
   const sub=fmtLabels[fin._fin]||'';
   const rounds=fin.rounds||1;
+  const finId='f'+(++_finIdx);
+  _finMap[finId]=fin;
   const movRows=(fin.movements||[]).map((m,mi)=>{
     const key=`fin-${dayId}-${mi}`;
     const saved=S.weights[key]?(S.weights[key].w||''):'';
@@ -1458,6 +1471,14 @@ function renderFinisherCard(fin,dayId){
       </div>
     </div>`;
   }).join('');
+  const showResult=(fin._fin==='amrap'||fin._fin==='cap');
+  const resultKey=`fin-${dayId}-result`;
+  const savedResult=S.weights[resultKey]?(S.weights[resultKey].result||''):'';
+  const resultRow=showResult?`<div class="fin-result-row">
+    <span class="fin-result-lbl">Result</span>
+    <input class="fin-result-inp${savedResult?' filled':''}" placeholder="rounds + reps completed"
+      value="${escH(savedResult)}" data-finreskey="${resultKey}" onchange="handleFinResult(this)">
+  </div>`:'';
   return `<div class="fin-band">
     <span class="fin-band-lbl">Finisher</span>
     <span class="fin-band-badge" style="background:${bg};color:${col}">${escH(fin.badge||'')}</span>
@@ -1465,13 +1486,14 @@ function renderFinisherCard(fin,dayId){
   <div style="background:var(--surf);border:1px solid var(--brd)">
     <div class="fin-timer-row">
       <span class="fin-fmt-lbl">${escH(sub)}</span>
-      <button class="fin-open-btn" onclick="openFinisherTimer('${fin._fin}',${fin.duration},${rounds},'${escH(fin.badge||'')}','${escH(sub)}')">
+      <button class="fin-open-btn" onclick="openFinisherTimer('${fin._fin}',${fin.duration},${rounds},'${escH(fin.badge||'')}','${escH(sub)}','${finId}')">
         <svg viewBox="0 0 24 24" fill="none"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
         ${fmtTime(fin.duration)}
       </button>
     </div>
     <div class="fin-mov-hdr"><span>Movement</span><span>Weight</span><span></span></div>
     ${movRows}
+    ${resultRow}
   </div>`;
 }
 
@@ -1479,6 +1501,14 @@ function handleFinWeight(inp){
   const key=inp.dataset.finkey, val=inp.value.trim();
   if(!S.weights[key]) S.weights[key]={};
   S.weights[key].w=val;
+  inp.classList.toggle('filled',!!val);
+  saveWorkout();
+}
+
+function handleFinResult(inp){
+  const key=inp.dataset.finreskey, val=inp.value.trim();
+  if(!S.weights[key]) S.weights[key]={};
+  S.weights[key].result=val;
   inp.classList.toggle('filled',!!val);
   saveWorkout();
 }
@@ -1569,6 +1599,7 @@ function handleNote(ta){
 
 let T={remaining:120,selected:120,recommended:120,running:false,interval:null,
   finType:null,finRounds:1,finCurRound:1};
+const _finMap={};let _finIdx=0;
 
 function buildRoundDots(total,cur){
   document.getElementById('timer-rd-dots').innerHTML=
@@ -1592,12 +1623,18 @@ function openTimer(exName,seconds){
   toggleTimer();
 }
 
-function openFinisherTimer(type,duration,rounds,badge,sub){
+function openFinisherTimer(type,duration,rounds,badge,sub,finId){
   clearInterval(T.interval);
   T={remaining:duration,selected:duration,recommended:duration,running:false,interval:null,
     finType:type,finRounds:rounds,finCurRound:1};
   document.getElementById('timer-ex-name').textContent='Finisher';
   document.getElementById('timer-sub').textContent=sub||badge;
+  const movEl=document.getElementById('timer-movements');
+  const movs=(finId&&_finMap[finId])?((_finMap[finId].movements)||[]):[];
+  if(movs.length){
+    movEl.className='has-movs';
+    movEl.innerHTML=movs.map(m=>`<div class="timer-mov-item"><span class="tmov-name">${escH(m.name)}</span><span class="tmov-reps">${escH(m.reps)}</span></div>`).join('');
+  } else { movEl.className=''; movEl.innerHTML=''; }
   document.getElementById('float-timer-time').textContent=fmtTime(duration);
   document.getElementById('timer-presets').innerHTML='';
   const showRounds=type==='interval'&&rounds>1;
