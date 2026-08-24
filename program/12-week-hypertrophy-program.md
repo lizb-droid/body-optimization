@@ -11,7 +11,7 @@ Priority order: Glutes → Shoulders → Legs → Core
 Two different rules apply depending on the equipment, because dumbbells jump in bigger increments than barbells do.
 
 ### Barbell main lifts — straight weight progression
-(Back Squat, Hip Thrust, Bench Press, Bent Over Row, Push Press/Jerk, Sumo Deadlift, Thrusters, Cyclist Squat, Staggered Hip Thrust)
+(Back Squat, Hip Thrust, Bench Press, Bent Over Row, Push Press/Jerk, Thrusters, Cyclist Squat)
 
 Add small plates (2.5-5 lb per side) whenever you hit **all sets at the top of the rep range with 2+ reps still left in the tank** (RPE ≤ 8). If a set was genuinely hard (RPE 9+), repeat that weight next week before adding. If you miss reps two sessions in a row, drop 10% and rebuild from there.
 
@@ -194,14 +194,14 @@ Overhead Tricep Extension *(standard wave, 8→12)* / Pallof Hold ×20s ea *(hol
 **Main Lift** — Barbell Bent Over Row 4×8 · 2:30 min rest
 *Straight weight progression.*
 
-**Main Lift 2** — Sumo Deadlift 4×6 · 3 min rest
-*Straight weight progression. Sumo stance instead of conventional — wider stance, more upright torso, less lower-back shear than a regular deadlift or RDL, which matters given your back has flared up with heavier hinge work before.*
+**Main Lift 2** — DB Pullover 4×8-12 (working weight 45lb, extend rep ceiling before jumping to 55lb) · 2 min rest
+*Switched from barbell to dumbbell version — barbell grip width was too hard on the shoulders. Lying flat, arms tracking closer together, arc from above the chest to behind the head. Genuinely different plane of motion than any row — targets lats and rib cage stretch, not a horizontal pull.*
 
 **Superset A** — 3 rounds, 60s rest
 DB Row tripod ea *(standard wave, 8→12)* / Seated Rear Delt Fly *(higher-rep wave, 10→14)*
 
 **Superset B** — 3 rounds, 60s rest
-Spider Curl *(higher-rep wave, 10→14)* / Single-arm DB Row, standing, bent over ea *(standard wave, 8→12 — different variation than the chest-supported DB Row tripod in Superset A, genuine pull pattern)*
+Spider Curl *(higher-rep wave, 10→14)* / DB High Pull, controlled tempo, no need to be explosive *(standard wave, 8→12 — vertical pulling plane, hits traps/rear delt differently than any row in the program)*
 
 **Finisher** — Every 2 min × 4 rounds
 20m Suitcase Carry ea + 8 KB Swings
@@ -222,17 +222,8 @@ Spider Curl *(higher-rep wave, 10→14)* / Single-arm DB Row, standing, bent ove
 **Main Lift** — Thrusters, building to heavy: 5×5 · 2:30-3 min rest
 *Straight weight progression, but build into it each session rather than starting at your top weight cold — a couple of lighter warm-up sets, then your working 5×5. This is the full-body/CNS-demanding piece of the week, deliberately placed here since Sunday is a full rest day right after.*
 
-**Main Lift 2** — Barbell Cyclist Squat 4×10 · 2:30 min rest
-*Straight weight progression. Heels elevated, more upright torso — this shifts emphasis onto the quads more than Monday's Back Squat does, which is the point of having two different squat patterns across the week.*
-
-**Main Lift 3** — Staggered Stance Hip Thrust 4×8 ea · 2 min rest
-*Straight weight progression per side. The staggered foot position shifts more load onto one glute at a time without needing a full single-leg setup — your second glute-focused main lift of the week, different angle than Monday's.*
-
-**Superset A** — 3 rounds, 60s rest
-Bulgarian Split Squat ea *(standard wave, 8→12)* / GHD Hip Extension *(higher-rep wave, 10→14)*
-
-**Superset B** — 3 rounds, 60s rest
-Walking Lunge *(higher-rep wave, 10→14)*
+**Main Lift 2** — Barbell Cyclist Squat (front squat position, heels elevated) 4×10 · 2:30 min rest
+*Straight weight progression. Front-loaded, not back squat — Monday already owns heavy back squat, so this is deliberately a different bar position and mechanics: more upright torso, more quad isolation, less posterior chain involvement. Two different squat stimuli across the week instead of redundant heavy squatting twice.*
 
 **Conditioning — 15 min** *(rotate weekly, A→B→C→D→E→A)*
 
@@ -251,7 +242,7 @@ Every 2 min × 7 rounds: 8 DB Thrusters + 10 cal Row
 **Week E — Buy-In (Snatch + Row + GHD)**
 Row 25 cal buy-in → AMRAP remaining time: 6 DB Snatch ea arm / 10 GHD Hip Extension / 10m Farmer Carry ea
 
-*Deload week: 3×5 thruster, 3×10 cyclist squat, 3×6 staggered hip thrust, 2 rounds each superset, skip conditioning. Hold last week's weights.*
+*Deload week: 3×5 thruster, 3×10 cyclist squat, skip conditioning. Hold last week's weights.*
 
 ---
 
