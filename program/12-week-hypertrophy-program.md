@@ -201,6 +201,9 @@ Overhead Tricep Extension *(standard wave, 8→12)* / Pallof Hold ×20s ea *(hol
 **Core** — 3 rounds, 45s rest
 Bird Dog ×8 ea *(DR-safe core rotation — day 3 of the weekly core rotation, anti-extension/anti-rotation from all-fours)*
 
+**Superset A** — 3 rounds, 60s rest
+Bulgarian Split Squat ea *(standard wave, 8→12 — unilateral, deep stretch, front-of-leg complement to the GHD)* / GHD Hip Extension *(higher-rep wave, 10→14 — back-of-leg complement, squeeze glutes at top)*
+
 **Conditioning — 15 min** *(rotate weekly, A→B→C→D→E→A)*
 
 **Week A — Buy-In**
