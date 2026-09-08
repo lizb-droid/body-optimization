@@ -198,11 +198,11 @@ Overhead Tricep Extension *(standard wave, 8→12)* / Pallof Hold ×20s ea *(hol
 **Main Lift 2** — Barbell Cyclist Squat (front squat position, heels elevated) 4×10 · 2:30 min rest
 *Straight weight progression. Front-loaded, not back squat — Monday already owns heavy back squat, so this is deliberately a different bar position and mechanics: more upright torso, more quad isolation, less posterior chain involvement. Two different squat stimuli across the week instead of redundant heavy squatting twice.*
 
-**Core** — 3 rounds, 45s rest
-Bird Dog ×8 ea *(DR-safe core rotation — day 3 of the weekly core rotation, anti-extension/anti-rotation from all-fours)*
-
 **Superset A** — 3 rounds, 60s rest
 Bulgarian Split Squat ea *(standard wave, 8→12 — unilateral, deep stretch, front-of-leg complement to the GHD)* / GHD Hip Extension *(higher-rep wave, 10→14 — back-of-leg complement, squeeze glutes at top)*
+
+**Core** — 3 rounds, 45s rest
+Bird Dog ×8 ea *(DR-safe core rotation — day 3 of the weekly core rotation, anti-extension/anti-rotation from all-fours)*
 
 **Conditioning — 15 min** *(rotate weekly, A→B→C→D→E→A)*
 
