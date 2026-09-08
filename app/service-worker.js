@@ -1,6 +1,6 @@
 // service-worker.js — Cache-first strategy for Liz Program PWA
 // Cache name: bump version string to force a fresh install on deploy
-const CACHE_NAME = "liz-app-v22"; // bumped: finisher timer shows movements; AMRAP/cap adds result logging
+const CACHE_NAME = "liz-app-v24"; // bumped: major program update — Fri/Sat swapped, Monday/Tuesday/Fri/Sat core rotation, Mon RDL swap
 
 // Files to cache on install (shell + CDN deps)
 // CDN URLs must match the <script src> imports in index.html exactly.
