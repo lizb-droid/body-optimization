@@ -63,8 +63,8 @@ If a movement genuinely can't add the next available dumbbell increment without 
 | Tuesday | Upper — Chest + Back |
 | Wednesday | Run — Snowbird (Aug 19) + Brighton (Aug 26) races, then hybrid rotation (Zone 2 / Tempo / Hills / Intervals / Long Easy) |
 | Thursday | Push — Shoulders + Chest |
-| Friday | Pull — Back + Arms |
-| Saturday | Legs — Full Body + Conditioning |
+| Friday | Legs — Full Body + Conditioning |
+| Saturday | Pull — Back + Arms |
 | Sunday | Rest |
 
 **Deload weeks:** Week 6 and Week 12 — volume -40%, intensity -15%, stop 2-4 reps shy of failure on everything. **What a deload actually is:** you're not detraining or losing progress — you're letting accumulated fatigue clear out so the next block hits harder. Hold the same weights you used the week before; don't add, don't test failure, don't skip it because you "feel fine." Feeling fine going into a deload is normal — that's what 5 weeks of accumulated fatigue often feels like right before it catches up with you.
@@ -89,7 +89,7 @@ If a movement genuinely can't add the next available dumbbell increment without 
 *Your #1 priority movement. The 2-second hold at the top is deliberate — it keeps tension on the glute at peak contraction instead of letting momentum carry you through the lockout.*
 
 **Superset A** — 3 rounds, 60s rest
-Landmine RDL ea *(standard wave, 8→12)* / Deficit Reverse Lunge ea, dumbbells, off a plate for the step-down *(standard wave, 8→12)*
+Single-leg DB RDL ea *(standard wave, 8→12 — same hip-hinge pattern as Landmine RDL, simpler setup, no barbell involved so the lower-back flare-up risk from Barbell RDL doesn't apply)* / Deficit Reverse Lunge ea, dumbbells, off a plate for the step-down *(standard wave, 8→12)*
 
 **Superset B** — 3 rounds, 60s rest
 Lateral Lunge ea *(standard wave, 8→12)* / Weighted Dead Bug ×8 ea, light DB in the extended arm *(progression from bodyweight Dead Bug — same anti-extension pattern, added load increases the core demand without changing the DR-safe movement profile)*
@@ -122,7 +122,7 @@ DB Squeeze Press, two DBs pressed together throughout *(standard wave, 8→12 �
 Arnold Press *(standard wave, 8→12)* / DB Rear Delt Fly *(standard wave, 8→12 — posterior delt, antagonist to the front-dominant Arnold Press)*
 
 **Superset C** — 3 rounds, 60s rest
-DB Lateral Raise *(higher-rep wave, 10→14)* / Incline DB Curl *(standard wave, 8→12 — deeper stretch on the bicep than Friday's Spider Curl or Hammer Curl, different angle)*
+DB Lateral Raise *(higher-rep wave, 10→14)* / Incline DB Curl *(standard wave, 8→12 — deeper stretch on the bicep than Friday's Spider Curl or Hammer Curl, different angle)* / Weighted Copenhagen Plank ×20s ea *(DR-safe core rotation — day 2 of the weekly core rotation, tacked onto the last superset before the finisher)*
 
 **Finisher** — 8 min buy-in
 Row 20 cal → AMRAP remaining: 8 Push-ups / 4 Turkish Get-Up ea
@@ -183,34 +183,7 @@ Overhead Tricep Extension *(standard wave, 8→12)* / Pallof Hold ×20s ea *(hol
 
 ---
 
-## FRIDAY — Pull (Back + Arms)
-
-**Warm-up** (~3 min)
-- Cat Cow — 30s
-- Child's Pose Thread the Needle — 30s each side
-- Scapular Push-up — 30s
-- Push-up to Down Dog — 30s
-
-**Main Lift** — Barbell Bent Over Row 4×8 · 2:30 min rest
-*Straight weight progression.*
-
-**Main Lift 2** — DB Pullover 4×8-12 (working weight 45lb, extend rep ceiling before jumping to 55lb) · 2 min rest
-*Switched from barbell to dumbbell version — barbell grip width was too hard on the shoulders. Lying flat, arms tracking closer together, arc from above the chest to behind the head. Genuinely different plane of motion than any row — targets lats and rib cage stretch, not a horizontal pull.*
-
-**Superset A** — 3 rounds, 60s rest
-DB Row tripod ea *(standard wave, 8→12)* / Seated Rear Delt Fly *(higher-rep wave, 10→14)*
-
-**Superset B** — 3 rounds, 60s rest
-Spider Curl *(higher-rep wave, 10→14)* / DB High Pull, controlled tempo, no need to be explosive *(standard wave, 8→12 — vertical pulling plane, hits traps/rear delt differently than any row in the program)*
-
-**Finisher** — Every 2 min × 4 rounds
-20m Suitcase Carry ea + 8 KB Swings
-
-*Deload week: 3×8/3×6 main lifts, 2 rounds each superset, skip finisher. Hold last week's weights.*
-
----
-
-## SATURDAY — Legs (Full Body + Conditioning)
+## FRIDAY — Legs (Full Body + Conditioning)
 
 **Warm-up** (~4 min)
 - World's Greatest Stretch — 30s each side
@@ -224,6 +197,9 @@ Spider Curl *(higher-rep wave, 10→14)* / DB High Pull, controlled tempo, no ne
 
 **Main Lift 2** — Barbell Cyclist Squat (front squat position, heels elevated) 4×10 · 2:30 min rest
 *Straight weight progression. Front-loaded, not back squat — Monday already owns heavy back squat, so this is deliberately a different bar position and mechanics: more upright torso, more quad isolation, less posterior chain involvement. Two different squat stimuli across the week instead of redundant heavy squatting twice.*
+
+**Core** — 3 rounds, 45s rest
+Bird Dog ×8 ea *(DR-safe core rotation — day 3 of the weekly core rotation, anti-extension/anti-rotation from all-fours)*
 
 **Conditioning — 15 min** *(rotate weekly, A→B→C→D→E→A)*
 
@@ -243,6 +219,33 @@ Every 2 min × 7 rounds: 8 DB Thrusters + 10 cal Row
 Row 25 cal buy-in → AMRAP remaining time: 6 DB Snatch ea arm / 10 GHD Hip Extension / 10m Farmer Carry ea
 
 *Deload week: 3×5 thruster, 3×10 cyclist squat, skip conditioning. Hold last week's weights.*
+
+---
+
+## SATURDAY — Pull (Back + Arms)
+
+**Warm-up** (~3 min)
+- Cat Cow — 30s
+- Child's Pose Thread the Needle — 30s each side
+- Scapular Push-up — 30s
+- Push-up to Down Dog — 30s
+
+**Main Lift** — Barbell Bent Over Row 4×8 · 2 min rest
+*Straight weight progression.*
+
+**Main Lift 2** — DB Pullover 4×8-12 (working weight 45lb, extend rep ceiling before jumping to 55lb) · 1 min rest
+*Switched from barbell to dumbbell version — barbell grip width was too hard on the shoulders. Lying flat, arms tracking closer together, arc from above the chest to behind the head. Genuinely different plane of motion than any row — targets lats and rib cage stretch, not a horizontal pull.*
+
+**Superset A** — 3 rounds, 60s rest
+DB Row tripod ea *(standard wave, 8→12)* / Seated Rear Delt Fly *(higher-rep wave, 10→14)*
+
+**Superset B** — 3 rounds, 60s rest
+Spider Curl *(higher-rep wave, 10→14)* / DB High Pull, controlled tempo, no need to be explosive *(standard wave, 8→12 — vertical pulling plane, hits traps/rear delt differently than any row in the program)* / Suitcase Carry ea, 20m *(DR-safe core rotation — day 5 of the weekly core rotation, anti-lateral-flexion)*
+
+**Finisher** — Every 2 min × 4 rounds
+20m Suitcase Carry ea + 8 KB Swings
+
+*Deload week: 3×8/3×6 main lifts, 2 rounds each superset, skip finisher. Hold last week's weights.*
 
 ---
 
