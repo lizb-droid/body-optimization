@@ -329,6 +329,9 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .gs-top{display:flex;align-items:center;gap:10px;padding:10px 16px 8px}
 .gs-icon-btn{width:36px;height:36px;border-radius:50%;border:none;background:#1c1c1c;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
 .gs-icon-btn svg{width:17px;height:17px;stroke:#aaa;stroke-width:2.25;fill:none}
+.gs-audio-btn{height:36px;padding:0 12px 0 10px;border-radius:var(--r-full);border:none;background:#1c1c1c;display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;color:#aaa;font-size:12px;font-weight:500;font-family:inherit}
+.gs-audio-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.25;fill:none}
+.gs-audio-btn.on{background:var(--pink-m);color:var(--pink)}
 .gs-top-title{flex:1;min-width:0;text-align:center}
 .gs-top-title div:first-child{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gs-top-title div:last-child{font-size:11px;color:#777;margin-top:1px;font-variant-numeric:tabular-nums}
@@ -1825,13 +1828,38 @@ function gsWarmSecs(txt){ const m=txt.match(/(\d+)s/); const n=m?parseInt(m[1]):
 
 function gsRepsLbl(setsStr){ return (setsStr||'').replace(/^\d+×/,'').replace(/^\((\d+)\+(\d+)\)$/,'$1 + $2'); }
 
+// Coach voice: turn program shorthand into something a voice can read
+function gsSpoken(t){
+  return String(t||'')
+    .replace(/\bDB\b/g,'dumbbell').replace(/\bKB\b/g,'kettlebell').replace(/\bRDL\b/g,'R D L').replace(/\bGHD\b/g,'G H D')
+    .replace(/\bea( side)?\b/g,'each side').replace(/\bcal\b/g,'calories').replace(/(\d+) min\b/g,'$1 minute')
+    .replace(/(\d+)m\b/g,'$1 meters').replace(/(\d+)s\b/g,'$1 second').replace(/#(\d)/g,'number $1')
+    .replace(/(\d)-(?=\d)/g,'$1, ').replace(/…/g,', down to ').replace(/(\d)×(\d)/g,'$1 by $2').replace(/\s*×\s*/g,', ').replace(/–/g,' to ')
+    .replace(/ \+ /g,' and ').replace(/·/g,'.').replace(/\s+/g,' ').trim();
+}
+function gsRepsSpoken(setsStr){
+  let r=(setsStr||'').replace(/^\d+×/,''), m;
+  const ea=/\bea\b/.test(r)?' each side':'', extra=r.replace(/^[^a-z]*(ea\b)?\s*/i,'').replace(/^ea\b\s*/,'');
+  if((m=r.match(/^(\d+)s/))) return `${m[1]} second hold${ea}`;
+  if((m=r.match(/^(\d+)m/))) return `${m[1]} meters${ea}`;
+  if((m=r.match(/^\((\d+)\+(\d+)\)/))) return `${m[1]} plus ${m[2]} reps`;
+  if((m=r.match(/^(\d+)(?:[–-](\d+))?/))) return `${m[2]?m[1]+' to '+m[2]:m[1]} reps${ea}${extra?', '+extra:''}`;
+  return gsSpoken(r);
+}
+function gsDurSpoken(sec){
+  const m=Math.floor(sec/60), r=sec%60;
+  if(!m) return `${r} seconds`;
+  return `${m} minute${m>1?'s':''}${r?' '+r:''}`;
+}
+
 function gsBuild(day,withWarmup){
   const items=WORKOUTS[day.workout]||[];
   const steps=[{kind:'ready',title:'Get ready',sub:day.session,dur:GS_READY,block:'Get ready'}];
   const wt=gsWarmupType(day.workout);
   if(withWarmup&&wt) WARMUPS[wt].forEach(m=>{
     const [name,...rest]=m.split(' — ');
-    steps.push({kind:'warmup',title:name,sub:rest.join(' — '),dur:gsWarmSecs(m),block:'Warm-up'});
+    steps.push({kind:'warmup',title:name,sub:rest.join(' — '),dur:gsWarmSecs(m),block:'Warm-up',
+      say:`${steps.length===1?'Warm up. ':''}${gsSpoken(name)}. ${gsDurSpoken(gsWarmSecs(m))}.`});
   });
   // Group into blocks: a straight exercise, a superset (until the next marker), or a finisher
   const blocks=[]; let ss=null;
@@ -1842,41 +1870,57 @@ function gsBuild(day,withWarmup){
   });
   let pending=[], lastRest=GS_FIRST_SETUP;
   const pushPause=(step)=>{ step.log=pending; pending=[]; steps.push(step); };
-  const work=(ex,ei,si,sub,block)=>{
+  let firstRest=true;
+  const rest=(step)=>{ if(firstRest){ step.say+=' Log your weight while you rest.'; firstRest=false; } step.say10='10 seconds. Get ready.'; pushPause(step); };
+  const work=(ex,ei,si,sub,block,say)=>{
     const entry={exId:`${day.id}-ex${ei}`,exName:ex[0],si,setsStr:ex[1]};
     pending.push(entry);
-    steps.push({kind:'work',title:ex[0],sub,dur:gsWorkSecs(ex[1]),block,note:EXERCISE_NOTES[ex[0]]||''});
+    steps.push({kind:'work',title:ex[0],sub,dur:gsWorkSecs(ex[1]),block,note:EXERCISE_NOTES[ex[0]]||'',say});
   };
   blocks.filter(b=>b.fin||b.exs.length).forEach(b=>{
     const firstName=b.fin?'Finisher':b.exs[0].ex[0];
     const blockName=b.fin?`Finisher · ${b.fin.badge||''}`:b.ss?`${b.ss} · ${b.exs.map(e=>e.ex[0]).join(' / ')}`:firstName;
+    const setupSay=b.fin
+      ? `Last block, the finisher. ${gsSpoken(b.fin.badge||'')}. ${(b.fin.movements||[]).map(m=>`${gsSpoken(m.name)}, ${gsSpoken(m.reps)}`).join('. ')}. Get set up.`
+      : b.ss
+      ? `Next up, ${b.ss}. ${b.exs.map(e=>gsSpoken(e.ex[0])).join(', then ')}. ${b.rounds||parseNumSets(b.exs[0].ex[1])} rounds. Get set up.`
+      : `Next up, ${gsSpoken(firstName)}. ${parseNumSets(b.exs[0].ex[1])} sets of ${gsRepsSpoken(b.exs[0].ex[1])}. ${gsSpoken(EXERCISE_NOTES[firstName]||'')} Get set up.`;
     pushPause({kind:'setup',title:firstName,sub:b.ss?`${b.ss} · ${b.exs.length} exercises`:'Get your equipment ready',
-      dur:Math.min(90,Math.max(45,lastRest)),block:blockName});
+      dur:Math.min(90,Math.max(45,lastRest)),block:blockName,say:setupSay,say10:'10 seconds.'});
     if(b.fin){
       const f=b.fin, rounds=f._fin==='interval'?(f.rounds||1):1;
       for(let r=0;r<rounds;r++) steps.push({kind:'finisher',title:f.badge||'Finisher',
         sub:rounds>1?`Round ${r+1} of ${rounds}`:(f._fin==='amrap'?'As many rounds as possible':'For time'),
-        dur:f.duration,block:blockName,movs:f.movements||[]});
+        dur:f.duration,block:blockName,movs:f.movements||[],
+        say:rounds>1?(r===0?`Round 1 of ${rounds}. Go!`:r===rounds-1?'Last round. Go!':`Round ${r+1}. Go!`):'Go! Finish strong.',
+        halfSay:rounds===1&&f.duration>=240?'Halfway there. Keep moving.':''});
       lastRest=GS_FIRST_SETUP;
     } else if(b.ss){
       const R=b.rounds||parseNumSets(b.exs[0].ex[1]);
       for(let r=0;r<R;r++){
         b.exs.forEach(({ex,ei},k)=>{
-          if(k>0) steps.push({kind:'switch',title:ex[0],sub:'Move to the next exercise',dur:GS_SWITCH,block:blockName});
-          work(ex,ei,r,`${b.ss} · Round ${r+1} of ${R} · ${gsRepsLbl(ex[1])}`,blockName);
+          if(k>0) steps.push({kind:'switch',title:ex[0],sub:'Move to the next exercise',dur:GS_SWITCH,block:blockName,
+            say:`Switch. ${gsSpoken(ex[0])}.`});
+          const lead=k>0?'':r===0?'Round 1. ':r===R-1?'Last round. ':`Round ${r+1}. `;
+          work(ex,ei,r,`${b.ss} · Round ${r+1} of ${R} · ${gsRepsLbl(ex[1])}`,blockName,
+            `${lead}${gsSpoken(ex[0])}, ${gsRepsSpoken(ex[1])}. Go.`);
         });
-        if(r<R-1) pushPause({kind:'rest',title:'Rest',sub:`${b.ss} · Round ${r+2} next`,dur:b.rest,block:blockName});
+        if(r<R-1) rest({kind:'rest',title:'Rest',sub:`${b.ss} · Round ${r+2} next`,dur:b.rest,block:blockName,
+          say:`Rest, ${gsDurSpoken(b.rest)}. Round ${r+2} next.`});
       }
       lastRest=b.rest;
     } else {
-      const {ex,ei}=b.exs[0], n=parseNumSets(ex[1]), rest=REST_TIMES[ex[0]]||120;
+      const {ex,ei}=b.exs[0], n=parseNumSets(ex[1]), restSecs=REST_TIMES[ex[0]]||120;
       for(let si=0;si<n;si++){
-        work(ex,ei,si,`Set ${si+1} of ${n} · ${gsRepsLbl(ex[1])}`,blockName);
-        if(si<n-1) pushPause({kind:'rest',title:'Rest',sub:`Set ${si+2} of ${n} next`,dur:rest,block:blockName});
+        work(ex,ei,si,`Set ${si+1} of ${n} · ${gsRepsLbl(ex[1])}`,blockName,
+          si===0?`Set 1. ${gsRepsSpoken(ex[1])}. Go.`:si===n-1?`Last set! ${gsRepsSpoken(ex[1])}. Go.`:`Set ${si+1}. Go.`);
+        if(si<n-1) rest({kind:'rest',title:'Rest',sub:`Set ${si+2} of ${n} next`,dur:restSecs,block:blockName,
+          say:`Rest, ${gsDurSpoken(restSecs)}. ${si+2===n?'Last set':'Set '+(si+2)} next.`});
       }
-      lastRest=rest;
+      lastRest=restSecs;
     }
   });
+  steps[0].say=`Let's go. ${gsSpoken(day.session.replace(/ — /,'. '))}. About ${Math.round(gsTotal(steps)/60)} minutes. ${withWarmup&&wt?'Warm-up first.':''}`;
   steps.finalLog=pending;
   return steps;
 }
@@ -1894,7 +1938,8 @@ function gsOpen(dayId){
   const day=WEEKS[S.weekIdx].days.find(d=>d.id===dayId);
   if(!day||!WORKOUTS[day.workout]) return;
   const saved=gsSaved();
-  G={day,warm:true,sound:true,phase:'plan',idx:0,endAt:0,pausedLeft:null,startedAt:0,tick:null,wl:null,beepAt:null,prs:0};
+  let audio='coach'; try{ audio=localStorage.getItem('betalizgsaudio')||'coach'; }catch(e){}
+  G={day,warm:true,audio,phase:'plan',idx:0,endAt:0,pausedLeft:null,startedAt:0,tick:null,wl:null,beepAt:null,halfAt:null,prs:0};
   if(saved&&saved.dayId===dayId){
     G.warm=saved.warm!==false; G.steps=gsBuild(day,G.warm);
     G.phase='run'; G.idx=Math.min(saved.idx,G.steps.length-1); G.pausedLeft=saved.left; G.startedAt=saved.startedAt||Date.now();
@@ -1908,20 +1953,53 @@ function gsClose(force){
   if(!G) return;
   if(G.phase==='run'&&!force){ G.leaving=true; gsRender(); return; }
   gsCommitLog(false);
-  clearInterval(G.tick); gsWake(false); gsPersist();
+  clearInterval(G.tick); gsWake(false); gsPersist(); gsHush();
   G=null;
   document.getElementById('gs').classList.remove('open');
   if(S.activeDayId) renderDayDetail(S.activeDayId);
 }
 
 function gsToggleWarm(){ G.warm=!G.warm; G.steps=gsBuild(G.day,G.warm); gsRender(); }
-function gsToggleSound(){ G.sound=!G.sound; gsRender(); }
+const GS_AUDIO_NEXT={coach:'beeps',beeps:'off',off:'coach'};
+const GS_AUDIO_LBL={coach:'Coach',beeps:'Beeps',off:'Muted'};
+function gsToggleSound(){
+  G.audio=GS_AUDIO_NEXT[G.audio]||'coach';
+  try{ localStorage.setItem('betalizgsaudio',G.audio); }catch(e){}
+  if(G.audio!=='coach') gsHush();
+  gsUnlockAudio();
+  if(G.audio==='coach') gsSay('Coach on.'); else if(G.audio==='beeps') gsChime();
+  gsRender();
+}
+
+let gsVoice=null;
+function gsPickVoice(){
+  try{
+    const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));
+    const pref=['Samantha','Ava','Allison','Google US English','Karen','Serena','Moira','Tessa'];
+    gsVoice=pref.map(n=>vs.find(v=>v.name.includes(n))).find(Boolean)||vs.find(v=>v.lang==='en-US')||vs[0]||null;
+  }catch(e){}
+}
+if('speechSynthesis' in window){ gsPickVoice(); try{ speechSynthesis.addEventListener('voiceschanged',gsPickVoice); }catch(e){} }
+function gsSay(text){
+  if(!G||G.audio!=='coach'||!text||!('speechSynthesis' in window)) return;
+  try{
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text.replace(/\s+/g,' ').trim());
+    if(gsVoice) u.voice=gsVoice;
+    u.rate=1.04;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function gsHush(){ try{ speechSynthesis.cancel(); }catch(e){} }
+function gsUnlockAudio(){ try{ gsAC=gsAC||new (window.AudioContext||window.webkitAudioContext)(); gsAC.resume(); }catch(e){} }
+function gsChime(){ gsBeep(660,180); setTimeout(()=>gsBeep(990,320),190); }
+function gsAnnounce(){ const st=G&&G.steps[G.idx]; if(st) gsSay(st.say); }
 
 function gsStart(){
-  try{ gsAC=gsAC||new (window.AudioContext||window.webkitAudioContext)(); gsAC.resume(); }catch(e){}
+  gsUnlockAudio();
   G.phase='run'; G.idx=0; G.startedAt=Date.now(); G.endAt=Date.now()+G.steps[0].dur*1000; G.pausedLeft=null;
   clearInterval(G.tick); G.tick=setInterval(gsTick,250);
-  gsWake(true); gsPersist(); gsRender();
+  gsWake(true); gsPersist(); gsRender(); gsAnnounce();
 }
 
 function gsLeft(){ return G.pausedLeft!==null?G.pausedLeft:G.endAt-Date.now(); }
@@ -1935,15 +2013,18 @@ function gsTick(){
     if(G.idx>=G.steps.length){ gsFinish(); return; }
     G.endAt+=G.steps[G.idx].dur*1000;
   }
-  if(changed){ gsBeep(880,450); try{ navigator.vibrate&&navigator.vibrate([300,100,300]); }catch(e){} gsPersist(); gsRender(); return; }
-  const s=Math.ceil(gsLeft()/1000);
-  if(s<=3&&s>=1&&G.beepAt!==`${G.idx}-${s}`){ G.beepAt=`${G.idx}-${s}`; gsBeep(600,120); }
+  if(changed){ gsBeep(880,450); try{ navigator.vibrate&&navigator.vibrate([300,100,300]); }catch(e){} gsPersist(); gsRender(); gsAnnounce(); return; }
+  const st=G.steps[G.idx], left=gsLeft(), s=Math.ceil(left/1000);
+  // One chime at 10 seconds left (skipped on steps too short for it to mean anything)
+  if(s===10&&st.dur>15&&G.beepAt!==G.idx){ G.beepAt=G.idx; gsChime(); if(st.say10) setTimeout(()=>gsSay(st.say10),550); }
+  if(st.halfSay&&left<=st.dur*500&&left>11000&&G.halfAt!==G.idx){ G.halfAt=G.idx; gsSay(st.halfSay); }
   gsRenderTime();
 }
 
 function gsTogglePause(){
+  gsUnlockAudio();
   if(G.pausedLeft!==null){ G.endAt=Date.now()+G.pausedLeft; G.pausedLeft=null; gsWake(true); }
-  else { G.pausedLeft=Math.max(0,G.endAt-Date.now()); }
+  else { G.pausedLeft=Math.max(0,G.endAt-Date.now()); gsHush(); }
   gsPersist(); gsRender();
 }
 
@@ -1953,7 +2034,9 @@ function gsJump(to){
   G.idx=Math.max(0,to);
   const ms=G.steps[G.idx].dur*1000;
   if(G.pausedLeft!==null) G.pausedLeft=ms; else G.endAt=Date.now()+ms;
+  G.beepAt=G.halfAt=null;
   gsPersist(); gsRender();
+  if(G.pausedLeft===null) gsAnnounce();
 }
 function gsNext(){ gsJump(G.idx+1); }
 function gsPrev(){ const intoStep=G.steps[G.idx].dur*1000-gsLeft(); gsJump(intoStep>3000?G.idx:G.idx-1); }
@@ -1963,6 +2046,7 @@ function gsFinish(){
   G.phase='done'; G.endedAt=Date.now();
   S.done[G.day.id]=true; saveWorkout();
   gsPersist(); gsBeep(1040,700); gsRender();
+  gsSay(`Session complete. ${Math.round((G.endedAt-G.startedAt)/60000)} minutes. Great work.`);
   launchConfetti(window.innerWidth/2,window.innerHeight/3);
 }
 
@@ -1981,7 +2065,7 @@ function gsCommitLog(checkPR){
 }
 
 function gsBeep(freq,ms){
-  if(!G||!G.sound||!gsAC) return;
+  if(!G||G.audio==='off'||!gsAC) return;
   try{
     const o=gsAC.createOscillator(), g=gsAC.createGain(), t=gsAC.currentTime;
     o.frequency.value=freq; o.connect(g); g.connect(gsAC.destination);
@@ -2023,6 +2107,7 @@ function gsLogRows(log){
 const GS_IC={
   x:'<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
   snd:'<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 010 7M19 5a10 10 0 010 14"/></svg>',
+  coach:'<svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 00-3 3v6a3 3 0 006 0V5a3 3 0 00-3-3z"/><path d="M19 10v1a7 7 0 01-14 0v-1M12 18v4M8 22h8"/></svg>',
   mute:'<svg viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="22" y1="9" x2="16" y2="15"/><line x1="16" y1="9" x2="22" y2="15"/></svg>',
   play:'<svg viewBox="0 0 24 24"><polygon points="7 4 20 12 7 20 7 4"/></svg>',
   pause:'<svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>',
@@ -2039,7 +2124,7 @@ function gsRender(){
   const top=(sub)=>`<div class="gs-top">
       <button class="gs-icon-btn" onclick="gsClose()" aria-label="Close">${GS_IC.x}</button>
       <div class="gs-top-title"><div>${escH(day.session)}</div><div id="gs-meta">${sub}</div></div>
-      <button class="gs-icon-btn" onclick="gsToggleSound()" aria-label="Sound">${G.sound?GS_IC.snd:GS_IC.mute}</button>
+      <button class="gs-audio-btn${G.audio==='coach'?' on':''}" onclick="gsToggleSound()" aria-label="Audio: ${GS_AUDIO_LBL[G.audio]}">${G.audio==='coach'?GS_IC.coach:G.audio==='beeps'?GS_IC.snd:GS_IC.mute}<span>${GS_AUDIO_LBL[G.audio]}</span></button>
     </div>`;
 
   if(G.phase==='plan'){
