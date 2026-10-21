@@ -387,6 +387,8 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .gs-stats{display:flex;gap:10px;width:100%;max-width:380px;margin-top:22px}
 .gs-stat{flex:1;background:#141414;border-radius:var(--r-lg);padding:14px 10px;text-align:center}
 .gs-stat div:first-child{font-size:24px;font-weight:500;font-variant-numeric:tabular-nums}
+.gs-sheet{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;z-index:2}
+.gs-sheet-card{width:100%;background:var(--dk2);border-radius:20px 20px 0 0;padding:24px 20px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center}
 .gs-stat div:last-child{font-size:11px;color:#777;margin-top:4px;text-transform:uppercase;letter-spacing:.6px}
 </style>
 </head>
@@ -1902,9 +1904,9 @@ function gsOpen(dayId){
   gsRender();
 }
 
-function gsClose(){
+function gsClose(force){
   if(!G) return;
-  if(G.phase==='run'&&!confirm('Leave this session? Your spot is saved — you can resume from the day screen.')) return;
+  if(G.phase==='run'&&!force){ G.leaving=true; gsRender(); return; }
   gsCommitLog(false);
   clearInterval(G.tick); gsWake(false); gsPersist();
   G=null;
@@ -2108,9 +2110,16 @@ function gsRender(){
       <button class="gs-ctrl" onclick="gsPrev()" aria-label="Back">${GS_IC.prev}</button>
       <button class="gs-ctrl main" onclick="gsTogglePause()" aria-label="${paused?'Play':'Pause'}">${paused?GS_IC.play:GS_IC.pause}</button>
       <button class="gs-ctrl" onclick="gsNext()" aria-label="Skip">${GS_IC.next}</button>
-    </div>`;
+    </div>
+    ${G.leaving?`<div class="gs-sheet" onclick="if(event.target===this)gsStay()"><div class="gs-sheet-card">
+      <div class="gs-name" style="margin-top:0">Leave this session?</div>
+      <div class="gs-sub">Your spot is saved. Resume it from the day screen.</div>
+      <button class="gs-big-btn" onclick="gsStay()">Keep going</button>
+      <button class="gs-ghost-btn" onclick="gsClose(true)">Leave session</button>
+    </div></div>`:''}`;
   gsRenderTime();
 }
+function gsStay(){ G.leaving=false; gsRender(); }
 
 function gsRenderTime(){
   if(!G||G.phase!=='run') return;
