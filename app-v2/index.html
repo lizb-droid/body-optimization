@@ -1423,7 +1423,7 @@ function woRender(){
         ${day.note?`<p>${escH(day.note)}</p>`:''}
         ${!isLift&&day.info?`<p>${escH(day.info)}</p>`:''}
       </div>
-      ${secs.map(sec=>`<div class="wo-sec${sec.kind==='ss'||sec.kind==='fin'?' grouped':''}${sec.kind==='fin'?' fin':''}">
+      ${secs.map(sec=>`<div class="wo-sec${sec.rows.length>1?' grouped':''}${sec.kind==='fin'?' fin':''}">
         <div class="wo-sec-hdr"><h2>${escH(sec.title)}</h2>${sec.sub?`<span>${escH(sec.sub)}</span>`:''}</div>
         <div class="wo-rows">${sec.rows.map(r=>`<div class="wo-row">
           <div class="wo-name">${escH(r.name)}</div>
