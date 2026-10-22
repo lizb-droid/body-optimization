@@ -32,7 +32,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 #content{flex:1;overflow:hidden;position:relative}
 .tab-panel{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}
 .tab-panel.active{display:block}
-#tabnav{flex-shrink:0;background:var(--dk0);border-top:1px solid #1f1f1f;display:flex;padding-bottom:env(safe-area-inset-bottom)}
+#tabnav{flex-shrink:0;display:flex;align-items:stretch;height:68px;margin:6px 16px calc(14px + env(safe-area-inset-bottom));border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(28,28,28,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);overflow:hidden}
 
 /* ── Header ── */
 .hdr-top{display:flex;align-items:center;justify-content:space-between;padding:10px 20px 0}
@@ -44,11 +44,11 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .io-btn:active{background:rgba(255,255,255,.1)}
 
 /* ── Tab bar ── */
-.nt{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 0 6px;cursor:pointer}
-.nt svg{width:22px;height:22px;stroke:currentColor;color:#555;stroke-width:1.75;transition:color .15s}
-.nt.on svg{color:var(--pink)}
-.nt-lbl{font-size:10px;color:#555;letter-spacing:.3px;transition:color .15s}
-.nt.on .nt-lbl{color:var(--pink);font-weight:500}
+.nt{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:#aaa;transition:color .15s}
+.nt:active{background:rgba(255,255,255,.06)}
+.nt svg{width:20px;height:20px;stroke:currentColor;stroke-width:2;flex-shrink:0}
+.nt-lbl{font-size:var(--cta-size);font-weight:var(--cta-weight)}
+.nt.on{color:var(--pink)}
 
 /* ── Phase bar ── */
 .phase-info{display:flex;justify-content:space-between;margin-bottom:5px}
@@ -299,7 +299,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .set-input.active-set{border-color:var(--pink)}
 
 /* ── Float timer ── */
-#float-timer{position:fixed;bottom:calc(60px + env(safe-area-inset-bottom) + 16px);right:16px;width:60px;height:60px;border-radius:50%;background:var(--dk0);border:1px solid #333;display:none;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;z-index:10;box-shadow:0 4px 16px rgba(0,0,0,.4)}
+#float-timer{position:fixed;bottom:calc(88px + env(safe-area-inset-bottom) + 16px);right:16px;width:60px;height:60px;border-radius:50%;background:var(--dk0);border:1px solid #333;display:none;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;z-index:10;box-shadow:0 4px 16px rgba(0,0,0,.4)}
 
 /* ── Warmup card ── */
 .warmup-details{margin:10px 14px 0}
