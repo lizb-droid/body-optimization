@@ -364,6 +364,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .wo-top{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;padding:8px 16px 10px}
 .wo-x{width:48px;height:48px;border-radius:50%;border:none;background:#1c1c1c;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .wo-x svg{width:22px;height:22px;stroke:#fff;stroke-width:2.5;fill:none}
+.wo-x svg polygon{fill:none}
 .wo-time{text-align:center;font-size:21px;font-weight:500;font-variant-numeric:tabular-nums}
 .wo-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 20px 130px}
 .wo-hero{padding:6px 0 4px}
@@ -481,6 +482,24 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .rs-w .plus{width:52px;height:52px;border-radius:50%;background:rgba(80,80,80,.7);font-size:30px;font-weight:300;display:flex;align-items:center;justify-content:center;line-height:1}
 .rs-w .v{font-family:'Barlow Condensed','Roboto',sans-serif;font-weight:800;font-size:38px;line-height:1.1;font-variant-numeric:tabular-nums}
 .rs-w .k{font-size:var(--cta-size);font-weight:var(--cta-weight);color:#9aa5ff}
+
+/* ── Sound & coach sheet ── */
+.jr-body.sd-body{padding:4px 20px 120px}
+.jr-hdr .l svg polygon{fill:none}
+.sd-sec{margin-top:18px}
+.sd-h{font-size:13px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:#999;margin-bottom:10px}
+.sd-h small{text-transform:none;letter-spacing:0;font-weight:400;color:#666;margin-left:6px;font-size:13px}
+.sd-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;padding:4px;border-radius:16px;background:#111}
+.sd-seg button{height:44px;border:none;border-radius:12px;background:none;color:#aaa;font-size:var(--cta-size);font-weight:var(--cta-weight);font-family:inherit;cursor:pointer}
+.sd-seg button.on{background:#2b2b2b;color:var(--pink)}
+.sd-note{font-size:14px;color:#888;line-height:1.5;margin-top:10px}
+.sd-list{display:flex;flex-direction:column;border-radius:16px;background:#232323;overflow:hidden}
+.sd-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:52px;padding:0 16px;border:none;border-bottom:1px solid #2e2e2e;background:none;color:#eee;font-size:var(--cta-size);font-weight:var(--cta-weight);font-family:inherit;text-align:left;cursor:pointer}
+.sd-opt:last-child{border-bottom:none}
+.sd-opt.on{color:var(--pink)}
+.sd-opt svg{width:18px;height:18px;stroke:var(--pink);stroke-width:3;fill:none;flex-shrink:0}
+.sd-opt small{color:#666;font-size:12px}
+.sd-opt em{font-style:normal;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--yel);margin-left:6px}
 
 /* ── Journal (log sets) sheet ── */
 #jr{position:fixed;inset:0;z-index:160;display:none}
@@ -1564,7 +1583,8 @@ function woRender(){
   el.innerHTML=`
     <div class="wo-top">
       <button class="wo-x" onclick="woClose()" aria-label="Close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
-      <div class="wo-time">${info.mins?info.mins+' min':''}</div><span></span>
+      <div class="wo-time">${info.mins?info.mins+' min':''}</div>
+      ${isLift?`<button class="wo-x" onclick="sdOpen()" aria-label="Sound and coach">${GS_IC.snd}</button>`:'<span></span>'}
     </div>
     <div class="wo-body">
       <div class="wo-hero">
@@ -2446,6 +2466,43 @@ function gsClose(force){
 function gsToggleWarm(){ G.warm=!G.warm; G.steps=gsBuild(G.day,G.warm); gsRender(); }
 const GS_AUDIO_NEXT={coach:'beeps',beeps:'off',off:'coach'};
 const GS_AUDIO_LBL={coach:'Coach',beeps:'Beeps',off:'Muted'};
+function sdAudio(){ try{ return localStorage.getItem('betalizgsaudio')||'coach'; }catch(e){ return 'coach'; } }
+function sdSetAudio(m){
+  try{ localStorage.setItem('betalizgsaudio',m); }catch(e){}
+  if(G){ G.audio=m; if(m!=='coach') gsHush(); }
+  if(m==='coach') gsSpeak('Coach on.'); else if(m==='beeps') gsChimeRaw(); else gsHush();
+  sdRender(); if(G) gsRender();
+}
+function sdOpen(){
+  JR={mode:'sound'};
+  const el=document.getElementById('jr');
+  el.innerHTML=`<div class="jr-scrim" onclick="jrClose()"></div>
+    <div class="jr-sheet sd-sheet" id="jr-sheet">
+      <div class="jr-hdr"><i class="jr-grab"></i><span class="l">${GS_IC.snd}Sound &amp; coach</span><span class="r"></span></div>
+      <div class="jr-body sd-body" id="jr-body"></div>
+      <div class="jr-foot"><span class="jr-spacer"></span><div class="m"></div>
+        <button class="jr-x" onclick="jrClose()" aria-label="Close">${JR_IC.x}</button></div>
+    </div>`;
+  sdRender(); gsUnlockAudio();
+  el.classList.add('open'); jrDrag();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));
+}
+function sdRender(){
+  const b=document.getElementById('jr-body'); if(!b||!JR||JR.mode!=='sound') return;
+  const a=sdAudio(), vs=gsVoices(), chime=gsChimeId();
+  b.innerHTML=`
+    <div class="sd-sec"><div class="sd-h">During the workout</div>
+      <div class="sd-seg">${[['coach','Coach voice'],['beeps','Sounds only'],['off','Muted']].map(([k,l])=>`<button class="${a===k?'on':''}" onclick="sdSetAudio('${k}')">${l}</button>`).join('')}</div>
+      <p class="sd-note">${a==='coach'?'The coach talks you through each movement, with a sound at 10 seconds left and at each change.':a==='beeps'?'A sound at 10 seconds left and at each change. No talking.':'No sound at all.'}</p></div>
+    <div class="sd-sec"><div class="sd-h">10-second sound <small>Tap to hear</small></div>
+      <div class="sd-list">${Object.entries(GS_CHIMES).map(([id,c])=>`<button class="sd-opt${chime===id?' on':''}" onclick="gsSetChime('${id}')"><span>${c.lbl}</span>${chime===id?HM_CHECK:''}</button>`).join('')}</div></div>
+    <div class="sd-sec"><div class="sd-h">Coach voice <small>Tap to hear</small></div>
+      ${vs.length?`<div class="sd-list">${vs.slice(0,12).map(v=>`<button class="sd-opt${gsVoice&&gsVoice.voiceURI===v.voiceURI?' on':''}" data-uri="${escH(v.voiceURI)}" onclick="gsSetVoice(this.dataset.uri)">
+        <span>${escH(v.name.replace(/\s*\((Premium|Enhanced)\)/i,''))}${gsVoiceRank(v)<2?` <em>${/premium/i.test(v.name)?'Premium':'Enhanced'}</em>`:''}</span>${gsVoice&&gsVoice.voiceURI===v.voiceURI?HM_CHECK:`<small>${escH(v.lang)}</small>`}</button>`).join('')}</div>`
+        :`<p class="sd-note">This browser doesn't offer any voices here. The installed app on your iPhone will.</p>`}
+      ${!vs.some(v=>gsVoiceRank(v)===0)?`<p class="sd-note">For a natural voice on iPhone: Settings → Accessibility → Spoken Content → Voices → English. Download a Premium voice (Ava or Zoe sound the most natural), then reopen this sheet.</p>`:''}
+    </div>`;
+}
 function gsToggleSound(){
   G.audio=GS_AUDIO_NEXT[G.audio]||'coach';
   try{ localStorage.setItem('betalizgsaudio',G.audio); }catch(e){}
@@ -2469,15 +2526,16 @@ function gsPickVoice(){
   gsVoice=vs.find(v=>v.voiceURI===saved)||vs.find(v=>gsVoiceRank(v)<2&&v.lang==='en-US')||vs.find(v=>gsVoiceRank(v)<2)
     ||pref.map(n=>vs.find(v=>v.name.includes(n))).find(Boolean)||vs.find(v=>v.lang==='en-US')||vs[0]||null;
   if(G&&G.phase==='plan') gsRender();
+  sdRender();
 }
 if('speechSynthesis' in window){ gsPickVoice(); try{ speechSynthesis.addEventListener('voiceschanged',gsPickVoice); }catch(e){} }
 function gsSetVoice(uri){
   try{ localStorage.setItem('betalizgsvoice',uri); }catch(e){}
-  gsPickVoice(); gsUnlockAudio();
-  const a=G.audio; G.audio='coach'; gsSay("Next up, Barbell Hip Thrust. 4 sets of 10 reps. Let's go."); G.audio=a;
+  gsPickVoice(); gsSpeak("Next up, Barbell Hip Thrust. 4 sets of 10 reps. Let's go."); sdRender();
 }
-function gsSay(text){
-  if(!G||G.audio!=='coach'||!text||!('speechSynthesis' in window)) return;
+function gsSay(text){ if(G&&G.audio==='coach') gsSpeak(text); }
+function gsSpeak(text){
+  if(!text||!('speechSynthesis' in window)) return;
   try{
     speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text.replace(/\s+/g,' ').trim());
@@ -2505,7 +2563,8 @@ const GS_CHIMES={
 };
 function gsChimeId(){ try{ const c=localStorage.getItem('betalizgschime'); return GS_CHIMES[c]?c:'rising'; }catch(e){ return 'rising'; } }
 function gsChime(id){ if(!G||G.audio==='off'||!gsAC) return; try{ GS_CHIMES[id||gsChimeId()].play(); }catch(e){} }
-function gsSetChime(id){ try{ localStorage.setItem('betalizgschime',id); }catch(e){} gsUnlockAudio(); const a=G.audio; G.audio='beeps'; gsChime(id); G.audio=a; gsRender(); }
+function gsChimeRaw(id){ gsUnlockAudio(); try{ GS_CHIMES[id||gsChimeId()].play(); }catch(e){} }
+function gsSetChime(id){ try{ localStorage.setItem('betalizgschime',id); }catch(e){} gsChimeRaw(id); sdRender(); }
 function gsAnnounce(){ const st=G&&G.steps[G.idx]; if(st) gsSay(st.say); }
 
 function gsStart(){
@@ -2864,7 +2923,7 @@ function gsRender(){
   const top=(sub)=>`<div class="gs-top">
       <button class="gs-icon-btn" onclick="gsClose()" aria-label="Close">${GS_IC.x}</button>
       <div class="gs-top-title"><div>${escH(day.session)}</div><div id="gs-meta">${sub}</div></div>
-      <button class="gs-audio-btn${G.audio==='coach'?' on':''}" onclick="gsToggleSound()" aria-label="Audio: ${GS_AUDIO_LBL[G.audio]}">${G.audio==='coach'?GS_IC.coach:G.audio==='beeps'?GS_IC.snd:GS_IC.mute}<span>${GS_AUDIO_LBL[G.audio]}</span></button>
+      <button class="gs-audio-btn${G.audio==='coach'?' on':''}" onclick="sdOpen()" aria-label="Sound and coach: ${GS_AUDIO_LBL[G.audio]}">${G.audio==='coach'?GS_IC.coach:G.audio==='beeps'?GS_IC.snd:GS_IC.mute}<span>${GS_AUDIO_LBL[G.audio]}</span></button>
     </div>`;
 
   if(G.phase==='plan'){
@@ -2942,7 +3001,7 @@ function gsRender(){
     ${paused&&!G.leaving?`<div class="sx-pause">
       <div class="sx-pause-top">
         <button class="gs-icon-btn" onclick="gsTogglePause()" aria-label="Back to workout">${GS_IC.x}</button>
-        <button class="gs-audio-btn${G.audio==='coach'?' on':''}" onclick="gsToggleSound()" aria-label="Audio: ${GS_AUDIO_LBL[G.audio]}">${G.audio==='coach'?GS_IC.coach:G.audio==='beeps'?GS_IC.snd:GS_IC.mute}<span>${GS_AUDIO_LBL[G.audio]}</span></button>
+        <button class="gs-audio-btn${G.audio==='coach'?' on':''}" onclick="sdOpen()" aria-label="Sound and coach: ${GS_AUDIO_LBL[G.audio]}">${G.audio==='coach'?GS_IC.coach:G.audio==='beeps'?GS_IC.snd:GS_IC.mute}<span>${GS_AUDIO_LBL[G.audio]}</span></button>
       </div>
       <div class="sx-pause-mid">
         <h2>Paused</h2>
