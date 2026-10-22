@@ -14,7 +14,7 @@
 <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans-serif}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Roboto','Helvetica Neue',sans-serif}
 :root{
   --pink:#FF9BD7;--pink-on:#5c1038;--pink-m:rgba(255,155,215,.15);
   --ind:#4D5FFF;--ind-on:#1a2580;--ind-m:#eef0ff;--ind-b:#c5caff;
@@ -390,7 +390,7 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .wo-start.done{background:var(--ind);color:#fff}
 
 /* ── Session screen (section view) ── */
-.sx{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;background:#0b0b0b center/cover no-repeat;overflow:hidden;user-select:none;-webkit-user-select:none}
+.sx{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;touch-action:pan-y;background:#0b0b0b center/cover no-repeat;overflow:hidden;user-select:none;-webkit-user-select:none}
 .sx::before{content:'';position:absolute;inset:0;background:radial-gradient(90% 55% at 80% 0%,rgba(255,155,215,.16),transparent 65%),radial-gradient(70% 45% at 0% 100%,rgba(77,95,255,.14),transparent 70%);pointer-events:none}
 .sx.has-img::before{background:rgba(0,0,0,.62)}
 .sx>*{position:relative}
@@ -2166,8 +2166,8 @@ function selectPreset(p){ clearInterval(T.interval); T.running=false; T.selected
 // ─────────────────────────────────────────────
 
 const GS_READY=10, GS_SWITCH=15, GS_FIRST_SETUP=60;
-const GS_KIND_LBL={ready:'Get ready',warmup:'Warm-up',work:'Work',rest:'Rest',switch:'Switch',setup:'Set up',finisher:'Finisher'};
-const GS_KIND_COL={ready:'#888',warmup:'#4D5FFF',work:'#FF9BD7',rest:'#4D5FFF',switch:'#888',setup:'#888',finisher:'#DADF0A'};
+const GS_KIND_LBL={preview:'Preview',ready:'Get ready',warmup:'Warm-up',work:'Work',rest:'Rest',switch:'Switch',setup:'Set up',finisher:'Finisher'};
+const GS_KIND_COL={preview:'#888',ready:'#888',warmup:'#4D5FFF',work:'#FF9BD7',rest:'#4D5FFF',switch:'#888',setup:'#888',finisher:'#DADF0A'};
 const GS_RING_C=2*Math.PI*45;
 let G=null, gsAC=null;
 
@@ -2215,13 +2215,16 @@ function gsDurSpoken(sec){
 
 function gsBuild(day,withWarmup){
   const items=WORKOUTS[day.workout]||[];
-  const steps=[{kind:'ready',title:'Get ready',sub:day.session,dur:GS_READY,block:'Get ready'}];
+  const steps=[];
   const wt=gsWarmupType(day.workout);
-  if(withWarmup&&wt) WARMUPS[wt].forEach(m=>{
-    const [name,...rest]=m.split(' — ');
-    steps.push({kind:'warmup',title:name,sub:rest.join(' — '),dur:gsWarmSecs(m),block:'Warm-up',
-      say:`${steps.length===1?'Warm up. ':''}${gsSpoken(name)}. ${gsDurSpoken(gsWarmSecs(m))}.`});
-  });
+  if(withWarmup&&wt){
+    steps.push({kind:'preview',title:'Warm Up',sub:'',dur:20,block:'Warm-up'});
+    WARMUPS[wt].forEach(m=>{
+      const [name,...rest]=m.split(' — ');
+      steps.push({kind:'warmup',title:name,sub:rest.join(' — '),dur:gsWarmSecs(m),block:'Warm-up',
+        say:`${gsSpoken(name)}. ${gsDurSpoken(gsWarmSecs(m))}. Go.`});
+    });
+  }
   // Group into blocks: a straight exercise, a superset (until the next marker), or a finisher
   const blocks=[]; let ss=null;
   items.forEach((it,ei)=>{
@@ -2269,7 +2272,9 @@ function gsBuild(day,withWarmup){
       st.row=b.fin?-2:st.exId!==undefined?map[st.exId]:st.kind==='rest'?(b.ss?-1:first):st.kind==='setup'?first:-1;
     }
   };
+  let prevStraight=false;
   blocks.filter(b=>b.fin||b.exs.length).forEach(b=>{
+    const straight=!b.fin&&!b.ss, newSec=!straight||!prevStraight; prevStraight=straight;
     const firstName=b.fin?'Finisher':b.exs[0].ex[0];
     const blockName=b.fin?`Finisher · ${b.fin.badge||''}`:b.ss?`${b.ss} · ${b.exs.map(e=>e.ex[0]).join(' / ')}`:firstName;
     const setupSay=b.fin
@@ -2278,7 +2283,7 @@ function gsBuild(day,withWarmup){
       ? `Next up, ${b.ss}. ${b.exs.map(e=>gsSpoken(e.ex[0])).join(', then ')}. ${b.rounds||parseNumSets(b.exs[0].ex[1])} rounds. Get set up.`
       : `Next up, ${gsSpoken(firstName)}. ${parseNumSets(b.exs[0].ex[1])} sets of ${gsRepsSpoken(b.exs[0].ex[1])}. ${gsSpoken(EXERCISE_NOTES[firstName]||'')} Get set up.`;
     const s0=steps.length;
-    pushPause({kind:'setup',title:firstName,sub:b.ss?`${b.ss} · ${b.exs.length} exercises`:'Get your equipment ready',
+    pushPause({kind:newSec?'preview':'setup',title:firstName,sub:b.ss?`${b.ss} · ${b.exs.length} exercises`:'Get your equipment ready',
       dur:Math.min(90,Math.max(45,lastRest)),block:blockName,say:setupSay,say10:'10 seconds.'});
     const tagThis=()=>tag(s0,b);
     if(b.fin){
@@ -2314,12 +2319,27 @@ function gsBuild(day,withWarmup){
       lastRest=restSecs; tagThis();
     }
   });
-  if(steps[0].sec===undefined){ steps[0].sec=0; steps[0].row=-1; }
+  // Previews: run down each movement in the section (warm-up 15–30s, barbell sections ~1 min)
+  const rowSay=(x,r)=>{
+    const sets=r.n&&r.n!=='1x'?`${parseInt(r.n)} ${x.kind==='ss'?'rounds':'sets'} of `:'';
+    const what=gsSpoken(r.sub.replace(/ · .*$/,'').replace(/(\d+) secs/,'$1 seconds'));
+    const cue=x.kind==='str'?' '+gsSpoken(EXERCISE_NOTES[r.name]||''):'';
+    return `${gsSpoken(r.name)}. ${sets}${what}.${cue}`;
+  };
+  steps.forEach(st=>{
+    if(st.kind!=='preview') return;
+    const x=secs[st.sec], heavy=x.rows.some(r=>/Barbell|Thruster|Push Press|Deadlift|Clean/i.test(r.name));
+    st.dur=x.kind==='wu'?Math.min(30,Math.max(15,x.rows.length*5)):x.kind==='fin'?30:heavy?60:40;
+    st.title=x.title; st.sub='Get set up'; st.row=-3; st.log=st.log||[];
+    st.rowSay=x.rows.map(r=>rowSay(x,r));
+    st.say=`${x.title}. ${st.rowSay[0]}`; st.say10='10 seconds.';
+  });
+  if(steps[0]&&steps[0].sec===undefined){ steps[0].sec=0; steps[0].row=-1; }
   // Time span of each section, for the timeline
   let t=0; secs.forEach(x=>{ x.start=null; x.dur=0; });
   steps.forEach(st=>{ const x=secs[st.sec]; if(x){ if(x.start===null) x.start=t; x.dur+=st.dur; } t+=st.dur; });
   steps.secs=secs;
-  steps[0].say=`Let's go. ${gsSpoken(day.session.replace(/ — /,'. '))}. About ${Math.round(gsTotal(steps)/60)} minutes. ${withWarmup&&wt?'Warm-up first.':''}`;
+  if(steps[0]) steps[0].say=`Let's go. ${gsSpoken(day.session.replace(/ — /,'. '))}. About ${Math.round(gsTotal(steps)/60)} minutes. ${steps[0].say||''}`;
   steps.finalLog=pending;
   return steps;
 }
@@ -2474,27 +2494,31 @@ function gsSecJump(dir){
   const cur=G.steps[G.idx].sec;
   if(dir>0){ const i=G.steps.findIndex(st=>st.sec>cur); gsJump(i<0?G.steps.length:i); return; }
   const s0=gsSecStart(cur);
-  const into=G.steps.slice(s0,G.idx).reduce((a,st)=>a+st.dur,0)*1000+(G.steps[G.idx].dur*1000-gsLeft());
-  gsJump(into>3000||cur===0?s0:gsSecStart(cur-1));
+  gsJump(cur===0?s0:gsSecStart(cur-1));
 }
 function gsReplay(){ if(G&&G.phase==='run') gsJump(G.idx); }
 (function(){
   const el=document.getElementById('gs');
   let x0=0,y0=0,t0=0,tapT=0,lastTap=0,active=false;
-  el.addEventListener('pointerdown',e=>{
-    active=!!(G&&G.phase==='run'&&!G.leaving&&!document.getElementById('jr').classList.contains('open'))&&!e.target.closest('button,input,textarea,.gs-sheet,.sx-journal');
-    x0=e.clientX; y0=e.clientY; t0=Date.now();
-  });
-  el.addEventListener('pointerup',e=>{
+  const down=(x,y,target)=>{
+    active=!!(G&&G.phase==='run'&&!G.leaving&&!document.getElementById('jr').classList.contains('open'))&&!target.closest('button,input,textarea,.gs-sheet,.sx-journal');
+    x0=x; y0=y; t0=Date.now();
+  };
+  el.addEventListener('touchstart',e=>{ const t=e.touches[0]; down(t.clientX,t.clientY,e.target); },{passive:true});
+  // Claim horizontal swipes so the browser doesn't treat them as back/forward navigation
+  el.addEventListener('touchmove',e=>{ if(!active) return; const t=e.touches[0]; if(Math.abs(t.clientX-x0)>Math.abs(t.clientY-y0)&&e.cancelable) e.preventDefault(); },{passive:false});
+  el.addEventListener('touchend',e=>{ const t=e.changedTouches[0]; up(t.clientX,t.clientY); if(Math.abs(t.clientX-x0)<10&&Math.abs(t.clientY-y0)<10&&e.cancelable&&!e.target.closest('button,input,textarea')) e.preventDefault(); });
+  el.addEventListener('pointerdown',e=>{ if(e.pointerType!=='touch') down(e.clientX,e.clientY,e.target); });
+  el.addEventListener('pointerup',e=>{ if(e.pointerType!=='touch') up(e.clientX,e.clientY); });
+  function up(x,y){
     if(!active) return; active=false;
-    const dx=e.clientX-x0, dy=e.clientY-y0;
+    const dx=x-x0, dy=y-y0;
     if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5){ clearTimeout(tapT); gsSecJump(dx<0?1:-1); return; }
     if(Math.abs(dx)>10||Math.abs(dy)>10||Date.now()-t0>450) return;
     if(Date.now()-lastTap<300){ clearTimeout(tapT); lastTap=0; gsReplay(); return; }
     lastTap=Date.now();
     tapT=setTimeout(()=>{ if(G&&G.phase==='run') gsTogglePause(); },300);
-  });
-  el.addEventListener('pointercancel',()=>{ active=false; });
+  }
 })();
 function gsPrev(){ const intoStep=G.steps[G.idx].dur*1000-gsLeft(); gsJump(intoStep>3000?G.idx:G.idx-1); }
 
@@ -2821,7 +2845,7 @@ function gsRender(){
     <div class="sx-main" id="sx-main">
       <div class="sx-title">${escH(sec.title)}</div>
       ${sec.sub?`<span class="sx-chip">${escH(sec.sub)}</span>`:''}
-      ${sec.rows.map((r,i)=>`<div class="sx-row${st.row===i||st.row===-2?' on':''}" id="sx-r${i}">
+      ${sec.rows.map((r,i)=>`<div class="sx-row${(st.kind==='preview'?gsPvRow()===i:st.row===i||st.row===-2)?' on':''}" id="sx-r${i}">
         <div class="nm">${r.n?`<b>${escH(r.n)}</b>`:''}${escH(r.name)}</div><div class="sb">${escH(r.sub)}</div></div>`).join('')}
     </div>
     <div class="sx-now"><div class="sx-count" id="gs-t">0:00</div></div>
@@ -2856,8 +2880,24 @@ function gsRender(){
 }
 function gsStay(){ G.leaving=false; gsRender(); }
 
+function gsPvRow(){
+  const st=G.steps[G.idx], n=(G.steps.secs[st.sec]||{rows:[]}).rows.length;
+  if(st.kind!=='preview'||!n) return -1;
+  return Math.min(n-1,Math.floor((st.dur*1000-Math.max(0,gsLeft()))/(st.dur*1000/n)));
+}
 function gsRenderTime(){
   if(!G||G.phase!=='run') return;
+  const st0=G.steps[G.idx];
+  if(st0.kind==='preview'){
+    const r=gsPvRow();
+    if(G.pvKey!==`${G.idx}-${r}`){
+      const first=G.pvKey===undefined||!G.pvKey.startsWith(G.idx+'-');
+      G.pvKey=`${G.idx}-${r}`;
+      document.querySelectorAll('#sx-main .sx-row').forEach((el,i)=>el.classList.toggle('on',i===r));
+      const on=document.getElementById('sx-r'+r); if(on) on.scrollIntoView({block:'nearest',behavior:'smooth'});
+      if(!first&&G.pausedLeft===null) gsSay(st0.rowSay[r]);
+    }
+  }
   const left=Math.max(0,gsLeft());
   const t=document.getElementById('gs-t'); if(!t) return;
   t.textContent=fmtTime(Math.ceil(left/1000));
