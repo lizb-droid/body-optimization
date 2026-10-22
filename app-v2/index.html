@@ -387,7 +387,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .wo-meta .last{font-size:13px;color:#666}
 .wo-manual{display:block;margin:30px auto 0;background:none;border:none;color:#888;font-size:var(--cta-size);font-weight:var(--cta-weight);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit}
 .wo-foot{position:absolute;left:0;right:0;bottom:0;padding:24px 20px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#000 35%)}
-.wo-start{width:100%;height:60px;border:none;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:var(--cta-size);font-weight:var(--cta-weight);letter-spacing:.6px;text-transform:uppercase;cursor:pointer;font-family:inherit}
+.wo-start{width:100%;height:60px;border:none;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:var(--cta-size);font-weight:var(--cta-weight);cursor:pointer;font-family:inherit}
 .wo-start.done{background:var(--ind);color:#fff}
 
 /* ── Session screen (section view) ── */
@@ -762,7 +762,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
     <div style="font-size:17px;font-weight:600;color:var(--tp);margin-bottom:4px">Connect GitHub</div>
     <div style="font-size:13px;color:var(--tt);margin-bottom:16px;line-height:1.5">One-time setup. Create a fine-grained token at <strong>github.com/settings/tokens</strong> with Contents: Read &amp; Write on the body-optimization repo.</div>
     <input id="gh-token-input" type="password" placeholder="Paste token here…" style="width:100%;height:44px;padding:0 12px;border:1px solid var(--brd);border-radius:var(--r-md);font-size:15px;color:var(--tp);background:var(--bg);outline:none;font-family:inherit;box-sizing:border-box;margin-bottom:10px">
-    <button onclick="confirmGHToken()" style="width:100%;height:48px;border:none;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:8px">Save &amp; Sync</button>
+    <button onclick="confirmGHToken()" style="width:100%;height:48px;border:none;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;margin-bottom:8px">Save &amp; sync</button>
     <button onclick="closeGHSetup()" style="width:100%;height:44px;border:1px solid var(--brd);border-radius:var(--r-full);background:transparent;font-size:14px;font-weight:500;color:var(--ts);cursor:pointer;font-family:inherit">Cancel</button>
   </div>
 </div>
@@ -2892,7 +2892,7 @@ function gsRender(){
   el.innerHTML=`<div class="sx${sec.kind==='fin'?' fin':''}${img?' has-img':''}" ${img?`style="background-image:url('${img}')"`:''}>
     <div class="sx-top">
       <div class="sx-clock"><span id="sx-el">0:00</span> · <span id="sx-pct">0%</span></div>
-      <button class="sx-skip" onclick="gsSecJump(1)">${GS_IC.next}Skip Section</button>
+      <button class="sx-skip" onclick="gsSecJump(1)">${GS_IC.next}Skip section</button>
     </div>
     <div class="sx-tl">${secs.map((x,i)=>`<div class="sx-seg${i===st.sec?' cur':''}" style="flex:${x.dur}"><i id="sx-f${i}"></i></div>`).join('')}</div>
     ${st.kind==='preview'?`<div class="sx-main" id="sx-main">
@@ -2904,7 +2904,7 @@ function gsRender(){
     <div class="sx-now"><div class="sx-count" id="gs-t">0:00</div></div>`:gsSetView(st)}
     <div class="sx-journal">
       <button class="l" onclick="pgOpen()" aria-label="Journal: personal records">${JR_IC.book}Journal</button>
-      <button class="r" onclick="jrOpen(G.day.id)">Track Results${JR_IC.up}</button>
+      <button class="r" onclick="jrOpen(G.day.id)">Track results${JR_IC.up}</button>
     </div>
     ${paused&&!G.leaving?`<div class="sx-pause">
       <div class="sx-pause-top">
@@ -3064,7 +3064,7 @@ function renderMacros(){
   const el=document.getElementById('macros-content'), m=S.macros;
   if(!m){
     el.innerHTML=`<div class="macro-empty"><p>Log your macros in the Claude chat, then paste the snippet here.</p>
-      <button class="nav-btn" style="margin-top:16px;font-size:15px;padding:10px 24px" onclick="openMacroLog()">Load Macros</button></div>`;
+      <button class="nav-btn" style="margin-top:16px;font-size:15px;padding:10px 24px" onclick="openMacroLog()">Load macros</button></div>`;
     return;
   }
   const p=parseFloat(m.p)||0,c=parseFloat(m.c)||0,f=parseFloat(m.f)||0,kcal=parseFloat(m.kcal)||0;
@@ -3117,7 +3117,7 @@ function renderMacros(){
 
   el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 20px;border-bottom:1px solid #222;background:var(--dk1)">
       <span style="font-size:13px;color:var(--tt)">${m.date||todayStr()}${m.dayType?` · ${escH(m.dayType)}`:''}</span>
-      <button class="nav-btn" style="font-size:13px;padding:6px 14px" onclick="openMacroLog()">Load Macros</button>
+      <button class="nav-btn" style="font-size:13px;padding:6px 14px" onclick="openMacroLog()">Load macros</button>
     </div>
     <div class="macro-bars">
       ${barRow('Protein',p,tgt.p,'var(--ind)','#a0aaff')}
