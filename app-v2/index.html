@@ -62,12 +62,14 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .hm-title{display:flex;align-items:center;gap:8px;font-size:28px;font-weight:600;color:#fff;letter-spacing:-.5px}
 .hm-titles .hdr-date{font-size:13px;color:#777;margin-top:2px}
 .beta-tag{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--pink-on);background:var(--pink);padding:3px 8px;border-radius:var(--r-full)}
-#week-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px 10px 12px}
+#week-tabs{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:8px 0 12px;-webkit-overflow-scrolling:touch}
+#week-tabs::-webkit-scrollbar{display:none}
+.wk-panel{flex:0 0 100%;display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 10px;scroll-snap-align:start;scroll-snap-stop:always}
 .wd{display:flex;flex-direction:column;align-items:center;gap:8px;padding:9px 0 10px;border-radius:20px;cursor:pointer;transition:background .2s}
 .wd .n{font-size:14px;color:#666}
 .wd .d{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:16px;color:#777;font-variant-numeric:tabular-nums}
-.wd .d svg{width:17px;height:17px;stroke:#111;stroke-width:3;fill:none}
-.wd.done .d{background:var(--yel)}
+.wd .d svg{width:17px;height:17px;stroke:#fff;stroke-width:3;fill:none}
+.wd.done .d{background:var(--ind)}
 .wd.today .n{color:#fff;font-weight:600}
 .wd.today:not(.done) .d{color:#fff}
 .wd.sel{background:#1c1c1c}
@@ -87,8 +89,8 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .hc-top{display:flex;align-items:center;gap:8px}
 .hc-tag{padding:7px 13px;border-radius:12px;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:15px;font-weight:500}
 .hc-tag.today{background:var(--pink);color:var(--pink-on)}
-.hc-done{margin-left:auto;width:36px;height:36px;border-radius:50%;background:var(--yel);display:flex;align-items:center;justify-content:center}
-.hc-done svg{width:19px;height:19px;stroke:#111;stroke-width:3;fill:none}
+.hc-done{margin-left:auto;width:36px;height:36px;border-radius:50%;background:var(--ind);display:flex;align-items:center;justify-content:center}
+.hc-done svg{width:19px;height:19px;stroke:#fff;stroke-width:3;fill:none}
 .hc-name{font-family:'Archivo','Roboto','Helvetica Neue',sans-serif;font-stretch:125%;font-weight:800;font-size:clamp(34px,10.5vw,50px);line-height:.95;text-transform:uppercase;letter-spacing:-.5px;text-wrap:balance}
 .hc-meta{font-size:16px;color:#c8c8c8;margin-top:12px}
 .hc-meta b{color:#fff;font-weight:500}
@@ -1222,18 +1224,32 @@ const HM_CHECK='<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></sv
 function hmDate(wi,di){ const st=getWeekStartDate(wi); return st?new Date(st.getTime()+di*86400000):null; }
 function hmIsToday(wi,di){ const d=hmDate(wi,di), t=new Date(); return !!d&&d.toDateString()===t.toDateString(); }
 
-function renderWeekTabs(){
+function hmTitle(){
+  if(S.tab!=='workout') return;
   const wi=S.weekIdx, ph=PHASES[getCurrentPhaseIdx()];
-  if(S.tab==='workout'){
-    document.getElementById('hdr-title').textContent=`Week ${wi+1}`;
-    document.getElementById('hdr-date').textContent=`${ph?ph.label+' · ':''}${WEEKS[wi].dates}`;
-  }
-  document.getElementById('week-tabs').innerHTML=WEEKS[wi].days.map((day,di)=>{
+  document.getElementById('hdr-title').textContent=`Week ${wi+1}`;
+  document.getElementById('hdr-date').textContent=`${ph?ph.label+' · ':''}${WEEKS[wi].dates}`;
+}
+
+let hmStripLockUntil=0; // ignore strip scroll events we caused
+function renderWeekTabs(){
+  hmTitle();
+  const sel=S.selDay||{wi:S.weekIdx,di:0};
+  const el=document.getElementById('week-tabs');
+  el.innerHTML=WEEKS.map((wk,wi)=>`<div class="wk-panel" data-wi="${wi}">${wk.days.map((day,di)=>{
     const d=hmDate(wi,di), done=!!S.done[day.id];
-    const cls=['wd',done?'done':'',hmIsToday(wi,di)?'today':'',S.selDay&&S.selDay.wi===wi&&S.selDay.di===di?'sel':''].join(' ');
-    return `<div class="${cls}" id="wd-${di}" onclick="hmScrollTo({wi:${wi},di:${di}},true)">
+    const cls=['wd',done?'done':'',hmIsToday(wi,di)?'today':'',sel.wi===wi&&sel.di===di?'sel':''].join(' ');
+    return `<div class="${cls}" ${wi===S.weekIdx?`id="wd-${di}"`:''} data-wi="${wi}" data-di="${di}" onclick="hmScrollTo({wi:${wi},di:${di}},true)">
       <span class="n">${day.day.slice(0,3)}</span><span class="d">${done?HM_CHECK:(d?d.getDate():'')}</span></div>`;
-  }).join('');
+  }).join('')}</div>`).join('');
+  hmStripTo(S.weekIdx,false);
+}
+
+function hmStripTo(wi,smooth){
+  const el=document.getElementById('week-tabs');
+  if(!el||!el.clientWidth) return;
+  hmStripLockUntil=Date.now()+(smooth?700:300);
+  el.scrollTo({left:wi*el.clientWidth,behavior:smooth?'smooth':'auto'});
 }
 
 function selectWeek(idx){
@@ -1290,9 +1306,27 @@ function hmScrollTo(sel,smooth){
 function hmSetSel(sel){
   const weekChanged=sel.wi!==S.weekIdx;
   S.selDay=sel;
-  if(weekChanged){ S.weekIdx=sel.wi; saveWorkout(); renderWeekTabs(); return; }
-  document.querySelectorAll('#week-tabs .wd').forEach((w,i)=>w.classList.toggle('sel',i===sel.di));
+  document.querySelectorAll('#week-tabs .wd').forEach(w=>w.classList.toggle('sel',+w.dataset.wi===sel.wi&&+w.dataset.di===sel.di));
+  if(weekChanged){
+    S.weekIdx=sel.wi; saveWorkout(); hmTitle();
+    document.querySelectorAll('#week-tabs .wd').forEach(w=>{ w.id=+w.dataset.wi===sel.wi?'wd-'+w.dataset.di:''; });
+    hmStripTo(sel.wi,true);
+  }
 }
+
+// Swiping the strip to another week moves the card to the same weekday there
+(function(){
+  const el=document.getElementById('week-tabs');
+  let t=0;
+  el.addEventListener('scroll',()=>{
+    if(!el.clientWidth||Date.now()<hmStripLockUntil) return;
+    clearTimeout(t);
+    t=setTimeout(()=>{
+      const wi=Math.round(el.scrollLeft/el.clientWidth);
+      if(wi!==S.weekIdx&&WEEKS[wi]) hmScrollTo({wi,di:S.selDay?S.selDay.di:0},false);
+    },120);
+  },{passive:true});
+})();
 
 function hmOpen(wi,dayId){ S.weekIdx=wi; openDay(dayId); }
 
