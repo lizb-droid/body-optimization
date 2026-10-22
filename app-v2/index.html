@@ -430,7 +430,7 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .sx-pause-top{display:flex;justify-content:space-between;align-items:center;padding:12px 16px}
 .sx-pause-mid{flex:1;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 20px;gap:8px}
 .sx-pause h2{grid-column:1/-1;text-align:center;font-family:'Archivo','Roboto',sans-serif;font-stretch:112%;font-weight:800;font-size:46px;margin-bottom:6px}
-.sx-hint{font-size:var(--cta-size);font-weight:var(--cta-weight)}
+.sx-hint{font-size:var(--cta-size);font-weight:var(--cta-weight);background:none;border:none;color:#fff;font-family:inherit;text-align:left;cursor:pointer;padding:12px 0}
 .sx-hint span{display:block;font-size:var(--cta-size);font-weight:var(--cta-weight);color:var(--pink);margin-top:6px}
 .sx-hint.r{text-align:right}
 .sx-play{display:flex;flex-direction:column;align-items:center;gap:10px;background:none;border:none;color:#fff;font-size:var(--cta-size);font-weight:var(--cta-weight);font-family:inherit;cursor:pointer}
@@ -2529,6 +2529,8 @@ function gsSecJump(dir){
   const s0=gsSecStart(cur);
   gsJump(cur===0?s0:gsSecStart(cur-1));
 }
+// Previous / Next on the pause screen: move a section and carry on
+function gsPauseJump(dir){ gsSecJump(dir); if(G&&G.phase==='run'&&G.pausedLeft!==null) gsTogglePause(); }
 function gsReplay(){ if(G&&G.phase==='run') gsJump(G.idx); }
 (function(){
   const el=document.getElementById('gs');
@@ -2913,10 +2915,10 @@ function gsRender(){
       </div>
       <div class="sx-pause-mid">
         <h2>Paused</h2>
-        <div class="sx-hint">Previous<span>Swipe ›››</span></div>
+        <button class="sx-hint" onclick="gsPauseJump(-1)">Previous<span>Swipe ›››</span></button>
         <button class="sx-play" onclick="gsTogglePause()"><i>${GS_IC.play}</i>Play</button>
-        <div class="sx-hint r">Next<span>‹‹‹ Swipe</span></div>
-        <div class="sx-replay"><div class="sx-hint">${JR_IC.replay}Replay<span style="margin:0 0 0 6px">Double tap</span></div></div>
+        <button class="sx-hint r" onclick="gsPauseJump(1)">Next<span>‹‹‹ Swipe</span></button>
+        <div class="sx-replay"><button class="sx-hint" onclick="gsReplay();if(G&&G.pausedLeft!==null)gsTogglePause()">${JR_IC.replay}Replay<span style="margin:0 0 0 6px">Double tap</span></button></div>
         <button class="sx-end" onclick="gsClose()">End workout</button>
       </div>
     </div>`:''}
