@@ -1524,9 +1524,7 @@ function woSections(day){
   const lastW=name=>{ const p=prev[name]; if(!p) return ''; const v=Object.values(p).map(x=>parseFloat(typeof x==='object'?x.w:x)).filter(n=>!isNaN(n)); return v.length?`Last ${Math.max(...v)} lb`:''; };
   const chip=str=>{ const m=(str||'').match(/^(\d+)×(.*)$/); return m?`${m[1]} × ${m[2].replace(/^\((\d+)\+(\d+)\)/,'$1+$2')}`:str; };
   const wt=gsWarmupType(day.workout);
-  if(wt) secs.push({title:'Warm Up',sub:`${Math.round(WARMUPS[wt].reduce((a,m)=>a+gsWarmSecs(m),0)/60)} min`,rows:WARMUPS[wt].map(m=>{
-    const [name,...r]=m.split(' — '); return {name,t:r.join(' — ').replace(/(\d+)s\b/,'$1 sec').replace(/\bea\b/,'each')};
-  })});
+  if(wt) secs.push({title:'Warm Up',kind:'wu',rows:gsWarmItems(wt).map(w=>({name:w.name,t:`${w.secs} sec`}))});
   let cur=null;
   items.forEach(it=>{
     if(Array.isArray(it)){
@@ -1538,6 +1536,9 @@ function woSections(day){
       cur={title:'Finisher',kind:'fin',sub:it.badge||'',rows:(it.movements||[]).map(m=>({name:m.name,chip:m.reps}))}; secs.push(cur);
     }
   });
+  // Section times come from the session timer itself, so the overview matches what you'll do
+  const timed=gsBuild(day,true).secs;
+  secs.forEach((x,i)=>{ const d=timed[i]&&timed[i].dur; if(d) x.sub=x.sub?`${x.sub} · ${fmtDur(d)}`:fmtDur(d); });
   return secs;
 }
 
@@ -2217,6 +2218,20 @@ function gsWorkSecs(setsStr){
 }
 
 function gsWarmSecs(txt){ const m=txt.match(/(\d+)s/); const n=m?parseInt(m[1]):30; return /\bea\b/.test(txt)?n*2:n; }
+function gsWarmItems(wt){
+  const out=[];
+  (WARMUPS[wt]||[]).forEach(m=>{
+    const [name]=m.split(' — '), x=m.match(/(\d+)s/), n=x?parseInt(x[1]):30;
+    if(/\bea\b/.test(m)) ['Left','Right'].forEach(side=>out.push({name:`${name} · ${side}`,base:name,side,secs:n}));
+    else out.push({name,base:name,secs:n});
+  });
+  return out;
+}
+// Exact durations: "4 min 25 sec", "45 sec", "12 min"
+function fmtDur(sec){
+  sec=Math.round(sec/5)*5; const m=Math.floor(sec/60), r=sec%60;
+  return m?(r?`${m} min ${r} sec`:`${m} min`):`${r} sec`;
+}
 
 function gsRepsLbl(setsStr){ return (setsStr||'').replace(/^\d+×/,'').replace(/^\((\d+)\+(\d+)\)$/,'$1 + $2'); }
 
@@ -2250,10 +2265,9 @@ function gsBuild(day,withWarmup){
   const wt=gsWarmupType(day.workout);
   if(withWarmup&&wt){
     steps.push({kind:'preview',title:'Warm Up',sub:'',dur:20,block:'Warm-up'});
-    WARMUPS[wt].forEach(m=>{
-      const [name,...rest]=m.split(' — ');
-      steps.push({kind:'warmup',title:name,sub:rest.join(' — '),dur:gsWarmSecs(m),block:'Warm-up',
-        say:`${gsSpoken(name)}. ${gsDurSpoken(gsWarmSecs(m))}. Go.`});
+    gsWarmItems(wt).forEach(w=>{
+      steps.push({kind:'warmup',title:w.name,sub:`${w.secs} secs`,dur:w.secs,block:'Warm-up',
+        say:`${gsSpoken(w.base)}${w.side?`, ${w.side.toLowerCase()} side`:''}. ${gsDurSpoken(w.secs)}. Go.`});
     });
   }
   // Group into blocks: a straight exercise, a superset (until the next marker), or a finisher
@@ -2275,8 +2289,7 @@ function gsBuild(day,withWarmup){
   // Sections drive the session screen: timeline segments, the list on screen, and which row is lit
   const secs=[];
   if(withWarmup&&wt){
-    secs.push({title:'Warm Up',sub:`${Math.round(WARMUPS[wt].reduce((a,m)=>a+gsWarmSecs(m),0)/60)} min · Bodyweight`,kind:'wu',
-      rows:WARMUPS[wt].map(m=>{ const [name,...r]=m.split(' — '); return {n:'1x',name,sub:r.join(' — ').replace(/(\d+)s\b/,'$1 secs').replace(/\bea\b/,'each')}; })});
+    secs.push({title:'Warm Up',sub:'',kind:'wu',rows:gsWarmItems(wt).map(w=>({n:'1x',name:w.name,sub:`${w.secs} secs`}))});
     steps.forEach((st,i)=>{ st.sec=0; st.row=i-1; });
   }
   const tag=(s0,b)=>{
@@ -2369,6 +2382,12 @@ function gsBuild(day,withWarmup){
   // Time span of each section, for the timeline
   let t=0; secs.forEach(x=>{ x.start=null; x.dur=0; });
   steps.forEach(st=>{ const x=secs[st.sec]; if(x){ if(x.start===null) x.start=t; x.dur+=st.dur; } t+=st.dur; });
+  secs.forEach(x=>{
+    x.sub=x.kind==='wu'?`${fmtDur(x.dur)} · Bodyweight`
+      :x.kind==='str'?`${x.rows.length} lift${x.rows.length>1?'s':''} · ${fmtDur(x.dur)}`
+      :x.kind==='ss'?`${x.sub.split(' · ')[0]} · ${fmtDur(x.dur)}`
+      :`${x.sub} · ${fmtDur(x.dur)}`;
+  });
   steps.secs=secs;
   if(steps[0]) steps[0].say=`Let's go. ${gsSpoken(day.session.replace(/ — /,'. '))}. About ${Math.round(gsTotal(steps)/60)} minutes. ${steps[0].say||''}`;
   steps.finalLog=pending;
