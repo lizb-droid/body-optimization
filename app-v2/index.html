@@ -470,6 +470,20 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .ss-pick-row button{height:64px;border-radius:12px;border:1px solid #333;background:#141414;color:#fff;font-size:var(--cta-size);font-weight:var(--cta-weight);font-family:inherit;cursor:pointer}
 .ss-pick-row input{height:64px;border-radius:16px;border:1.5px solid var(--pink);background:#0f0f0f;color:#fff;font-family:'Barlow Condensed','Roboto',sans-serif;font-weight:800;font-size:40px;text-align:center;outline:none;min-width:0}
 
+/* ── Rest screen ── */
+.rs-card{display:flex;align-items:center;gap:14px;margin:18px 16px 0;padding:16px 16px 16px 18px;border-radius:22px;border:1px solid rgba(255,255,255,.2);background:rgba(20,20,20,.6);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.rs-txt{flex:1;min-width:0}
+.rs-kicker{font-size:17px;font-weight:600;color:var(--pink)}
+.rs-title{font-size:21px;font-weight:600;line-height:1.25;margin-top:4px;text-wrap:balance}
+.rs-title b{color:var(--pink);font-weight:600}
+.rs-div{align-self:stretch;width:1px;background:rgba(255,255,255,.2);margin:6px 0}
+.rs-w{display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:none;color:#fff;font-family:inherit;cursor:pointer;min-width:64px;padding:0}
+.rs-w .plus{width:52px;height:52px;border-radius:50%;background:rgba(80,80,80,.7);font-size:30px;font-weight:300;display:flex;align-items:center;justify-content:center;line-height:1}
+.rs-w .v{font-family:'Barlow Condensed','Roboto',sans-serif;font-weight:800;font-size:38px;line-height:1.1;font-variant-numeric:tabular-nums}
+.rs-w .k{font-size:var(--cta-size);font-weight:var(--cta-weight);color:#9aa5ff}
+.rs-lbl{text-align:center;font-family:'Archivo','Roboto',sans-serif;font-stretch:112%;font-weight:800;font-size:34px;letter-spacing:-.3px;margin-bottom:4px}
+.rs-ctrl{padding-bottom:16px}
+
 /* ── Journal (log sets) sheet ── */
 #jr{position:fixed;inset:0;z-index:160;display:none}
 #jr.open{display:block}
@@ -2999,6 +3013,28 @@ function gsSetView(st){
   } else { kicker=GS_KIND_LBL[st.kind]||''; title=escH(st.title); }
   const v=w?gsShown(w):null;
   const lbl={work:'work',rest:'rest',setup:'set up',switch:'switch',warmup:'warm-up',finisher:'finisher'}[st.kind]||'';
+  const arc=`<div class="ss-arc">
+        <svg viewBox="0 0 200 140" aria-hidden="true">
+          <defs><mask id="ss-mask"><path d="M24.8 127.4 A80 80 0 1 1 175.2 127.4" stroke="#fff" stroke-width="22" fill="none" id="ss-arc-m" stroke-dasharray="0 ${GS_ARC_L}"/></mask></defs>
+          <path d="M24.8 127.4 A80 80 0 1 1 175.2 127.4" stroke="rgba(255,255,255,.22)" stroke-width="16" fill="none" stroke-dasharray="3 4.2"/>
+          <path d="M24.8 127.4 A80 80 0 1 1 175.2 127.4" stroke="${col}" stroke-width="16" fill="none" stroke-dasharray="3 4.2" mask="url(#ss-mask)"/>
+        </svg>
+        <div class="ss-t"><div id="gs-t">0:00</div>${prep?'':`<small>${lbl}</small>`}</div>
+      </div>`;
+  // Rest / set-up / switch: next movement in a card up top, label and timer below
+  if(prep) return `<div class="rs-card">
+      <div class="rs-txt">
+        <div class="rs-kicker">${escH((w.sub||'').replace(/ · [^·]*$/,''))}</div>
+        <div class="rs-title">${title}</div>
+      </div>
+      <i class="rs-div"></i>
+      <button class="rs-w" onclick="gsPickOpen('w')" aria-label="Weight">
+        ${v.w?`<span class="v">${escH(v.w)}</span>`:`<span class="plus">+</span>`}<span class="k">${v.w?'lb':'weight'}</span>
+      </button>
+    </div>
+    <div class="ss-fill"></div>
+    <div class="rs-lbl">${escH(sub)}</div>
+    <div class="ss-ctrl rs-ctrl"><span></span>${arc}<span></span></div>`;
   return `<div class="ss-head">
       <div class="ss-kicker" style="color:${prep?'#9aa5ff':col}">${escH(kicker)}</div>
       <div class="ss-title">${title}</div>
@@ -3007,14 +3043,7 @@ function gsSetView(st){
     <div class="ss-fill"></div>
     <div class="ss-ctrl">
       ${v?`<button class="ss-side" onclick="gsPickOpen('r')"><span class="v">${escH(v.r||'—')}</span><span class="k">reps ${GS_IC.updown}</span></button>`:'<span></span>'}
-      <div class="ss-arc">
-        <svg viewBox="0 0 200 140" aria-hidden="true">
-          <defs><mask id="ss-mask"><path d="M24.8 127.4 A80 80 0 1 1 175.2 127.4" stroke="#fff" stroke-width="22" fill="none" id="ss-arc-m" stroke-dasharray="0 ${GS_ARC_L}"/></mask></defs>
-          <path d="M24.8 127.4 A80 80 0 1 1 175.2 127.4" stroke="rgba(255,255,255,.22)" stroke-width="16" fill="none" stroke-dasharray="3 4.2"/>
-          <path d="M24.8 127.4 A80 80 0 1 1 175.2 127.4" stroke="${col}" stroke-width="16" fill="none" stroke-dasharray="3 4.2" mask="url(#ss-mask)"/>
-        </svg>
-        <div class="ss-t"><div id="gs-t">0:00</div><small>${lbl}</small></div>
-      </div>
+      ${arc}
       ${v?`<button class="ss-side" onclick="gsPickOpen('w')">${v.w?`<span class="v">${escH(v.w)}</span>`:`<span class="plus">+</span>`}<span class="k">${v.w?'lb ':''}weight ${GS_IC.updown}</span></button>`:'<span></span>'}
     </div>`;
 }
