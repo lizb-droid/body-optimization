@@ -355,6 +355,40 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .fin-result-inp.filled{border-color:var(--ind-b);background:var(--ind-m);color:var(--ind-on)}
 .fin-result-inp:focus{border-color:var(--pink)}
 
+/* ── Workout overview modal ── */
+#wo{position:fixed;inset:0;z-index:140;display:none;flex-direction:column;background:#000;color:#fff;padding-top:env(safe-area-inset-top)}
+#wo.open{display:flex;animation:wo-up .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes wo-up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){#wo.open{animation:none}}
+.wo-top{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;padding:8px 16px 10px}
+.wo-x{width:48px;height:48px;border-radius:50%;border:none;background:#1c1c1c;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.wo-x svg{width:22px;height:22px;stroke:#fff;stroke-width:2.5;fill:none}
+.wo-time{text-align:center;font-size:21px;font-weight:500;font-variant-numeric:tabular-nums}
+.wo-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 20px 130px}
+.wo-hero{padding:6px 0 4px}
+.wo-hero .tag{display:inline-block;font-size:13px;color:#999;margin-bottom:6px}
+.wo-hero .tag.done{color:#9aa5ff}
+.wo-hero h1{font-family:'Archivo','Roboto','Helvetica Neue',sans-serif;font-stretch:125%;font-weight:800;font-size:30px;line-height:1;text-transform:uppercase;letter-spacing:-.3px;text-wrap:balance}
+.wo-hero p{font-size:15px;color:#999;margin-top:8px;line-height:1.45}
+.wo-sec{margin-top:26px}
+.wo-sec-hdr{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding-bottom:12px;border-bottom:1px solid #222}
+.wo-sec-hdr h2{font-family:'Archivo','Roboto','Helvetica Neue',sans-serif;font-stretch:112%;font-weight:800;font-size:24px;letter-spacing:-.3px}
+.wo-sec-hdr span{font-size:13px;color:#888;white-space:nowrap}
+.wo-rows{display:flex;flex-direction:column}
+.wo-sec.grouped .wo-rows{border-left:2px solid var(--pink);margin-top:14px;padding-left:14px}
+.wo-sec.fin .wo-rows{border-left-color:var(--yel)}
+.wo-row{display:flex;flex-direction:column;gap:8px;padding:14px 0}
+.wo-sec.grouped .wo-row{padding:9px 0}
+.wo-name{font-size:18px;font-weight:600;line-height:1.25}
+.wo-meta{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.wo-chip{height:32px;padding:0 12px;border-radius:8px;background:#1c1c1c;display:inline-flex;align-items:center;font-size:15px;color:#ddd;font-variant-numeric:tabular-nums}
+.wo-meta .t{font-size:15px;color:#999;font-variant-numeric:tabular-nums}
+.wo-meta .last{font-size:13px;color:#666}
+.wo-manual{display:block;margin:30px auto 0;background:none;border:none;color:#888;font-size:14px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit}
+.wo-foot{position:absolute;left:0;right:0;bottom:0;padding:24px 20px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(transparent,#000 35%)}
+.wo-start{width:100%;height:60px;border:none;border-radius:var(--r-full);background:var(--pink);color:var(--pink-on);font-size:17px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;cursor:pointer;font-family:inherit}
+.wo-start.done{background:var(--ind);color:#fff}
+
 /* ── Guided session (Ladder-style timed player) ── */
 .gs-start-btn{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;margin:12px 14px 4px;border-radius:var(--r-full);background:var(--dk0);color:#fff;font-size:16px;font-weight:500;cursor:pointer}
 .gs-start-btn svg{width:16px;height:16px;fill:var(--pink)}
@@ -537,6 +571,9 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
     </div>
   </div>
 </div>
+
+<!-- ── Workout overview (full-screen, opens from a day card) ── -->
+<div id="wo"></div>
 
 <!-- ── Guided session (full-screen timed player) ── -->
 <div id="gs"></div>
@@ -1328,7 +1365,79 @@ function hmSetSel(sel){
   },{passive:true});
 })();
 
-function hmOpen(wi,dayId){ S.weekIdx=wi; openDay(dayId); }
+function hmOpen(wi,dayId){ S.weekIdx=wi; woOpen(dayId); }
+
+// ── Workout overview: whole session at a glance, then Start ──
+let WO=null;
+function woOpen(dayId){
+  const day=WEEKS[S.weekIdx].days.find(d=>d.id===dayId);
+  if(!day) return;
+  WO={day};
+  document.getElementById('wo').classList.add('open');
+  woRender();
+}
+function woClose(){ WO=null; document.getElementById('wo').classList.remove('open'); renderWeekTabs(); renderDayCards(); }
+function woManual(){ const id=WO.day.id; woClose(); openDay(id); }
+function woStart(){ const id=WO.day.id, saved=gsSaved(); gsOpen(id); if(!(saved&&saved.dayId===id)) gsStart(); }
+function woToggleDone(){ S.done[WO.day.id]=!S.done[WO.day.id]; if(S.done[WO.day.id]) launchConfetti(window.innerWidth/2,window.innerHeight/2); saveWorkout(); woRender(); }
+
+function woSections(day){
+  const secs=[], items=WORKOUTS[day.workout]||[], prev=buildPrevWeights();
+  const lastW=name=>{ const p=prev[name]; if(!p) return ''; const v=Object.values(p).map(x=>parseFloat(typeof x==='object'?x.w:x)).filter(n=>!isNaN(n)); return v.length?`Last ${Math.max(...v)} lb`:''; };
+  const chip=str=>{ const m=(str||'').match(/^(\d+)×(.*)$/); return m?`${m[1]} × ${m[2].replace(/^\((\d+)\+(\d+)\)/,'$1+$2')}`:str; };
+  const wt=gsWarmupType(day.workout);
+  if(wt) secs.push({title:'Warm Up',sub:`${Math.round(WARMUPS[wt].reduce((a,m)=>a+gsWarmSecs(m),0)/60)} min`,rows:WARMUPS[wt].map(m=>{
+    const [name,...r]=m.split(' — '); return {name,t:r.join(' — ').replace(/(\d+)s\b/,'$1 sec').replace(/\bea\b/,'each')};
+  })});
+  let cur=null;
+  items.forEach(it=>{
+    if(Array.isArray(it)){
+      if(!cur||cur.kind==='fin'){ cur={title:'Strength',kind:'str',rows:[]}; secs.push(cur); }
+      cur.rows.push({name:it[0],chip:chip(it[1]),t:cur.kind==='str'?`${fmtTime(REST_TIMES[it[0]]||120)} rest`:'',last:lastW(it[0])});
+    } else if(it._ss){
+      cur={title:it._ss,kind:'ss',sub:`${it.rounds} rounds${it.rest?' · '+it.rest:''}`,rows:[]}; secs.push(cur);
+    } else if(it._fin){
+      cur={title:'Finisher',kind:'fin',sub:it.badge||'',rows:(it.movements||[]).map(m=>({name:m.name,chip:m.reps}))}; secs.push(cur);
+    }
+  });
+  return secs;
+}
+
+function woRender(){
+  const el=document.getElementById('wo');
+  if(!WO){ el.innerHTML=''; return; }
+  const day=WO.day, info=hmCardInfo(day), done=!!S.done[day.id];
+  const isLift=day.type==='lift'&&WORKOUTS[day.workout];
+  const saved=gsSaved(), resuming=saved&&saved.dayId===day.id;
+  const secs=isLift?woSections(day):[];
+  el.innerHTML=`
+    <div class="wo-top">
+      <button class="wo-x" onclick="woClose()" aria-label="Close"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <div class="wo-time">${info.mins?info.mins+' min':''}</div><span></span>
+    </div>
+    <div class="wo-body">
+      <div class="wo-hero">
+        <span class="tag${done?' done':''}">${done?'✓ Completed · ':''}${day.day}</span>
+        <h1>${escH(info.name)}</h1>
+        ${info.sub&&isLift?`<p>${escH(info.sub)}</p>`:''}
+        ${day.note?`<p>${escH(day.note)}</p>`:''}
+        ${!isLift&&day.info?`<p>${escH(day.info)}</p>`:''}
+      </div>
+      ${secs.map(sec=>`<div class="wo-sec${sec.kind==='ss'||sec.kind==='fin'?' grouped':''}${sec.kind==='fin'?' fin':''}">
+        <div class="wo-sec-hdr"><h2>${escH(sec.title)}</h2>${sec.sub?`<span>${escH(sec.sub)}</span>`:''}</div>
+        <div class="wo-rows">${sec.rows.map(r=>`<div class="wo-row">
+          <div class="wo-name">${escH(r.name)}</div>
+          <div class="wo-meta">${r.chip?`<span class="wo-chip">${escH(r.chip)}</span>`:''}${r.t?`<span class="t">${escH(r.t)}</span>`:''}${r.last?`<span class="last">${escH(r.last)}</span>`:''}</div>
+        </div>`).join('')}</div>
+      </div>`).join('')}
+      ${isLift?`<button class="wo-manual" onclick="woManual()">Log sets without the timer</button>`:''}
+    </div>
+    ${day.type==='rest'?'':`<div class="wo-foot">
+      ${isLift?`<button class="wo-start" onclick="woStart()">${resuming?'Resume workout':'Start workout'}</button>`
+        :`<button class="wo-start${done?' done':''}" onclick="woToggleDone()">${done?'✓ Completed':'Mark complete'}</button>`}
+    </div>`}`;
+  el.querySelector('.wo-body').scrollTop=0;
+}
 
 // Track which card is centered while swiping
 (function(){
@@ -2101,6 +2210,7 @@ function gsClose(force){
   clearInterval(G.tick); gsWake(false); gsPersist(); gsHush();
   G=null;
   document.getElementById('gs').classList.remove('open');
+  if(WO) woRender();
   if(S.activeDayId) renderDayDetail(S.activeDayId);
 }
 
