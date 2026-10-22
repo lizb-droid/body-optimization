@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192-v2.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&family=Archivo:wdth,wght@125,800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -27,7 +27,7 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 
 /* ── Layout shell ── */
 #app{display:flex;flex-direction:column;height:100%;background:var(--dk0)}
-#header{flex-shrink:0;background:var(--dk1);border-bottom:1px solid #222;padding:env(safe-area-inset-top) 0 0}
+#header{flex-shrink:0;background:var(--dk0);padding:env(safe-area-inset-top) 0 0}
 #content{flex:1;overflow:hidden;position:relative}
 .tab-panel{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}
 .tab-panel.active{display:block}
@@ -50,15 +50,48 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .nt.on .nt-lbl{color:var(--pink);font-weight:500}
 
 /* ── Phase bar ── */
-#phase-bar{padding:8px 20px;background:var(--dk2);border-bottom:1px solid #2a2a2a}
 .phase-info{display:flex;justify-content:space-between;margin-bottom:5px}
 .phase-info span{font-size:11px;color:#555}
 .prog-track{height:5px;background:#333;border-radius:var(--r-full);overflow:hidden}
 .prog-fill{height:100%;background:var(--pink);border-radius:var(--r-full);transition:width .3s}
 
 /* ── Week tabs ── */
-#week-tabs{display:flex;background:var(--dk2);border-bottom:1px solid #2a2a2a;overflow-x:auto;padding:0 12px;-webkit-overflow-scrolling:touch}
-#week-tabs::-webkit-scrollbar{display:none}
+/* ── Home: header, week strip, day carousel ── */
+.hm-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 20px 6px}
+.hm-titles{min-width:0}
+.hm-title{display:flex;align-items:center;gap:8px;font-size:28px;font-weight:600;color:#fff;letter-spacing:-.5px}
+.hm-titles .hdr-date{font-size:13px;color:#777;margin-top:2px}
+.beta-tag{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--pink-on);background:var(--pink);padding:3px 8px;border-radius:var(--r-full)}
+#week-tabs{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px 10px 12px}
+.wd{display:flex;flex-direction:column;align-items:center;gap:8px;padding:9px 0 10px;border-radius:20px;cursor:pointer;transition:background .2s}
+.wd .n{font-size:14px;color:#666}
+.wd .d{width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:16px;color:#777;font-variant-numeric:tabular-nums}
+.wd .d svg{width:17px;height:17px;stroke:#111;stroke-width:3;fill:none}
+.wd.done .d{background:var(--yel)}
+.wd.today .n{color:#fff;font-weight:600}
+.wd.today:not(.done) .d{color:#fff}
+.wd.sel{background:#1c1c1c}
+#workout-list{height:100%;display:flex;flex-direction:column;padding:4px 0 16px}
+#day-cards{position:relative;flex:1;min-height:0;display:flex;gap:12px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:0 24px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+#day-cards::-webkit-scrollbar{display:none}
+#day-cards::after{content:'';flex:0 0 12px}
+.hc{position:relative;flex:0 0 100%;max-height:640px;border-radius:28px;overflow:hidden;scroll-snap-align:center;scroll-snap-stop:always;cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;padding:20px;background:#161616 center/cover no-repeat;border:1px solid #232323;color:#fff}
+.hc::before{content:'';position:absolute;inset:0;background:radial-gradient(120% 70% at 85% 10%,var(--glow) 0%,transparent 60%),repeating-linear-gradient(115deg,rgba(255,255,255,.025) 0 2px,transparent 2px 14px);pointer-events:none}
+.hc::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.25) 0%,transparent 30%,transparent 45%,rgba(0,0,0,.8) 100%);pointer-events:none}
+.hc.has-img::before{display:none}
+.hc>*{position:relative;z-index:1}
+.hc.lift{--glow:rgba(255,155,215,.22)}
+.hc.run{--glow:rgba(77,95,255,.3)}
+.hc.race{--glow:rgba(255,98,48,.3)}
+.hc.rest{--glow:rgba(255,255,255,.06)}
+.hc-top{display:flex;align-items:center;gap:8px}
+.hc-tag{padding:7px 13px;border-radius:12px;background:rgba(255,255,255,.14);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);font-size:15px;font-weight:500}
+.hc-tag.today{background:var(--pink);color:var(--pink-on)}
+.hc-done{margin-left:auto;width:36px;height:36px;border-radius:50%;background:var(--yel);display:flex;align-items:center;justify-content:center}
+.hc-done svg{width:19px;height:19px;stroke:#111;stroke-width:3;fill:none}
+.hc-name{font-family:'Archivo','Roboto','Helvetica Neue',sans-serif;font-stretch:125%;font-weight:800;font-size:clamp(34px,10.5vw,50px);line-height:.95;text-transform:uppercase;letter-spacing:-.5px;text-wrap:balance}
+.hc-meta{font-size:16px;color:#c8c8c8;margin-top:12px}
+.hc-meta b{color:#fff;font-weight:500}
 .wt{padding:10px 10px 8px;font-size:12px;font-weight:500;color:#555;border-bottom:2px solid transparent;white-space:nowrap;cursor:pointer;flex-shrink:0}
 .wt.on{color:#fff;border-bottom-color:var(--pink)}
 
@@ -257,7 +290,7 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 #day-detail{display:none;position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--bg);z-index:1}
 
 /* ── Day list padding ── */
-#workout-list{padding-top:8px}
+
 
 /* ── Set input active highlight ── */
 .set-input.active-set{border-color:var(--pink)}
@@ -422,16 +455,12 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
   <div id="header">
     <!-- Normal mode: list / macros / progress -->
     <div id="hdr-normal">
-      <div class="hdr-top">
-        <div><div class="hdr-date" id="hdr-date"></div></div>
-        <div style="display:flex;gap:6px;padding-top:4px">
-          <button id="gh-save-btn" class="nav-btn" style="font-size:14px;padding:8px 16px" onclick="saveToGitHub()">Save</button>
+      <div class="hm-top">
+        <div class="hm-titles">
+          <div class="hm-title"><span id="hdr-title">Workout</span><span class="beta-tag">Beta</span></div>
+          <div class="hdr-date" id="hdr-date"></div>
         </div>
-      </div>
-      <div class="hdr-title"><span id="hdr-title">Workout</span> <span style="font-size:11px;font-weight:600;letter-spacing:1px;color:var(--pink-on);background:var(--pink);padding:2px 8px;border-radius:var(--r-full);vertical-align:middle">BETA</span></div>
-      <div id="phase-bar">
-        <div class="phase-info"><span id="phase-label">Phase 1</span><span id="phase-pct">0%</span></div>
-        <div class="prog-track"><div class="prog-fill" id="phase-fill" style="width:0%"></div></div>
+        <button id="gh-save-btn" class="nav-btn" style="font-size:14px;padding:8px 16px" onclick="saveToGitHub()">Save</button>
       </div>
       <div id="week-tabs"></div>
     </div>
@@ -451,7 +480,7 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
   <!-- ── Tab content ── -->
   <div id="content">
     <!-- WORKOUT TAB -->
-    <div id="workout-tab" class="tab-panel active" style="background:var(--bg)">
+    <div id="workout-tab" class="tab-panel active" style="background:var(--dk0)">
       <!-- Day list view -->
       <div id="workout-list">
         <div id="import-banner">
@@ -1175,9 +1204,10 @@ function switchTab(tab){
     document.getElementById('tab-'+t).classList.toggle('on',t===tab);
   });
   const isW=tab==='workout';
-  document.getElementById('phase-bar').style.display=isW?'':'none';
   document.getElementById('week-tabs').style.display=isW?'':'none';
   document.getElementById('hdr-title').textContent={workout:'Workout',macros:'Macros',progress:'Progress'}[tab];
+  document.getElementById('hdr-date').textContent=todayStr();
+  if(isW&&S.selDay){ renderWeekTabs(); hmScrollTo(S.selDay,false); }
   document.getElementById('gh-save-btn').style.display=tab==='macros'?'none':'';
   if(tab==='macros') renderMacros();
   if(tab==='progress') renderProgress();
@@ -1187,29 +1217,102 @@ function switchTab(tab){
 // WORKOUT — RENDER
 // ─────────────────────────────────────────────
 
+// Home: Mon–Sun strip for the week of the card in view
+const HM_CHECK='<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+function hmDate(wi,di){ const st=getWeekStartDate(wi); return st?new Date(st.getTime()+di*86400000):null; }
+function hmIsToday(wi,di){ const d=hmDate(wi,di), t=new Date(); return !!d&&d.toDateString()===t.toDateString(); }
+
 function renderWeekTabs(){
-  const pi=getCurrentPhaseIdx(), ph=PHASES[pi];
-  document.getElementById('phase-label').textContent=`${ph.label} · Week ${S.weekIdx+1} of 12`;
-  const pct=Math.round((S.weekIdx/11)*100);
-  document.getElementById('phase-pct').textContent=pct+'%';
-  document.getElementById('phase-fill').style.width=pct+'%';
-
-  document.getElementById('week-tabs').innerHTML=WEEKS.map((wk,i)=>
-    `<div class="wt${i===S.weekIdx?' on':''}" onclick="selectWeek(${i})" id="wt-${i}">${wk.label}</div>`
-  ).join('');
-
-  setTimeout(()=>{
-    const el=document.getElementById('wt-'+S.weekIdx);
-    if(el) el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
-  },50);
+  const wi=S.weekIdx, ph=PHASES[getCurrentPhaseIdx()];
+  if(S.tab==='workout'){
+    document.getElementById('hdr-title').textContent=`Week ${wi+1}`;
+    document.getElementById('hdr-date').textContent=`${ph?ph.label+' · ':''}${WEEKS[wi].dates}`;
+  }
+  document.getElementById('week-tabs').innerHTML=WEEKS[wi].days.map((day,di)=>{
+    const d=hmDate(wi,di), done=!!S.done[day.id];
+    const cls=['wd',done?'done':'',hmIsToday(wi,di)?'today':'',S.selDay&&S.selDay.wi===wi&&S.selDay.di===di?'sel':''].join(' ');
+    return `<div class="${cls}" id="wd-${di}" onclick="hmScrollTo({wi:${wi},di:${di}},true)">
+      <span class="n">${day.day.slice(0,3)}</span><span class="d">${done?HM_CHECK:(d?d.getDate():'')}</span></div>`;
+  }).join('');
 }
 
 function selectWeek(idx){
-  S.weekIdx=idx;
+  S.weekIdx=idx; S.selDay={wi:idx,di:0};
   saveWorkout();
   renderWeekTabs();
   renderDayCards();
 }
+
+// Card copy: "Push — Shoulders + Chest" → big "Push", meta "Shoulders + Chest"
+function hmCardInfo(day){
+  const clean=(day.session||'').replace(/[\u{1F300}-\u{1FAFF}\u2600-\u27BF]\uFE0F?/gu,'').trim();
+  let [name,...rest]=clean.split(' — '); let sub=rest.join(' — ');
+  let mins=null;
+  if(day.type==='lift'&&WORKOUTS[day.workout]) mins=Math.round(gsTotal(gsBuild(day,true))/60);
+  const m=clean.match(/(\d+)(?:[–-](\d+))?\s*min/);
+  if(m&&mins===null){ mins=parseInt(m[2]||m[1]); sub=sub.replace(/,?\s*\d+(?:[–-]\d+)?\s*min/,'').trim(); }
+  if(day.type==='rest'){ sub=sub||'Recovery day'; }
+  if(day.type==='race'){ sub=sub||'Race day'; name=name||'Race'; }
+  if(day.type==='run'&&!sub) sub='Run';
+  return {name,sub,mins};
+}
+
+// Optional photo per workout key (fill in once the card images exist)
+const DAY_IMAGES={};
+
+function renderDayCards(){
+  const el=document.getElementById('day-cards');
+  if(!S.selDay||S.selDay.wi!==S.weekIdx) S.selDay={wi:S.weekIdx,di:0};
+  el.innerHTML=WEEKS.map((wk,wi)=>wk.days.map((day,di)=>{
+    const info=hmCardInfo(day), img=DAY_IMAGES[day.workout]||DAY_IMAGES[day.type];
+    const today=hmIsToday(wi,di), done=!!S.done[day.id];
+    return `<div class="hc ${day.type}${img?' has-img':''}" data-wi="${wi}" data-di="${di}" onclick="hmOpen(${wi},'${day.id}')"
+      ${img?`style="background-image:url('${img}')"`:''}>
+      <div class="hc-top"><span class="hc-tag${today?' today':''}">${today?'Today':day.day}</span>
+        ${done?`<span class="hc-done" aria-label="Done">${HM_CHECK}</span>`:''}</div>
+      <div><div class="hc-name" style="font-size:min(50px,10.5vw,calc((100vw - 96px) / ${(Math.max(...info.name.split(' ').map(w=>w.length))*0.9).toFixed(2)}))">${escH(info.name)}</div>
+        <div class="hc-meta">${info.mins?`<b>${info.mins} min</b>${info.sub?' · ':''}`:''}${escH(info.sub)}</div></div>
+    </div>`;
+  }).join('')).join('');
+  hmScrollTo(S.selDay,false);
+}
+
+let hmLockUntil=0; // ignore scroll events caused by re-rendering or showing the list
+function hmScrollTo(sel,smooth){
+  const el=document.getElementById('day-cards');
+  const card=el&&el.querySelector(`.hc[data-wi="${sel.wi}"][data-di="${sel.di}"]`);
+  if(!card) return;
+  if(!smooth) hmLockUntil=Date.now()+300;
+  el.scrollTo({left:card.offsetLeft-24,behavior:smooth?'smooth':'auto'});
+  hmSetSel(sel);
+}
+
+function hmSetSel(sel){
+  const weekChanged=sel.wi!==S.weekIdx;
+  S.selDay=sel;
+  if(weekChanged){ S.weekIdx=sel.wi; saveWorkout(); renderWeekTabs(); return; }
+  document.querySelectorAll('#week-tabs .wd').forEach((w,i)=>w.classList.toggle('sel',i===sel.di));
+}
+
+function hmOpen(wi,dayId){ S.weekIdx=wi; openDay(dayId); }
+
+// Track which card is centered while swiping
+(function(){
+  let raf=0;
+  const el=document.getElementById('day-cards');
+  el.addEventListener('scroll',()=>{
+      if(!el.clientWidth||Date.now()<hmLockUntil) return;
+      cancelAnimationFrame(raf);
+      raf=requestAnimationFrame(()=>{
+        const mid=el.scrollLeft+el.clientWidth/2;
+        let best=null,bd=1e9;
+        el.querySelectorAll('.hc').forEach(c=>{ const d=Math.abs(c.offsetLeft+c.offsetWidth/2-mid); if(d<bd){bd=d;best=c;} });
+        if(!best) return;
+        const sel={wi:+best.dataset.wi,di:+best.dataset.di};
+        if(!S.selDay||sel.wi!==S.selDay.wi||sel.di!==S.selDay.di) hmSetSel(sel);
+      });
+  },{passive:true});
+})();
 
 function getWeekStartDate(weekIdx){
   const w=WEEKS[weekIdx];
@@ -1224,12 +1327,6 @@ function getTodayDayIdx(){
   const d=new Date().getDay(); return d===0?6:d-1; // Mon=0…Sun=6
 }
 
-function renderDayCards(){
-  const week=WEEKS[S.weekIdx];
-  const start=getWeekStartDate(S.weekIdx);
-  const todayIdx=getTodayDayIdx();
-  document.getElementById('day-cards').innerHTML=week.days.map((day,i)=>renderDayCard(day,i,start,todayIdx)).join('');
-}
 
 function dayHasLoggedWeights(day){
   if(!day.workout||!WORKOUTS[day.workout]) return false;
@@ -1371,6 +1468,7 @@ function closeDay(){
   document.getElementById('hdr-day').style.display='none';
   document.getElementById('workout-list').style.display='';
   document.getElementById('day-detail').style.display='none';
+  renderWeekTabs();
   document.getElementById('float-timer').style.display='none';
   renderDayCards();
 }
@@ -2804,6 +2902,10 @@ document.getElementById('hdr-date').textContent=todayStr();
   const todayIdx=getTodayDayIdx();
   const day=WEEKS[S.weekIdx].days[todayIdx];
   if(day&&day.type!=='rest') S.openDays[day.id]=true;
+})();
+(function(){
+  for(let wi=0;wi<WEEKS.length;wi++) for(let di=0;di<7;di++) if(hmIsToday(wi,di)){ S.weekIdx=wi; S.selDay={wi,di}; return; }
+  S.selDay={wi:S.weekIdx,di:0};
 })();
 renderWeekTabs();
 renderDayCards();
