@@ -10,7 +10,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icons/icon-192-v2.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&family=Archivo:wdth,wght@125,800&family=Barlow+Condensed:wght@700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600&family=Archivo:wdth,wght@125,800&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -395,14 +395,14 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .sx.has-img::before{background:rgba(0,0,0,.62)}
 .sx>*{position:relative}
 .sx-top{display:flex;align-items:center;justify-content:space-between;padding:12px 20px 0}
-.sx-clock{font-family:'Barlow Condensed','Roboto',sans-serif;font-weight:800;font-size:34px;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.sx-clock{font-family:'Barlow Condensed','Roboto',sans-serif;font-weight:500;font-size:24px;letter-spacing:.2px;color:#e8e8e8;font-variant-numeric:tabular-nums}
 .sx-skip{display:flex;align-items:center;gap:7px;background:none;border:none;color:#ccc;font-size:17px;font-family:inherit;cursor:pointer;padding:8px 0}
 .sx-skip svg{width:16px;height:16px;fill:#ccc}
 .sx-tl{display:flex;gap:6px;padding:14px 20px 0;align-items:center}
 .sx-seg{height:4px;background:rgba(255,255,255,.18);border-radius:2px;min-width:8px}
 .sx-seg i{display:block;height:100%;width:0;background:var(--pink);border-radius:2px;position:relative}
 .sx-seg.cur i::after{content:'';position:absolute;right:-6px;top:-4px;width:12px;height:12px;border-radius:50%;background:var(--pink)}
-.sx-main{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:26px 0 10px}
+.sx-main{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:26px 0 150px}
 .sx-title{font-family:'Archivo','Roboto',sans-serif;font-stretch:112%;font-weight:800;font-size:38px;letter-spacing:-.5px;line-height:1.05;padding:0 20px;text-wrap:balance}
 .sx-chip{display:inline-block;margin:10px 20px 14px;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.1);font-size:15px;color:#ddd}
 .sx-row{padding:12px 20px 12px 20px;border-left:5px solid transparent;transition:background .25s}
@@ -413,12 +413,14 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .sx-row.on .sb{color:#e6c9da}
 .sx.fin .sx-row .nm b{color:var(--yel)}
 .sx.fin .sx-row.on{background:linear-gradient(90deg,rgba(218,223,10,.22),rgba(218,223,10,.04));border-left-color:var(--yel)}
-.sx-now{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:6px 20px 12px}
+.sx-now{position:absolute;left:0;right:0;bottom:82px;padding:70px 20px 8px;background:linear-gradient(180deg,rgba(11,11,11,0) 0%,rgba(11,11,11,.72) 45%,rgba(11,11,11,.92) 100%);pointer-events:none}
 .sx-state{font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
 .sx-count{font-family:'Barlow Condensed','Roboto',sans-serif;font-weight:800;font-size:clamp(84px,27vw,120px);line-height:.88;letter-spacing:-2px;font-variant-numeric:tabular-nums}
 .sx-next{text-align:right;font-size:13px;color:#888;padding-bottom:8px;min-width:0}
 .sx-next b{display:block;color:#ccc;font-weight:500;font-size:15px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:42vw}
-.sx-journal{display:flex;align-items:center;justify-content:space-between;margin:0 16px 14px;padding:0 20px;height:68px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(28,28,28,.82);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:#fff;font-family:inherit;cursor:pointer;flex-shrink:0}
+.sx-journal{display:flex;align-items:stretch;justify-content:space-between;margin:0 16px 14px;height:68px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(28,28,28,.86);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);flex-shrink:0;z-index:4;overflow:hidden}
+.sx-journal button{background:none;border:none;color:#fff;font-family:inherit;cursor:pointer;padding:0 20px}
+.sx-journal button:active{background:rgba(255,255,255,.06)}
 .sx-journal .l{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:600}
 .sx-journal .l svg{width:20px;height:20px;stroke:#fff;stroke-width:2;fill:none}
 .sx-journal .r{display:flex;align-items:center;gap:6px;color:var(--pink);font-size:16px}
@@ -436,6 +438,9 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .sx-replay{grid-column:1/-1;margin-top:34px}
 .sx-replay .sx-hint{display:flex;align-items:center;gap:8px;text-transform:none;font-size:18px}
 .sx-replay svg{width:20px;height:20px;stroke:#fff;stroke-width:2.25;fill:none}
+.sx-pause{padding-bottom:96px}
+.sx-end{grid-column:1/-1;justify-self:center;margin-top:28px;background:none;border:1px solid rgba(255,255,255,.25);border-radius:var(--r-full);color:#bbb;font-size:14px;font-family:inherit;padding:10px 20px;cursor:pointer}
+.jr-body.light{background:var(--bg);color:var(--tp);border-radius:20px 20px 0 0;padding-bottom:110px}
 
 /* ── Journal (log sets) sheet ── */
 #jr{position:fixed;inset:0;z-index:160;display:none}
@@ -571,7 +576,7 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .gs-stats{display:flex;gap:10px;width:100%;max-width:380px;margin-top:22px}
 .gs-stat{flex:1;background:#141414;border-radius:var(--r-lg);padding:14px 10px;text-align:center}
 .gs-stat div:first-child{font-size:24px;font-weight:500;font-variant-numeric:tabular-nums}
-.gs-sheet{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;z-index:2}
+.gs-sheet{position:absolute;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;z-index:5}
 .gs-sheet-card{width:100%;background:var(--dk2);border-radius:20px 20px 0 0;padding:24px 20px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:center}
 .gs-stat div:last-child{font-size:11px;color:#777;margin-top:4px;text-transform:uppercase;letter-spacing:.6px}
 </style>
@@ -2477,7 +2482,7 @@ function gsReplay(){ if(G&&G.phase==='run') gsJump(G.idx); }
   const el=document.getElementById('gs');
   let x0=0,y0=0,t0=0,tapT=0,lastTap=0,active=false;
   el.addEventListener('pointerdown',e=>{
-    active=!!(G&&G.phase==='run'&&!G.leaving&&!document.getElementById('jr').classList.contains('open'))&&!e.target.closest('button,input,textarea,.gs-sheet');
+    active=!!(G&&G.phase==='run'&&!G.leaving&&!document.getElementById('jr').classList.contains('open'))&&!e.target.closest('button,input,textarea,.gs-sheet,.sx-journal');
     x0=e.clientX; y0=e.clientY; t0=Date.now();
   });
   el.addEventListener('pointerup',e=>{
@@ -2520,13 +2525,27 @@ function jrOpen(dayId){
   requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));
   setTimeout(()=>{ const a=el.querySelector('.jr-set.active'); if(a) a.scrollIntoView({block:'center'}); },340);
 }
+function pgOpen(){
+  JR={mode:'progress'};
+  const el=document.getElementById('jr');
+  el.innerHTML=`<div class="jr-scrim" onclick="jrClose()"></div>
+    <div class="jr-sheet" id="jr-sheet">
+      <div class="jr-hdr"><i class="jr-grab"></i><span class="l">${JR_IC.book}Journal</span><span class="r">Personal records</span></div>
+      <div class="jr-body light" id="jr-body"><div id="jr-prog"></div></div>
+      <div class="jr-foot"><span class="jr-spacer"></span><div class="m"></div>
+        <button class="jr-x" onclick="jrClose()" aria-label="Close journal">${JR_IC.x}</button></div>
+    </div>`;
+  renderProgress(document.getElementById('jr-prog'));
+  el.classList.add('open'); jrDrag();
+  requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));
+}
 function jrClose(){
   const el=document.getElementById('jr');
   el.classList.remove('in');
   setTimeout(()=>{ el.classList.remove('open'); el.innerHTML=''; JR=null; if(WO) woRender(); },320);
 }
 function jrCur(){
-  if(!G||G.phase!=='run'||!JR||G.day.id!==JR.day.id) return null;
+  if(!G||G.phase!=='run'||!JR||!JR.day||G.day.id!==JR.day.id) return null;
   const st=G.steps[G.idx];
   if(st.exId) return {exId:st.exId,si:st.si};
   if(st.log&&st.log.length) return {exId:st.log[st.log.length-1].exId,si:st.log[st.log.length-1].si};
@@ -2793,12 +2812,6 @@ function gsRender(){
   const st=G.steps[G.idx], nx=G.steps[G.idx+1], paused=G.pausedLeft!==null;
   const secs=G.steps.secs, sec=secs[st.sec]||{title:'',rows:[]};
   const img=DAY_IMAGES[day.workout];
-  const state=st.kind==='ready'?`Get ready · ${sec.title} first`
-    :st.kind==='warmup'?`Warm-up · ${st.title}`
-    :st.kind==='setup'?`Set up · ${st.title}`
-    :st.kind==='switch'?`Switch · ${st.title}`
-    :`${GS_KIND_LBL[st.kind]} · ${(st.sub||'').replace(/^Superset [A-Z] · /,'').replace(/ · [^·]*$/,'')}`;
-  const nxLbl=!nx?'Finish':nx.kind==='rest'?'Rest':nx.kind==='switch'?nx.title:nx.kind==='setup'?nx.title:nx.kind==='work'?nx.title:nx.title;
   el.innerHTML=`<div class="sx${sec.kind==='fin'?' fin':''}${img?' has-img':''}" ${img?`style="background-image:url('${img}')"`:''}>
     <div class="sx-top">
       <div class="sx-clock"><span id="sx-el">0:00</span> · <span id="sx-pct">0%</span></div>
@@ -2811,17 +2824,14 @@ function gsRender(){
       ${sec.rows.map((r,i)=>`<div class="sx-row${st.row===i||st.row===-2?' on':''}" id="sx-r${i}">
         <div class="nm">${r.n?`<b>${escH(r.n)}</b>`:''}${escH(r.name)}</div><div class="sb">${escH(r.sub)}</div></div>`).join('')}
     </div>
-    <div class="sx-now">
-      <div><div class="sx-state" style="color:${GS_KIND_COL[st.kind]==='#888'?'#bbb':GS_KIND_COL[st.kind]}">${escH(state)}</div>
-        <div class="sx-count" id="gs-t">0:00</div></div>
-      <div class="sx-next">Next<b>${escH(nxLbl)}</b></div>
+    <div class="sx-now"><div class="sx-count" id="gs-t">0:00</div></div>
+    <div class="sx-journal">
+      <button class="l" onclick="pgOpen()" aria-label="Journal: personal records">${JR_IC.book}Journal</button>
+      <button class="r" onclick="jrOpen(G.day.id)">Track Results${JR_IC.up}</button>
     </div>
-    <button class="sx-journal" onclick="jrOpen(G.day.id)">
-      <span class="l">${JR_IC.book}Journal</span><span class="r">Track Results${JR_IC.up}</span>
-    </button>
     ${paused&&!G.leaving?`<div class="sx-pause">
       <div class="sx-pause-top">
-        <button class="gs-icon-btn" onclick="gsClose()" aria-label="End session">${GS_IC.x}</button>
+        <button class="gs-icon-btn" onclick="gsTogglePause()" aria-label="Back to workout">${GS_IC.x}</button>
         <button class="gs-audio-btn${G.audio==='coach'?' on':''}" onclick="gsToggleSound()" aria-label="Audio: ${GS_AUDIO_LBL[G.audio]}">${G.audio==='coach'?GS_IC.coach:G.audio==='beeps'?GS_IC.snd:GS_IC.mute}<span>${GS_AUDIO_LBL[G.audio]}</span></button>
       </div>
       <div class="sx-pause-mid">
@@ -2830,6 +2840,7 @@ function gsRender(){
         <button class="sx-play" onclick="gsTogglePause()"><i>${GS_IC.play}</i>Play</button>
         <div class="sx-hint r">Next<span>‹‹‹ Swipe</span></div>
         <div class="sx-replay"><div class="sx-hint">${JR_IC.replay}Replay<span style="margin:0 0 0 6px">Double tap</span></div></div>
+        <button class="sx-end" onclick="gsClose()">End workout</button>
       </div>
     </div>`:''}
     ${G.leaving?`<div class="gs-sheet" onclick="if(event.target===this)gsStay()"><div class="gs-sheet-card">
@@ -2938,8 +2949,8 @@ function toggleMeal(id){
 // PROGRESS — RENDER
 // ─────────────────────────────────────────────
 
-function renderProgress(){
-  const el=document.getElementById('progress-content'), pr=S.progress;
+function renderProgress(target){
+  const el=target||document.getElementById('progress-content'), pr=S.progress;
   const allPRs=Object.assign({},pr?.prs||{});
   Object.entries(S.prs).forEach(([name,val])=>{ if(!allPRs[name]||val>allPRs[name]) allPRs[name]=val; });
   const wLog=pr?.weightLog||[];
