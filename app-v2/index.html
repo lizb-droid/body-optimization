@@ -332,6 +332,19 @@ html,body{height:100%;overflow:hidden;font-family:'Roboto','Helvetica Neue',sans
 .gs-audio-btn{height:36px;padding:0 12px 0 10px;border-radius:var(--r-full);border:none;background:#1c1c1c;display:flex;align-items:center;gap:6px;cursor:pointer;flex-shrink:0;color:#aaa;font-size:12px;font-weight:500;font-family:inherit}
 .gs-audio-btn svg{width:16px;height:16px;stroke:currentColor;stroke-width:2.25;fill:none}
 .gs-audio-btn.on{background:var(--pink-m);color:var(--pink)}
+.gs-set{width:100%;max-width:380px;margin-top:16px;padding:14px;background:#141414;border-radius:var(--r-lg)}
+.gs-set-hdr{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.gs-set-hdr small{text-transform:none;letter-spacing:0;color:#555;margin-left:6px;font-size:11px}
+.gs-chips{display:flex;flex-wrap:wrap;gap:6px}
+.gs-chip-btn{height:34px;padding:0 12px;border-radius:var(--r-full);border:1px solid #333;background:transparent;color:#bbb;font-size:13px;font-family:inherit;cursor:pointer}
+.gs-chip-btn.on{border-color:var(--pink);background:var(--pink-m);color:var(--pink)}
+.gs-voices{display:flex;flex-direction:column;gap:4px}
+.gs-voice{display:flex;align-items:center;gap:8px;min-height:40px;padding:0 12px;border-radius:var(--r-md);border:1px solid #262626;background:transparent;color:#ddd;font-size:14px;font-family:inherit;cursor:pointer;text-align:left}
+.gs-voice.on{border-color:var(--pink);background:var(--pink-m)}
+.gs-voice em{font-style:normal;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--yel)}
+.gs-voice small{margin-left:auto;color:#666;font-size:11px}
+.gs-tip{font-size:12px;color:#888;line-height:1.5;margin-top:10px}
+.gs-tip b{color:#ddd;font-weight:500}
 .gs-top-title{flex:1;min-width:0;text-align:center}
 .gs-top-title div:first-child{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gs-top-title div:last-child{font-size:11px;color:#777;margin-top:1px;font-variant-numeric:tabular-nums}
@@ -1972,14 +1985,26 @@ function gsToggleSound(){
 }
 
 let gsVoice=null;
+// English voices, most natural first (iOS "Premium"/"Enhanced" downloads sound far less robotic)
+function gsVoiceRank(v){ return /premium/i.test(v.name)?0:/enhanced|neural|natural/i.test(v.name)?1:/google/i.test(v.name)?2:3; }
+function gsVoices(){
+  try{ return speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang)).sort((a,b)=>gsVoiceRank(a)-gsVoiceRank(b)||a.name.localeCompare(b.name)); }
+  catch(e){ return []; }
+}
 function gsPickVoice(){
-  try{
-    const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));
-    const pref=['Samantha','Ava','Allison','Google US English','Karen','Serena','Moira','Tessa'];
-    gsVoice=pref.map(n=>vs.find(v=>v.name.includes(n))).find(Boolean)||vs.find(v=>v.lang==='en-US')||vs[0]||null;
-  }catch(e){}
+  const vs=gsVoices(); let saved=null;
+  try{ saved=localStorage.getItem('betalizgsvoice'); }catch(e){}
+  const pref=['Ava','Zoe','Samantha','Allison','Google US English','Karen','Serena'];
+  gsVoice=vs.find(v=>v.voiceURI===saved)||vs.find(v=>gsVoiceRank(v)<2&&v.lang==='en-US')||vs.find(v=>gsVoiceRank(v)<2)
+    ||pref.map(n=>vs.find(v=>v.name.includes(n))).find(Boolean)||vs.find(v=>v.lang==='en-US')||vs[0]||null;
+  if(G&&G.phase==='plan') gsRender();
 }
 if('speechSynthesis' in window){ gsPickVoice(); try{ speechSynthesis.addEventListener('voiceschanged',gsPickVoice); }catch(e){} }
+function gsSetVoice(uri){
+  try{ localStorage.setItem('betalizgsvoice',uri); }catch(e){}
+  gsPickVoice(); gsUnlockAudio();
+  const a=G.audio; G.audio='coach'; gsSay("Next up, Barbell Hip Thrust. 4 sets of 10 reps. Let's go."); G.audio=a;
+}
 function gsSay(text){
   if(!G||G.audio!=='coach'||!text||!('speechSynthesis' in window)) return;
   try{
@@ -1992,7 +2017,24 @@ function gsSay(text){
 }
 function gsHush(){ try{ speechSynthesis.cancel(); }catch(e){} }
 function gsUnlockAudio(){ try{ gsAC=gsAC||new (window.AudioContext||window.webkitAudioContext)(); gsAC.resume(); }catch(e){} }
-function gsChime(){ gsBeep(660,180); setTimeout(()=>gsBeep(990,320),190); }
+// 10-second warning sounds, synthesized so they work offline
+function gsTone(freq,at,dur,type,vol){
+  const o=gsAC.createOscillator(), g=gsAC.createGain(), t=gsAC.currentTime+at;
+  o.type=type||'sine'; o.frequency.value=freq; o.connect(g); g.connect(gsAC.destination);
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(vol||.3,t+.008); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o.start(t); o.stop(t+dur+.02); return o;
+}
+const GS_CHIMES={
+  rising:{lbl:'Rising chime',play:()=>{ gsTone(660,0,.25); gsTone(990,.19,.45); }},
+  bell:{lbl:'Boxing bell',play:()=>{ [0,.42].forEach(at=>[1,2.76,5.4,8.93].forEach((m,i)=>gsTone(520*m,at,1.4/(i+1),'sine',.22/(i+1)))); }},
+  whistle:{lbl:'Coach whistle',play:()=>{ [0,.32].forEach(at=>{ const o=gsTone(2300,at,.24,'sine',.18); o.frequency.setValueAtTime(2300,gsAC.currentTime+at); o.frequency.linearRampToValueAtTime(2550,gsAC.currentTime+at+.2); }); }},
+  marimba:{lbl:'Soft marimba',play:()=>{ [523,659,784].forEach((f,i)=>{ gsTone(f,i*.13,.5,'triangle',.35); gsTone(f*4,i*.13,.08,'sine',.05); }); }},
+  digital:{lbl:'Digital beep-beep',play:()=>{ gsTone(1050,0,.12,'square',.08); gsTone(1050,.18,.12,'square',.08); }},
+  ding:{lbl:'Ding-dong',play:()=>{ gsTone(784,0,.7,'sine',.32); gsTone(622,.38,1,'sine',.32); }}
+};
+function gsChimeId(){ try{ const c=localStorage.getItem('betalizgschime'); return GS_CHIMES[c]?c:'rising'; }catch(e){ return 'rising'; } }
+function gsChime(id){ if(!G||G.audio==='off'||!gsAC) return; try{ GS_CHIMES[id||gsChimeId()].play(); }catch(e){} }
+function gsSetChime(id){ try{ localStorage.setItem('betalizgschime',id); }catch(e){} gsUnlockAudio(); const a=G.audio; G.audio='beeps'; gsChime(id); G.audio=a; gsRender(); }
 function gsAnnounce(){ const st=G&&G.steps[G.idx]; if(st) gsSay(st.say); }
 
 function gsStart(){
@@ -2136,6 +2178,14 @@ function gsRender(){
         <div class="gs-name">~${Math.round(total/60)} min</div>
         <div class="gs-sub">Every set, rest and transition on one clock. Hit start and follow along.</div>
         ${gsWarmupType(day.workout)?`<div class="gs-toggle" onclick="gsToggleWarm()"><span>Include warm-up</span><div class="gs-sw${G.warm?' on':''}"></div></div>`:''}
+        <div class="gs-set">
+          <div class="gs-set-hdr">10-second sound <small>tap to hear</small></div>
+          <div class="gs-chips">${Object.entries(GS_CHIMES).map(([id,c])=>`<button class="gs-chip-btn${gsChimeId()===id?' on':''}" onclick="gsSetChime('${id}')">${c.lbl}</button>`).join('')}</div>
+          ${gsVoices().length?`<div class="gs-set-hdr" style="margin-top:14px">Coach voice <small>tap to hear</small></div>
+          <div class="gs-voices">${gsVoices().slice(0,12).map(v=>`<button class="gs-voice${gsVoice&&gsVoice.voiceURI===v.voiceURI?' on':''}" data-uri="${escH(v.voiceURI)}" onclick="gsSetVoice(this.dataset.uri)">
+            <span>${escH(v.name.replace(/\s*\((Premium|Enhanced)\)/i,''))}</span>${gsVoiceRank(v)<2?`<em>${/premium/i.test(v.name)?'Premium':'Enhanced'}</em>`:''}<small>${escH(v.lang)}</small></button>`).join('')}</div>
+          ${gsVoices().every(v=>gsVoiceRank(v)>0)?`<div class="gs-tip">For a natural voice on iPhone: Settings → Accessibility → Spoken Content → Voices → English. Download a <b>Premium</b> voice (Ava or Zoe sound most natural), then reopen this screen.</div>`:''}`:''}
+        </div>
         <div class="gs-plan">${rows.filter(r=>r.block!=='Get ready').map(r=>`<div class="gs-plan-row"><span>${escH(r.block)}</span><span>${Math.max(1,Math.round(r.dur/60))} min</span></div>`).join('')}</div>
         <button class="gs-big-btn" onclick="gsStart()">Start session</button>
         <div style="height:12px;flex-shrink:0"></div>
