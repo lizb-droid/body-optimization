@@ -513,6 +513,9 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .jr-fin-row input,.jr-result input{width:100%;height:44px;border-radius:12px;border:1.5px solid #3a3a3a;background:transparent;color:#fff;font-size:16px;text-align:center;font-family:inherit;outline:none}
 .jr-result{padding:8px 22px 6px}
 .jr-result input{text-align:left;padding:0 14px}
+.jr-foot-row{display:flex;align-items:center;gap:14px;width:100%}
+.jr-foot.manual{flex-direction:column;gap:12px}
+.jr-body.manual{padding-bottom:190px}
 .jr-foot{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:14px;padding:14px 20px calc(14px + env(safe-area-inset-bottom));background:#1a1a1a;border-top:1px solid #262626}
 .jr-foot .m{flex:1;text-align:center}
 .jr-foot .m b{display:block;font-size:17px;font-weight:600}
@@ -1512,7 +1515,7 @@ function woOpen(dayId){
   woRender();
 }
 function woClose(){ WO=null; document.getElementById('wo').classList.remove('open'); renderWeekTabs(); renderDayCards(); }
-function woManual(){ jrOpen(WO.day.id); }
+function woManual(){ jrOpen(WO.day.id,true); }
 function woStart(){ const id=WO.day.id, saved=gsSaved(); gsOpen(id); if(!(saved&&saved.dayId===id)) gsStart(); }
 function woToggleDone(){ S.done[WO.day.id]=!S.done[WO.day.id]; if(S.done[WO.day.id]) launchConfetti(window.innerWidth/2,window.innerHeight/2); saveWorkout(); woRender(); }
 
@@ -2570,10 +2573,10 @@ const JR_IC={
   replay:'<svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><polyline points="3 3 3 8 8 8"/></svg>'
 };
 let JR=null;
-function jrOpen(dayId){
+function jrOpen(dayId,manual){
   let day=null; WEEKS.forEach(w=>w.days.forEach(d=>{ if(d.id===dayId) day=d; }));
   if(!day||!WORKOUTS[day.workout]) return;
-  JR={day};
+  JR={day,manual:!!manual};
   const el=document.getElementById('jr');
   el.classList.add('open'); jrRender();
   requestAnimationFrame(()=>requestAnimationFrame(()=>el.classList.add('in')));
@@ -2666,12 +2669,23 @@ function jrRender(){
   el.innerHTML=`<div class="jr-scrim" onclick="jrClose()"></div>
     <div class="jr-sheet" id="jr-sheet">
       <div class="jr-hdr"><i class="jr-grab"></i><span class="l">${JR_IC.book}Journal</span><span class="r">${escH(hmCardInfo(day).name)} · ${day.day}</span></div>
-      <div class="jr-body" id="jr-body">${html}</div>
-      <div class="jr-foot"><span class="jr-spacer"></span>
-        <div class="m"><b id="jr-pct">${st.pct}% Journal completion</b><span id="jr-reps">${st.done} sets · ${st.reps} reps</span></div>
-        <button class="jr-x" onclick="jrClose()" aria-label="Close journal">${JR_IC.x}</button></div>
+      <div class="jr-body${JR.manual?' manual':''}" id="jr-body">${html}</div>
+      <div class="jr-foot${JR.manual?' manual':''}">
+        <div class="jr-foot-row"><span class="jr-spacer"></span>
+          <div class="m"><b id="jr-pct">${st.pct}% Journal completion</b><span id="jr-reps">${st.done} sets · ${st.reps} reps</span></div>
+          <button class="jr-x" onclick="jrClose()" aria-label="Close journal">${JR_IC.x}</button></div>
+        ${JR.manual?`<button class="wo-start${S.done[day.id]?' done':''}" onclick="jrComplete()">${S.done[day.id]?'✓ Completed':'Complete workout'}</button>`:''}
+      </div>
     </div>`;
   jrDrag();
+}
+// Finish a workout logged without the timer: mark the day done and go back home
+function jrComplete(){
+  const id=JR.day.id;
+  if(S.done[id]){ S.done[id]=false; saveWorkout(); jrRender(); return; }
+  S.done[id]=true; saveWorkout();
+  launchConfetti(window.innerWidth/2,window.innerHeight/2);
+  jrClose(); if(WO) setTimeout(woClose,340);
 }
 function jrSave(row,w,r){
   const exId=row.dataset.exid, exName=row.dataset.exname, si=+row.dataset.si;
@@ -2683,7 +2697,7 @@ function jrSave(row,w,r){
     if(!isNaN(num)&&num>(S.prs[exName]||0)){ S.prs[exName]=num; if(G) G.prs++; launchConfetti(window.innerWidth/2,window.innerHeight/2); }
   }
   saveWorkout();
-  row.classList.toggle('done',!!w);
+  row.classList.toggle('done',!!w); row.dataset.doneAt=w?Date.now():'';
   row.querySelector('.jr-n').innerHTML=w?'<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>':(si+1);
   const st=jrStats();
   document.getElementById('jr-pct').textContent=`${st.pct}% Journal completion`;
@@ -2692,7 +2706,11 @@ function jrSave(row,w,r){
 // Tap the set number: log it with what's shown (typed values, else last time's weight and the target reps)
 function jrLog(btn){
   const row=btn.closest('.jr-set'), wi=row.querySelector('[data-field="w"]'), ri=row.querySelector('[data-field="r"]');
-  if(row.classList.contains('done')){ wi.value=''; ri.value=''; jrSave(row,'',''); return; }
+  if(row.classList.contains('done')){
+    // Typing then tapping the circle saves on blur first; don't let that same tap undo it
+    if(Date.now()-(+row.dataset.doneAt||0)<600) return;
+    wi.value=''; ri.value=''; jrSave(row,'',''); return;
+  }
   const w=wi.value.trim()||(/^\d/.test(wi.placeholder)?wi.placeholder:'');
   if(!w){ wi.focus(); return; }
   const r=ri.value.trim()||(/^\d/.test(ri.placeholder)?ri.placeholder:'');
@@ -2700,7 +2718,10 @@ function jrLog(btn){
 }
 function jrInput(inp){
   const row=inp.closest('.jr-set');
-  const w=row.querySelector('[data-field="w"]').value.trim(), r=row.querySelector('[data-field="r"]').value.trim();
+  const ri=row.querySelector('[data-field="r"]');
+  const w=row.querySelector('[data-field="w"]').value.trim();
+  const r=ri.value.trim()||(w&&/^\d/.test(ri.placeholder)?ri.placeholder:'');
+  if(w&&!ri.value.trim()) ri.value=r;
   jrSave(row,w,w?r:'');
 }
 function jrAddSet(exId){
