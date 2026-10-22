@@ -481,8 +481,6 @@ html,body{height:100%;overflow:hidden;overscroll-behavior:none;font-family:'Robo
 .rs-w .plus{width:52px;height:52px;border-radius:50%;background:rgba(80,80,80,.7);font-size:30px;font-weight:300;display:flex;align-items:center;justify-content:center;line-height:1}
 .rs-w .v{font-family:'Barlow Condensed','Roboto',sans-serif;font-weight:800;font-size:38px;line-height:1.1;font-variant-numeric:tabular-nums}
 .rs-w .k{font-size:var(--cta-size);font-weight:var(--cta-weight);color:#9aa5ff}
-.rs-lbl{text-align:center;font-family:'Archivo','Roboto',sans-serif;font-stretch:112%;font-weight:800;font-size:34px;letter-spacing:-.3px;margin-bottom:4px}
-.rs-ctrl{padding-bottom:16px}
 
 /* ── Journal (log sets) sheet ── */
 #jr{position:fixed;inset:0;z-index:160;display:none}
@@ -3019,7 +3017,7 @@ function gsSetView(st){
           <path d="M24.8 127.4 A80 80 0 1 1 175.2 127.4" stroke="rgba(255,255,255,.22)" stroke-width="16" fill="none" stroke-dasharray="3 4.2"/>
           <path d="M24.8 127.4 A80 80 0 1 1 175.2 127.4" stroke="${col}" stroke-width="16" fill="none" stroke-dasharray="3 4.2" mask="url(#ss-mask)"/>
         </svg>
-        <div class="ss-t"><div id="gs-t">0:00</div>${prep?'':`<small>${lbl}</small>`}</div>
+        <div class="ss-t"><div id="gs-t">0:00</div><small>${lbl}</small></div>
       </div>`;
   // Rest / set-up / switch: next movement in a card up top, label and timer below
   if(prep) return `<div class="rs-card">
@@ -3033,8 +3031,7 @@ function gsSetView(st){
       </button>
     </div>
     <div class="ss-fill"></div>
-    <div class="rs-lbl">${escH(sub)}</div>
-    <div class="ss-ctrl rs-ctrl"><span></span>${arc}<span></span></div>`;
+    <div class="ss-ctrl"><span></span>${arc}<span></span></div>`;
   return `<div class="ss-head">
       <div class="ss-kicker" style="color:${prep?'#9aa5ff':col}">${escH(kicker)}</div>
       <div class="ss-title">${title}</div>
